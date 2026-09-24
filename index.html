@@ -32,19 +32,58 @@
 
         h1 {
             text-align: center;
-            margin-bottom: 24px;
+            margin-bottom: 16px;
             color: var(--text-main);
+        }
+
+        /* Sticky Header Container */
+        .header-sticky {
+            position: sticky;
+            top: 0;
+            z-index: 900;
+            background-color: var(--bg-color);
+            padding-top: 8px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 24px;
         }
 
         .controls {
             background-color: var(--card-bg);
             padding: 20px;
             border-radius: 12px;
-            margin-bottom: 24px;
             border: 1px solid var(--border-color);
             display: flex;
             flex-direction: column;
             gap: 16px;
+        }
+
+        .header-top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .toggle-btn {
+            background-color: var(--border-color);
+            color: var(--text-main);
+            font-size: 13px;
+            padding: 6px 12px;
+            cursor: pointer;
+            border: none;
+            border-radius: 6px;
+        }
+
+        .controls-content {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .controls-content.collapsed {
+            display: none;
         }
 
         .filter-grid {
@@ -112,7 +151,6 @@
         .oc-image {
             width: 100%;
             height: 180px;
-            object-fit: cover;
             border-radius: 8px;
             margin-bottom: 12px;
             background-color: var(--bg-color);
@@ -220,6 +258,8 @@
             border-radius: 12px;
             width: 90%;
             max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
             border: 1px solid var(--border-color);
             display: flex;
             flex-direction: column;
@@ -257,38 +297,40 @@
 <div class="container">
     <h1>OC Code Organizer</h1>
 
-    <div class="controls">
-        <div class="filter-grid">
-            <input type="text" id="searchInput" placeholder="Search by name, code, or tags...">
-            
-            <select id="versionFilter">
-                <option value="ALL">All Versions</option>
-                <option value="OC TEMPLATE">OC TEMPLATE</option>
-                <option value="OC DESIGN V1">OC DESIGN V1</option>
-                <option value="OC DESIGN V2">OC DESIGN V2</option>
-                <option value="OC DESIGN V3">OC DESIGN V3</option>
-                <option value="OC DESIGN V4">OC DESIGN V4</option>
-                <option value="CHIBIS">CHIBIS</option>
-            </select>
+    <!-- Sticky and Retractable Header Controls -->
+    <div class="header-sticky">
+        <div class="controls">
+            <div class="header-top-bar">
+                <span class="stats" id="statsDisplay">Showing 0 / 0 OCs</span>
+                <button class="toggle-btn" id="toggleHeaderBtn" onclick="toggleHeaderControls()">Fold Menu 🔼</button>
+            </div>
 
-            <select id="categoryFilter">
-                <option value="ALL">All Categories</option>
-            </select>
+            <div class="controls-content" id="controlsContent">
+                <div class="filter-grid">
+                    <input type="text" id="searchInput" placeholder="Search by name, code, or tags...">
+                    
+                    <select id="versionFilter">
+                        <option value="ALL">All Versions</option>
+                    </select>
 
-            <select id="tagFilter">
-                <option value="ALL">All Variation Tags</option>
-            </select>
-        </div>
-        <button class="btn-secondary" onclick="bulkEditOCs()">Bulk Edit Selected</button>
+                    <select id="categoryFilter">
+                        <option value="ALL">All Categories</option>
+                    </select>
 
-        <div class="action-bar">
-            <div class="stats" id="statsDisplay">Showing 0 / 0 OCs</div>
-            <div>
-              <button class="btn-secondary" onclick="renameCategory()">Rename Category</button>
-              <button class="btn-secondary" onclick="renameVersion()">Rename Version</button>
+                    <select id="tagFilter">
+                        <option value="ALL">All Variation Tags</option>
+                    </select>
+                </div>
 
-                <button onclick="openModal()">+ Add New OC / Code</button>
-                <button class="btn-secondary" onclick="exportData()">Export Backup</button>
+                <div class="action-bar">
+                    <button class="btn-secondary" onclick="bulkEditOCs()">Bulk Edit Selected</button>
+                    <div>
+                        <button class="btn-secondary" onclick="renameCategory()">Rename Category</button>
+                        <button class="btn-secondary" onclick="renameVersion()">Rename Version</button>
+                        <button onclick="openModal()">+ Add New OC / Code</button>
+                        <button class="btn-secondary" onclick="exportData()">Export Backup</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -300,7 +342,6 @@
 <div class="modal" id="editorModal">
     <div class="modal-content">
         <h2 id="modalTitle">Add New OC</h2>
-      
         
         <label for="inputCode">9-Character Code:</label>
         <input type="text" id="inputCode" maxlength="9" placeholder="e.g. EISVWOF9D">
@@ -308,16 +349,27 @@
         <label for="inputName">OC Name / Title:</label>
         <input type="text" id="inputName" placeholder="e.g. Son">
 
-        <label for="inputImage">Picture URL (Optional):</label>
+        <label for="inputImage">Picture URL:</label>
         <input type="url" id="inputImage" placeholder="https://example.com/character.png">
 
-        <label for="inputVersion">Design Version:</label>
-<input type="text" id="inputVersion" list="versionList" placeholder="Select or type new version...">
-<datalist id="versionList"></datalist>
+        <label for="inputFile">Or Upload Direct Image File:</label>
+        <input type="file" id="inputFile" accept="image/*" onchange="handleFileUpload(event)">
 
-<label for="inputCategory">Category / Association:</label>
-<input type="text" id="inputCategory" list="categoryList" placeholder="Select or type new category...">
-<datalist id="categoryList"></datalist>
+        <label for="inputImageFit">Image Fit Style:</label>
+        <select id="inputImageFit">
+            <option value="cover">Cover (Crop to fill)</option>
+            <option value="contain">Contain (Fit full picture)</option>
+            <option value="fill">Fill (Stretch)</option>
+            <option value="scale-down">Scale Down</option>
+        </select>
+
+        <label for="inputVersion">Design Version:</label>
+        <input type="text" id="inputVersion" list="versionList" placeholder="Select or type new version...">
+        <datalist id="versionList"></datalist>
+
+        <label for="inputCategory">Category / Association:</label>
+        <input type="text" id="inputCategory" list="categoryList" placeholder="Select or type new category...">
+        <datalist id="categoryList"></datalist>
 
         <label for="inputTags">Variation Tags (comma-separated):</label>
         <input type="text" id="inputTags" placeholder="e.g. Boy, Remastered, Winter, Redesign">
@@ -334,7 +386,6 @@
 <script>
     // Initial Dataset Extracted directly from Document
     const rawData = [
-    // ==== OC TEMPLATE ====
     { code: "EISVWOF9D", name: "Son", version: "OC TEMPLATE", category: "Base Templates", tags: ["Boy"] },
     { code: "VPE4R54U3", name: "Boy", version: "OC TEMPLATE", category: "Base Templates", tags: ["Boy"] },
     { code: "XGQDLN7V9", name: "Boy Remastered", version: "OC TEMPLATE", category: "Base Templates", tags: ["Boy", "Remastered"] },
@@ -353,427 +404,21 @@
     { code: "7XTWR5XGU", name: "Lady", version: "OC TEMPLATE", category: "Base Templates", tags: ["Woman"] },
     { code: "1NM175U7F", name: "Sooka", version: "OC TEMPLATE", category: "Base Templates", tags: [] },
     { code: "7BDXOWAKM", name: "Smol", version: "OC TEMPLATE", category: "Base Templates", tags: ["Smol"] },
-
-    // ========= THE OWNER ========
     { code: "I5PLMSMIZ", name: "Wanzzer!", version: "OC TEMPLATE", category: "The Owner", tags: ["Wanzzer"] },
     { code: "4U6NVMZV7", name: "LH", version: "OC TEMPLATE", category: "The Owner", tags: [] },
     { code: "N5BV7JO77", name: "SH", version: "OC TEMPLATE", category: "The Owner", tags: [] },
     { code: "KH3998JW3", name: "Pi Sekolah", version: "OC TEMPLATE", category: "The Owner", tags: [] },
     { code: "4VN2F7GVQ", name: "WANZZER !!!", version: "OC TEMPLATE", category: "The Owner", tags: ["Wanzzer"] },
-    { code: "SSMDTMGGZ", name: "(Unnamed Owner OC 1)", version: "OC TEMPLATE", category: "The Owner", tags: [] },
-    { code: "2ZIOGFNQU", name: "Arnab Botak", version: "OC TEMPLATE", category: "The Owner", tags: [] },
-    { code: "J7EWX4XRM", name: "Berayer", version: "OC TEMPLATE", category: "The Owner", tags: [] },
-    { code: "O43S5Q9MM", name: "Baju Selangoi", version: "OC TEMPLATE", category: "The Owner", tags: [] },
-    { code: "6MNC11WAS", name: "(Unnamed Owner OC 2)", version: "OC TEMPLATE", category: "The Owner", tags: [] },
-    { code: "UP1DEMJM2", name: "Tangan Kena Pemberat", version: "OC TEMPLATE", category: "The Owner", tags: [] },
-    { code: "QBF4A3TDT", name: "Boolad", version: "OC TEMPLATE", category: "The Owner", tags: [] },
-    { code: "IHD195J9Q", name: "Sword Gaming", version: "OC TEMPLATE", category: "The Owner", tags: [] },
-    { code: "7T68CYFNL", name: "Apa Ko Tengo Tu", version: "OC TEMPLATE", category: "The Owner", tags: [] },
-    { code: "QHGJP4QBU", name: "(Unnamed Owner OC 3)", version: "OC TEMPLATE", category: "The Owner", tags: [] },
-    { code: "6ZN5L9YYY", name: "Pakai Singled", version: "OC TEMPLATE", category: "The Owner", tags: [] },
-    { code: "OBQIY69L4", name: "Wanzzer Di Tahun 2040", version: "OC TEMPLATE", category: "The Owner", tags: ["Wanzzer", "Variant"] },
-    { code: "WZ7BUTNPJ", name: "Wanzzer Pukul 3 Baru Tidur", version: "OC TEMPLATE", category: "The Owner", tags: ["Wanzzer", "Variant"] },
-    { code: "IU7EY7FV5", name: "Wanzzer Dengan,someone.", version: "OC TEMPLATE", category: "The Owner", tags: ["Wanzzer"] },
-    { code: "8DL2PDAYV", name: "WANZZER??!??!", version: "OC TEMPLATE", category: "The Owner", tags: ["Wanzzer"] },
-    { code: "EOSVYH6RD", name: "Apa Lagi Ko Tengo Tu", version: "OC TEMPLATE", category: "The Owner", tags: [] },
-    { code: "CLEW2B2W4", name: "BUDAK NERD", version: "OC TEMPLATE", category: "The Owner", tags: [] },
-    { code: "F7OWKEACI", name: "cozy", version: "OC TEMPLATE", category: "The Owner", tags: [] },
-    { code: "VOUYMLJOH", name: "AWWWW WANZZERRRR 🥺", version: "OC TEMPLATE", category: "The Owner", tags: ["Wanzzer"] },
-    { code: "QZ2PU9J55", name: "Mam", version: "OC TEMPLATE", category: "The Owner", tags: ["Family"] },
-    { code: "1UMY5OY2A", name: "Bap", version: "OC TEMPLATE", category: "The Owner", tags: ["Family"] },
-    { code: "MF9Q8VTCU", name: "Izam", version: "OC TEMPLATE", category: "The Owner", tags: ["Family"] },
-    { code: "IU4YJJ3CK", name: "Isam Punya Benda", version: "OC TEMPLATE", category: "The Owner", tags: ["Family"] },
-    { code: "Y6WXSCQGS", name: "Isam Punya Benda Tapi Aku", version: "OC TEMPLATE", category: "The Owner", tags: ["Family"] },
-    { code: "439TWK8TW", name: "Fla", version: "OC TEMPLATE", category: "The Owner", tags: [] },
-    { code: "DDEPCX7UX", name: "(Unnamed Owner OC 4)", version: "OC TEMPLATE", category: "The Owner", tags: [] },
-    { code: "LY23LX23L", name: "Haf", version: "OC TEMPLATE", category: "The Owner", tags: [] },
-    { code: "61UW6JZ76", name: "(Unnamed Owner OC 5)", version: "OC TEMPLATE", category: "The Owner", tags: [] },
-    { code: "AUG4GRKWP", name: "Hazy", version: "OC TEMPLATE", category: "The Owner", tags: [] },
-    { code: "S9CG2CECV", name: "(Unnamed Owner OC 6)", version: "OC TEMPLATE", category: "The Owner", tags: [] },
-
-    // # OC DESIGN V1
-    // DZM ASSOCIATION + GIRLIE VERSION
     { code: "SZUXVBZX8", name: "DZM", version: "OC DESIGN V1", category: "DZM Association", tags: ["Boy"] },
     { code: "A9QTZMRJM", name: "DZM (Girl Ver)", version: "OC DESIGN V1", category: "DZM Association", tags: ["Girl", "Girl Ver"] },
-    { code: "3ZW74FWYO", name: "Reddish", version: "OC DESIGN V1", category: "DZM Association", tags: ["Boy"] },
-    { code: "CNQJ7DFGG", name: "Reddish (Girl Ver)", version: "OC DESIGN V1", category: "DZM Association", tags: ["Girl", "Girl Ver"] },
-    { code: "O57GTCTJV", name: "Blonde", version: "OC DESIGN V1", category: "DZM Association", tags: ["Boy"] },
-    { code: "PSKBMKF91", name: "Blonde (Girl Ver)", version: "OC DESIGN V1", category: "DZM Association", tags: ["Girl", "Girl Ver"] },
-    { code: "JI92G8AO3", name: "His Friend", version: "OC DESIGN V1", category: "DZM Association", tags: ["Boy"] },
-    { code: "DDGQSW1LU", name: "His Friend (Girl Ver)", version: "OC DESIGN V1", category: "DZM Association", tags: ["Girl", "Girl Ver"] },
-    { code: "6DLAJ4FAD", name: "Ginger", version: "OC DESIGN V1", category: "DZM Association", tags: ["Boy"] },
-    { code: "H7BRH7JTR", name: "Ginger (Girl Ver)", version: "OC DESIGN V1", category: "DZM Association", tags: ["Girl", "Girl Ver"] },
-    { code: "I2BXC5MU2", name: "Quack", version: "OC DESIGN V1", category: "DZM Association", tags: ["Boy"] },
-    { code: "C5FJ9NLW9", name: "Quack (Girl Ver)", version: "OC DESIGN V1", category: "DZM Association", tags: ["Girl", "Girl Ver"] },
-    { code: "LM6PJWKVR", name: "Aquatica", version: "OC DESIGN V1", category: "DZM Association", tags: ["Boy"] },
-    { code: "OCX6GC2RP", name: "Aquatica (Girl Ver)", version: "OC DESIGN V1", category: "DZM Association", tags: ["Girl", "Girl Ver"] },
-    { code: "W3FHNQ8KM", name: "Boy", version: "OC DESIGN V1", category: "DZM Association", tags: ["Boy"] },
-    { code: "RD8EF72AY", name: "Boy (Girl Ver)", version: "OC DESIGN V1", category: "DZM Association", tags: ["Girl", "Girl Ver"] },
-
-    // OLD DAAEMORTION (ODE) ASSOCIATION
-    { code: "RHFBBV8TL", name: "ODE", version: "OC DESIGN V1", category: "ODE Association", tags: ["ODE"] },
-    { code: "1MEN7LB4W", name: "ODE2", version: "OC DESIGN V1", category: "ODE Association", tags: ["ODE"] },
-    { code: "9NPV8DJGE", name: "ODE3", version: "OC DESIGN V1", category: "ODE Association", tags: ["ODE"] },
-    { code: "6FDUZJ9AK", name: "ODE4", version: "OC DESIGN V1", category: "ODE Association", tags: ["ODE"] },
-
-    // SPECIAL OLD DAAEMORTION
-    { code: "ALLMIESH3", name: "Pendekar Melayu", version: "OC DESIGN V1", category: "Special Old Daaemortion", tags: ["ODE", "Malay"] },
-    { code: "L761KV18W", name: "ODE Muslimin", version: "OC DESIGN V1", category: "Special Old Daaemortion", tags: ["ODE"] },
-    { code: "PYG1GVPBI", name: "ODE Karateka/Taekwando", version: "OC DESIGN V1", category: "Special Old Daaemortion", tags: ["ODE"] },
-    { code: "NBKVQFJV3", name: "ODE Girlie", version: "OC DESIGN V1", category: "Special Old Daaemortion", tags: ["ODE", "Girl"] },
-    { code: "F2UCAIR8P", name: "CB", version: "OC DESIGN V1", category: "Special Old Daaemortion", tags: [] },
-    { code: "PF6FLXMF2", name: "ACB", version: "OC DESIGN V1", category: "Special Old Daaemortion", tags: [] },
-    { code: "8DXNWVSGP", name: "New DE", version: "OC DESIGN V1", category: "Special Old Daaemortion", tags: [] },
-    { code: "TGBUL85XR", name: "New DE2", version: "OC DESIGN V1", category: "Special Old Daaemortion", tags: [] },
-
-    // ZKN ASSOCIATION
-    { code: "OP7384Y56", name: "ZKN", version: "OC DESIGN V1", category: "ZKN Association", tags: ["ZKN"] },
-    { code: "GVDZZRNDC", name: "Old ZKN", version: "OC DESIGN V1", category: "ZKN Association", tags: ["ZKN"] },
-    { code: "22LER4L41", name: "Am", version: "OC DESIGN V1", category: "ZKN Association", tags: ["ZKN"] },
-    { code: "VE98QYCEP", name: "Urticant", version: "OC DESIGN V1", category: "ZKN Association", tags: ["ZKN"] },
-    { code: "CVMFR42XT", name: "RI", version: "OC DESIGN V1", category: "ZKN Association", tags: ["ZKN"] },
-
-    // HYBRIDS EMOR ASSOCIATION
-    { code: "ZOTVPNFMV", name: "Trxt", version: "OC DESIGN V1", category: "Hybrids Emor Association", tags: [] },
-    { code: "NLLAFE8RO", name: "Mntr", version: "OC DESIGN V1", category: "Hybrids Emor Association", tags: [] },
-    { code: "29O9SHC8B", name: "JHNZZ", version: "OC DESIGN V1", category: "Hybrids Emor Association", tags: [] },
-    { code: "X7D1CKJAE", name: "CRMLD", version: "OC DESIGN V1", category: "Hybrids Emor Association", tags: [] },
-    { code: "V2NNDYJNJ", name: "FRD", version: "OC DESIGN V1", category: "Hybrids Emor Association", tags: ["Boy"] },
-    { code: "MVOICN4VU", name: "FRDGIRL", version: "OC DESIGN V1", category: "Hybrids Emor Association", tags: ["Girl"] },
-
-    // THE EPS
-    { code: "2OB9C2ZCK", name: "BEps", version: "OC DESIGN V1", category: "The EPs", tags: ["Eps"] },
-    { code: "7T77AR8HP", name: "Eps", version: "OC DESIGN V1", category: "The EPs", tags: ["Eps"] },
-    { code: "JO8F6X2YA", name: "WEps", version: "OC DESIGN V1", category: "The EPs", tags: ["Eps"] },
-    { code: "DPHKBWOSQ", name: "REps", version: "OC DESIGN V1", category: "The EPs", tags: ["Eps"] },
-    { code: "QRRBD1OYU", name: "GEps", version: "OC DESIGN V1", category: "The EPs", tags: ["Eps"] },
-    { code: "E3PEPFK7A", name: "PEps", version: "OC DESIGN V1", category: "The EPs", tags: ["Eps"] },
-    { code: "9F8SPFDT4", name: "YEps", version: "OC DESIGN V1", category: "The EPs", tags: ["Eps"] },
-    { code: "UQOCN9NHR", name: "BLUEps", version: "OC DESIGN V1", category: "The EPs", tags: ["Eps"] },
-
-    // MINEGACHA
-    { code: "UXS5ANJ7E", name: "MC DE", version: "OC DESIGN V1", category: "Minegacha", tags: ["MC"] },
-    { code: "ORCR4FK9N", name: "MC DE2", version: "OC DESIGN V1", category: "Minegacha", tags: ["MC"] },
-    { code: "OMQ66I4KX", name: "MCDEC", version: "OC DESIGN V1", category: "Minegacha", tags: ["MC"] },
-
-    // # OC DESIGN V2
-    { code: "BKPYRJQRQ", name: "Red Bro", version: "OC DESIGN V2", category: "General V2", tags: ["Bro"] },
-    { code: "WFNF8W9OP", name: "Blu", version: "OC DESIGN V2", category: "General V2", tags: [] },
-    { code: "YHYANYZWB", name: "His Feeling", version: "OC DESIGN V2", category: "General V2", tags: [] },
-    { code: "5UGGU33SS", name: "The Love He Get", version: "OC DESIGN V2", category: "General V2", tags: [] },
-    { code: "J8K2AN1AL", name: "ODE Remastered", version: "OC DESIGN V2", category: "General V2", tags: ["ODE", "Remastered"] },
-    { code: "J2P64YR7W", name: "ODE Unmastered", version: "OC DESIGN V2", category: "General V2", tags: ["ODE"] },
-    { code: "PP73PRGG9", name: "ODE2 REMASTERED", version: "OC DESIGN V2", category: "General V2", tags: ["ODE", "Remastered"] },
-    { code: "XVZF74XLI", name: "ODE3 Remastered", version: "OC DESIGN V2", category: "General V2", tags: ["ODE", "Remastered"] },
-    { code: "RS471UW6L", name: "ODE4 Remastered", version: "OC DESIGN V2", category: "General V2", tags: ["ODE", "Remastered"] },
-    { code: "T4GHUATP2", name: "Blue Sis", version: "OC DESIGN V2", category: "General V2", tags: ["Sister", "Girl"] },
-    { code: "STNQG3VHE", name: "AB", version: "OC DESIGN V2", category: "General V2", tags: [] },
-    { code: "3R7MDRXFD", name: "AG", version: "OC DESIGN V2", category: "General V2", tags: [] },
-    { code: "765N1PUKW", name: "Rid", version: "OC DESIGN V2", category: "General V2", tags: [] },
-    { code: "AEAVG8B56", name: "Le Oanxx", version: "OC DESIGN V2", category: "General V2", tags: [] },
-    { code: "MX3179WFU", name: "Black", version: "OC DESIGN V2", category: "General V2", tags: [] },
-    { code: "S7TLV1SKM", name: "Whit", version: "OC DESIGN V2", category: "General V2", tags: [] },
-    { code: "MOKDXX41F", name: "Gotl", version: "OC DESIGN V2", category: "General V2", tags: [] },
-    { code: "U79J3IE5M", name: "Gotl Bur Datket", version: "OC DESIGN V2", category: "General V2", tags: [] },
-    { code: "U6VEH9SQC", name: "idk", version: "OC DESIGN V2", category: "General V2", tags: [] },
-    { code: "63HSKN7BR", name: "TROTU", version: "OC DESIGN V2", category: "General V2", tags: [] },
-
-    // OC RANDOMIZER
-    { code: "MIAJI7QTL", name: "Futura", version: "OC DESIGN V2", category: "OC Randomizer", tags: [] },
-    { code: "6WRS8TUYJ", name: "Forestine", version: "OC DESIGN V2", category: "OC Randomizer", tags: [] },
-    { code: "FCT7QT3OT", name: "Thechaanie", version: "OC DESIGN V2", category: "OC Randomizer", tags: [] },
-    { code: "XX6RM3UUL", name: "Lithina", version: "OC DESIGN V2", category: "OC Randomizer", tags: [] },
-    { code: "DXRR8IOKU", name: "Aquatine", version: "OC DESIGN V2", category: "OC Randomizer", tags: [] },
-    { code: "GM5UFYUSN", name: "Nighteral", version: "OC DESIGN V2", category: "OC Randomizer", tags: [] },
-    { code: "FFJH2JL2E", name: "Nighteral Mythicized", version: "OC DESIGN V2", category: "OC Randomizer", tags: ["Variant"] },
-    { code: "GZGGGQYXF", name: "Lynx", version: "OC DESIGN V2", category: "OC Randomizer", tags: [] },
-    { code: "D5IEZ9D78", name: "Prismera", version: "OC DESIGN V2", category: "OC Randomizer", tags: [] },
-    { code: "YKRGIUT6Y", name: "Hellnature", version: "OC DESIGN V2", category: "OC Randomizer", tags: [] },
-    { code: "9TJ7997E5", name: "Nico", version: "OC DESIGN V2", category: "OC Randomizer", tags: [] },
-    { code: "49F7H1YEX", name: "Aria", version: "OC DESIGN V2", category: "OC Randomizer", tags: [] },
-
-    // Dynasties,Nengō OCs
-    { code: "FDC6KRBRQ", name: "Chinese District (Shui Zen Zhou)", version: "OC DESIGN V2", category: "Dynasties & Nengō", tags: ["District"] },
-    { code: "GP3FJGY2I", name: "Japanese District (Xui Jeng Lao)", version: "OC DESIGN V2", category: "Dynasties & Nengō", tags: ["District"] },
-    { code: "5B9Q5SG78", name: "Korean District (Zhong Li Pien)", version: "OC DESIGN V2", category: "Dynasties & Nengō", tags: ["District"] },
-    { code: "ZC7G4XZM6", name: "Mongolian District (Hou Zhin)", version: "OC DESIGN V2", category: "Dynasties & Nengō", tags: ["District"] },
-    { code: "LDK1JA5OB", name: "BONUS (Unnamed)", version: "OC DESIGN V2", category: "Dynasties & Nengō", tags: ["Bonus"] },
-
-    // Victorian Era OCs
-    { code: "PRVRUTJM5", name: "English District (Charles Vermont Davidson)", version: "OC DESIGN V2", category: "Victorian Era", tags: ["District"] },
-    { code: "2TFCRB7U6", name: "Irish District (Alexis Henderson VI)", version: "OC DESIGN V2", category: "Victorian Era", tags: ["District"] },
-    { code: "ZI4EB96RI", name: "Deutsch District (Josh Kheintner Hasen)", version: "OC DESIGN V2", category: "Victorian Era", tags: ["District"] },
-    { code: "RBKE1PG8M", name: "Greek District (Andover Cristopus)", version: "OC DESIGN V2", category: "Victorian Era", tags: ["District"] },
-
-    // Wild West OCs
-    { code: "OL1TIUEOT", name: "Western American District (John McHenry)", version: "OC DESIGN V2", category: "Wild West", tags: ["District"] },
-
-    // SERIAL CHARACTERS
-    { code: "OC4ZAYUIL", name: "Swift Shooter", version: "OC DESIGN V2", category: "Serial Characters", tags: [] },
-    { code: "TIP5Q6M1I", name: "Sneaky Shooter", version: "OC DESIGN V2", category: "Serial Characters", tags: [] },
-    { code: "C31DWLU3P", name: "Sharpshooter", version: "OC DESIGN V2", category: "Serial Characters", tags: [] },
-    { code: "BHXDTKHZZ", name: "Auto Girl", version: "OC DESIGN V2", category: "Serial Characters", tags: ["Girl"] },
-    { code: "RVCK4Q44I", name: "Assist", version: "OC DESIGN V2", category: "Serial Characters", tags: [] },
-    { code: "XIY8AM9N4", name: "Crystalist", version: "OC DESIGN V2", category: "Serial Characters", tags: [] },
-    { code: "NSERQBDXL", name: "AOTC", version: "OC DESIGN V2", category: "Serial Characters", tags: [] },
-    { code: "G1YTAVGUK", name: "SOC", version: "OC DESIGN V2", category: "Serial Characters", tags: [] },
-    { code: "3CWWZRQJE", name: "SPOC", version: "OC DESIGN V2", category: "Serial Characters", tags: [] },
-    { code: "TSUFLVJJ4", name: "No Pose (1)", version: "OC DESIGN V2", category: "Serial Characters", tags: ["No Pose"] },
-    { code: "GM757ES28", name: "GOTC", version: "OC DESIGN V2", category: "Serial Characters", tags: [] },
-    { code: "XQUBK4TG1", name: "AOTS", version: "OC DESIGN V2", category: "Serial Characters", tags: [] },
-    { code: "T18W77IK8", name: "No Pose (2)", version: "OC DESIGN V2", category: "Serial Characters", tags: ["No Pose"] },
-    { code: "8XXENAV6Z", name: "TiiW", version: "OC DESIGN V2", category: "Serial Characters", tags: [] },
-    { code: "UPP9PWGRH", name: "SE", version: "OC DESIGN V2", category: "Serial Characters", tags: [] },
-    { code: "Y5CPG95U6", name: "TOK", version: "OC DESIGN V2", category: "Serial Characters", tags: [] },
-    { code: "88IPR85AQ", name: "HK", version: "OC DESIGN V2", category: "Serial Characters", tags: [] },
-    { code: "BYK6ELGBV", name: "Demoniac", version: "OC DESIGN V2", category: "Serial Characters", tags: [] },
-    { code: "WNEWSANOF", name: "No Pose (3)", version: "OC DESIGN V2", category: "Serial Characters", tags: ["No Pose"] },
-    { code: "SNMSVWE7E", name: "TSH", version: "OC DESIGN V2", category: "Serial Characters", tags: [] },
-    { code: "A2CGDLK68", name: "TOTDH", version: "OC DESIGN V2", category: "Serial Characters", tags: [] },
-    { code: "SHR8SQYW4", name: "TSM", version: "OC DESIGN V2", category: "Serial Characters", tags: [] },
-    { code: "W9O5TEGJ7", name: "TDK", version: "OC DESIGN V2", category: "Serial Characters", tags: [] },
-    { code: "LW1DDYVHN", name: "No Pose (4)", version: "OC DESIGN V2", category: "Serial Characters", tags: ["No Pose"] },
-    { code: "AA2IB8BYY", name: "AW", version: "OC DESIGN V2", category: "Serial Characters", tags: [] },
-    { code: "IHPZUNHR5", name: "KB", version: "OC DESIGN V2", category: "Serial Characters", tags: [] },
-    { code: "PDZ1RVK21", name: "LSJ", version: "OC DESIGN V2", category: "Serial Characters", tags: [] },
-    { code: "D9734O52L", name: "LSN", version: "OC DESIGN V2", category: "Serial Characters", tags: [] },
-    { code: "CPNF4J2PW", name: "Qis", version: "OC DESIGN V2", category: "Serial Characters", tags: [] },
-
-    // # OC DESIGN V3
     { code: "P1QGN3E1S", name: "OC Test Boy", version: "OC DESIGN V3", category: "Base Tests V3", tags: ["Boy", "Test OC"] },
-    { code: "MRVWMLZHU", name: "OC Test Girl", version: "OC DESIGN V3", category: "Base Tests V3", tags: ["Girl", "Test OC"] },
-
-    // RANDOM COMEDY
-    { code: "KLC8ZT89E", name: "OC Test Boy 2 (David)", version: "OC DESIGN V3", category: "Random Comedy", tags: ["Boy", "Test OC"] },
-    { code: "TICD7UZV6", name: "David (Winter)", version: "OC DESIGN V3", category: "Random Comedy", tags: ["Winter", "Outfit Variant"] },
-    { code: "U579EHOWJ", name: "David (Casual)", version: "OC DESIGN V3", category: "Random Comedy", tags: ["Casual", "Outfit Variant"] },
-    { code: "SODJ4SN9U", name: "David (Summer)", version: "OC DESIGN V3", category: "Random Comedy", tags: ["Summer", "Outfit Variant"] },
-    { code: "JRQ187QUG", name: "OC Test Girl 2 (Sandra)", version: "OC DESIGN V3", category: "Random Comedy", tags: ["Girl", "Test OC"] },
-    { code: "YEYH8A2BO", name: "Sandra (Winter)", version: "OC DESIGN V3", category: "Random Comedy", tags: ["Winter", "Outfit Variant"] },
-    { code: "OKKBPCRAG", name: "(Carl/Ayden)", version: "OC DESIGN V3", category: "Random Comedy", tags: [] },
-    { code: "ZCYLBCMIY", name: "Carl/Ayden (Winter)", version: "OC DESIGN V3", category: "Random Comedy", tags: ["Winter", "Outfit Variant"] },
-    { code: "B5QCXSVI8", name: "(Amanda)", version: "OC DESIGN V3", category: "Random Comedy", tags: ["Girl"] },
-    { code: "YKK2UVNCY", name: "Amanda (Winter)", version: "OC DESIGN V3", category: "Random Comedy", tags: ["Winter", "Outfit Variant"] },
-    { code: "DIQPCNM3M", name: "(Simeone)", version: "OC DESIGN V3", category: "Random Comedy", tags: [] },
-    { code: "ECN9ESTE1", name: "Simeone (Winter)", version: "OC DESIGN V3", category: "Random Comedy", tags: ["Winter", "Outfit Variant"] },
-    { code: "ECVD6P3WQ", name: "(T.Maria)", version: "OC DESIGN V3", category: "Random Comedy", tags: ["Girl"] },
-    { code: "1MGRJ9EG7", name: "Clothing Model 1", version: "OC DESIGN V3", category: "Random Comedy", tags: ["Clothing Model"] },
-    { code: "DBF2AUMZW", name: "Clothing Model 2", version: "OC DESIGN V3", category: "Random Comedy", tags: ["Clothing Model"] },
-    { code: "P56F6OVFT", name: "Clothing Model 2 (Winter)", version: "OC DESIGN V3", category: "Random Comedy", tags: ["Winter", "Clothing Model"] },
-    { code: "9D5EXQPDO", name: "Clothing Model 3", version: "OC DESIGN V3", category: "Random Comedy", tags: ["Clothing Model"] },
-    { code: "ECATHVF7D", name: "(Shou)", version: "OC DESIGN V3", category: "Random Comedy", tags: [] },
-    { code: "KMBPKG4XF", name: "Shou (Winter)", version: "OC DESIGN V3", category: "Random Comedy", tags: ["Winter", "Outfit Variant"] },
-    { code: "42ZUYGTDJ", name: "Shou (Casual)", version: "OC DESIGN V3", category: "Random Comedy", tags: ["Casual", "Outfit Variant"] },
-    { code: "39STBYU4K", name: "(Alice)", version: "OC DESIGN V3", category: "Random Comedy", tags: ["Girl"] },
-    { code: "IBVRR55QS", name: "Alice (Winter)", version: "OC DESIGN V3", category: "Random Comedy", tags: ["Winter", "Outfit Variant"] },
-    { code: "7QX45163Y", name: "(Jimmy)", version: "OC DESIGN V3", category: "Random Comedy", tags: ["Boy"] },
-    { code: "FMKJ6QZVZ", name: "Jimmy (Winter)", version: "OC DESIGN V3", category: "Random Comedy", tags: ["Winter", "Outfit Variant"] },
-    { code: "93SM3BKUC", name: "(Ethan)", version: "OC DESIGN V3", category: "Random Comedy", tags: ["Boy"] },
-    { code: "HL7SGYPV4", name: "Ethan (Winter)", version: "OC DESIGN V3", category: "Random Comedy", tags: ["Winter", "Outfit Variant"] },
-    { code: "JZTAU61MY", name: "(Candice)", version: "OC DESIGN V3", category: "Random Comedy", tags: ["Girl"] },
-    { code: "VEI7S6X8U", name: "Clothing Model 2 (Candice)", version: "OC DESIGN V3", category: "Random Comedy", tags: ["Clothing Model"] },
-    { code: "TRDLK5ZBS", name: "Candice (Winter)", version: "OC DESIGN V3", category: "Random Comedy", tags: ["Winter", "Outfit Variant"] },
-    { code: "JM2DKQ5FZ", name: "Candice (Blackout Fit)", version: "OC DESIGN V3", category: "Random Comedy", tags: ["Outfit Variant"] },
-    { code: "QN9IHZQ2O", name: "(Luna)", version: "OC DESIGN V3", category: "Random Comedy", tags: ["Girl"] },
-    { code: "HVHM6DTFT", name: "Luna (Skating)", version: "OC DESIGN V3", category: "Random Comedy", tags: ["Outfit Variant"] },
-    { code: "S4KT2P3MC", name: "Luna (Blackout Fit)", version: "OC DESIGN V3", category: "Random Comedy", tags: ["Outfit Variant"] },
-    { code: "TPND5I942", name: "(Mr. Mitchell)", version: "OC DESIGN V3", category: "Random Comedy", tags: [] },
-    { code: "4AXSGTR3L", name: "(Garry)", version: "OC DESIGN V3", category: "Random Comedy", tags: [] },
-    { code: "EF9EVCFJ8", name: "(Samantha)", version: "OC DESIGN V3", category: "Random Comedy", tags: ["Girl"] },
-    { code: "5W44PJ8HS", name: "OC Test 3 (Alan)", version: "OC DESIGN V3", category: "Random Comedy", tags: ["Test OC"] },
-    { code: "NQKLUIHTI", name: "OC Test 4 (Ane)", version: "OC DESIGN V3", category: "Random Comedy", tags: ["Test OC"] },
-    { code: "Q37HYM6SL", name: "OC Test 5 (Andy)", version: "OC DESIGN V3", category: "Random Comedy", tags: ["Test OC"] },
-    { code: "7L5WLF2QQ", name: "Andy (Sleepy)", version: "OC DESIGN V3", category: "Random Comedy", tags: ["Outfit Variant"] },
-    { code: "GG9VYBD25", name: "Andy (Winter)", version: "OC DESIGN V3", category: "Random Comedy", tags: ["Winter", "Outfit Variant"] },
-    { code: "D2LO8Q4ZC", name: "Andy (Explicit)", version: "OC DESIGN V3", category: "Random Comedy", tags: ["Outfit Variant"] },
-    { code: "8J836J793", name: "Andy (Pirate Cosplay)", version: "OC DESIGN V3", category: "Random Comedy", tags: ["Cosplay", "Outfit Variant"] },
-    { code: "GH4M4SR73", name: "Emi's Clothing", version: "OC DESIGN V3", category: "Random Comedy", tags: ["Clothing Model"] },
-    { code: "CO82ULIBJ", name: "OC Test 6 (Emi)", version: "OC DESIGN V3", category: "Random Comedy", tags: ["Test OC", "Girl"] },
-    { code: "3GZTNWG2A", name: "Emi (Sleepy)", version: "OC DESIGN V3", category: "Random Comedy", tags: ["Outfit Variant"] },
-    { code: "7CYX2Q9OM", name: "Emi (Style 2)", version: "OC DESIGN V3", category: "Random Comedy", tags: ["Outfit Variant"] },
-    { code: "8JKE1CJK9", name: "Emi (Winter)", version: "OC DESIGN V3", category: "Random Comedy", tags: ["Winter", "Outfit Variant"] },
-    { code: "ASJZ5AYID", name: "Emi (Explicit)", version: "OC DESIGN V3", category: "Random Comedy", tags: ["Outfit Variant"] },
-    { code: "S9C9N7XRK", name: "Emi (Pirate Cosplay)", version: "OC DESIGN V3", category: "Random Comedy", tags: ["Cosplay", "Outfit Variant"] },
-    { code: "Q4DPKDZOY", name: "Andy's Clothing", version: "OC DESIGN V3", category: "Random Comedy", tags: ["Clothing Model"] },
-    { code: "WQK252K8S", name: "OC Test 7 (Ivan)", version: "OC DESIGN V3", category: "Random Comedy", tags: ["Test OC"] },
-    { code: "OT6Y1LTZG", name: "OC Test 8 (Katie)", version: "OC DESIGN V3", category: "Random Comedy", tags: ["Test OC", "Girl"] },
-    { code: "IHPPZYN87", name: "OC Test 9 (Taylor)", version: "OC DESIGN V3", category: "Random Comedy", tags: ["Test OC"] },
-    { code: "JRUS21BZZ", name: "Genderbend (Andrea)", version: "OC DESIGN V3", category: "Random Comedy", tags: ["Genderbend"] },
-    { code: "NT1FWOWJL", name: "Genderbend 2 (Eldy)", version: "OC DESIGN V3", category: "Random Comedy", tags: ["Genderbend"] },
-
-    // MALAY SERIES V3
-    { code: "FKDILLOEU", name: "Malay (Rizah)", version: "OC DESIGN V3", category: "Malay Series", tags: ["Malay"] },
-    { code: "NO25U5SNE", name: "Rizah (Malay Festival)", version: "OC DESIGN V3", category: "Malay Series", tags: ["Malay", "Festival"] },
-    { code: "SY9A4BYJ2", name: "Malay2 (Amarul)", version: "OC DESIGN V3", category: "Malay Series", tags: ["Malay"] },
-    { code: "27XJRV6SC", name: "Amarul (Malay Festival)", version: "OC DESIGN V3", category: "Malay Series", tags: ["Malay", "Festival"] },
-    { code: "MPDEHB8AU", name: "Malay3 (Liana)", version: "OC DESIGN V3", category: "Malay Series", tags: ["Malay", "Girl"] },
-    { code: "33SXRZYEH", name: "Liana (Malay Festival)", version: "OC DESIGN V3", category: "Malay Series", tags: ["Malay", "Festival"] },
-    { code: "V3QQ2YBAD", name: "Malay4 (Zui)", version: "OC DESIGN V3", category: "Malay Series", tags: ["Malay"] },
-    { code: "J93XDPRSZ", name: "Zui (Malay Festival)", version: "OC DESIGN V3", category: "Malay Series", tags: ["Malay", "Festival"] },
-    { code: "5QBBBDGNM", name: "Malay5 (Rami)", version: "OC DESIGN V3", category: "Malay Series", tags: ["Malay"] },
-    { code: "QOUEH2G9V", name: "Rami (Malay Festival)", version: "OC DESIGN V3", category: "Malay Series", tags: ["Malay", "Festival"] },
-    { code: "MZRL9FZGL", name: "Malay6 (Burhan)", version: "OC DESIGN V3", category: "Malay Series", tags: ["Malay"] },
-    { code: "ZHU1EF55G", name: "Burhan (Malay Festival)", version: "OC DESIGN V3", category: "Malay Series", tags: ["Malay", "Festival"] },
-    { code: "NPTDNW1ND", name: "Malay7 (Ninda)", version: "OC DESIGN V3", category: "Malay Series", tags: ["Malay", "Girl"] },
-    { code: "HIV2E67VD", name: "Ninda (Malay Festival)", version: "OC DESIGN V3", category: "Malay Series", tags: ["Malay", "Festival"] },
-    { code: "6RZ1GK9SK", name: "Malay8 (Nana)", version: "OC DESIGN V3", category: "Malay Series", tags: ["Malay", "Girl"] },
-    { code: "CXCB6C8GC", name: "Nana (Malay Festival)", version: "OC DESIGN V3", category: "Malay Series", tags: ["Malay", "Festival"] },
-    { code: "TNGV3DIZG", name: "Malay9 (Kairi)", version: "OC DESIGN V3", category: "Malay Series", tags: ["Malay"] },
-    { code: "K3IPK96UK", name: "Kairi (Malay Festival)", version: "OC DESIGN V3", category: "Malay Series", tags: ["Malay", "Festival"] },
-    { code: "2OEFNUTKM", name: "Malay 10 (Aqib)", version: "OC DESIGN V3", category: "Malay Series", tags: ["Malay"] },
-    { code: "PN8FT6CVO", name: "Aqib (Malay Festival)", version: "OC DESIGN V3", category: "Malay Series", tags: ["Malay", "Festival"] },
-
-    // PSYCHEDELIC ERA
-    { code: "6WN1UNILB", name: "BAM (Dissappearance)", version: "OC DESIGN V3", category: "Psychedelic Era", tags: ["BAM", "Lore"] },
-    { code: "1HPMRTU98", name: "BAM (Dissappearance in the day)", version: "OC DESIGN V3", category: "Psychedelic Era", tags: ["BAM", "Lore"] },
-    { code: "HGQ8Y4JQZ", name: "BAM (Dissappearance when The One is a child)", version: "OC DESIGN V3", category: "Psychedelic Era", tags: ["BAM", "Lore"] },
-    { code: "S33V4RMFI", name: "BAMFB (Dissappearance facing back)", version: "OC DESIGN V3", category: "Psychedelic Era", tags: ["BAM", "Lore"] },
-    { code: "YO6FXZK9A", name: "BAMBIIWAG (Fadenesses)", version: "OC DESIGN V3", category: "Psychedelic Era", tags: ["BAM", "Lore"] },
-    { code: "PXJY8EER4", name: "BAM (Reappearance)", version: "OC DESIGN V3", category: "Psychedelic Era", tags: ["BAM", "Lore"] },
-    { code: "S87YX4ZEK", name: "BAMFB (Reappearance Facing Back)", version: "OC DESIGN V3", category: "Psychedelic Era", tags: ["BAM", "Lore"] },
-    { code: "4ZTSC5FAR", name: "BAM (TTD)", version: "OC DESIGN V3", category: "Psychedelic Era", tags: ["BAM", "Lore"] },
-    { code: "SQKH8O6U3", name: "BAM2 (Madman)", version: "OC DESIGN V3", category: "Psychedelic Era", tags: ["BAM", "Lore"] },
-    { code: "BJ1H2IQAA", name: "BAM3 (Rage)", version: "OC DESIGN V3", category: "Psychedelic Era", tags: ["BAM", "Lore"] },
-    { code: "UDX9RSVZG", name: "VAVOH (Hallucination)", version: "OC DESIGN V3", category: "Psychedelic Era", tags: ["Lore"] },
-    { code: "SZFOQOZ5A", name: "BAM4 (Doubtness)", version: "OC DESIGN V3", category: "Psychedelic Era", tags: ["BAM", "Lore"] },
-    { code: "CYVG8Z5RB", name: "BAM 5 (Nothingness)", version: "OC DESIGN V3", category: "Psychedelic Era", tags: ["BAM", "Lore"] },
-    { code: "9HSOVOSFF", name: "NSAM (Hope)", version: "OC DESIGN V3", category: "Psychedelic Era", tags: ["Lore"] },
-    { code: "A434YQ2MM", name: "MeLa (Feels)", version: "OC DESIGN V3", category: "Psychedelic Era", tags: ["Lore"] },
-    { code: "MVT91XJ94", name: "YLime (Emi's Lore Side)", version: "OC DESIGN V3", category: "Psychedelic Era", tags: ["Lore"] },
-    { code: "CWR1RC4MO", name: "WerDna (Andy's Lore Side)", version: "OC DESIGN V3", category: "Psychedelic Era", tags: ["Lore"] },
-    { code: "6PGB1NO1Y", name: "(VAVOH2)", version: "OC DESIGN V3", category: "Psychedelic Era", tags: ["Lore"] },
-
-    // OTHER GAME INSPO
-    { code: "INQKWYFXO", name: "Roblox", version: "OC DESIGN V3", category: "Other Game Inspo", tags: ["Inspo"] },
-    { code: "CASSCGX7A", name: "Roblox Girl ver", version: "OC DESIGN V3", category: "Other Game Inspo", tags: ["Inspo", "Girl"] },
-    { code: "D666WX43Q", name: "Roblox Red", version: "OC DESIGN V3", category: "Other Game Inspo", tags: ["Inspo"] },
-    { code: "5F7XHE83C", name: "Minecraft", version: "OC DESIGN V3", category: "Other Game Inspo", tags: ["Inspo"] },
-    { code: "YG4SWQ8XL", name: "Minecraft (Redesign)", version: "OC DESIGN V3", category: "Other Game Inspo", tags: ["Inspo", "Redesign"] },
-
-    // MISCELLANEOUS 2
-    { code: "6TRFMNLTW", name: "A Very Terrible Chicken", version: "OC DESIGN V3", category: "Miscellaneous 2", tags: ["Meme"] },
-    { code: "3LZ3BF2EV", name: "😭🙏", version: "OC DESIGN V3", category: "Miscellaneous 2", tags: ["Meme"] },
-    { code: "XK4H1FT9W", name: "drooling", version: "OC DESIGN V3", category: "Miscellaneous 2", tags: ["Meme"] },
-    { code: "E1WWPF96I", name: "😝", version: "OC DESIGN V3", category: "Miscellaneous 2", tags: ["Meme"] },
-    { code: "M8MPPMVYT", name: "A Very Terrifying Cow", version: "OC DESIGN V3", category: "Miscellaneous 2", tags: ["Meme"] },
-    { code: "I3NFBH1P6", name: "No Name Brand", version: "OC DESIGN V3", category: "Miscellaneous 2", tags: [] },
-
-    // SELF OC'S REDESIGNS
-    { code: "P4KTGCM98", name: "La Futura", version: "OC DESIGN V3", category: "Self OC's Redesigns", tags: ["Redesign"] },
-    { code: "3ALGOOJQJ", name: "Thechaanie", version: "OC DESIGN V3", category: "Self OC's Redesigns", tags: ["Redesign"] },
-    { code: "SRZXZEO7K", name: "Lithina", version: "OC DESIGN V3", category: "Self OC's Redesigns", tags: ["Redesign"] },
-    { code: "QQDVDALP4", name: "Nico", version: "OC DESIGN V3", category: "Self OC's Redesigns", tags: ["Redesign"] },
-    { code: "GURMZ3D11", name: "Aria Metropolis", version: "OC DESIGN V3", category: "Self OC's Redesigns", tags: ["Redesign"] },
-    { code: "K64399BZU", name: "Hou Xuai", version: "OC DESIGN V3", category: "Self OC's Redesigns", tags: ["Redesign"] },
-    { code: "2QTD3ZM5V", name: "Zhong Li Xuan", version: "OC DESIGN V3", category: "Self OC's Redesigns", tags: ["Redesign"] },
-    { code: "6CWUPQJ2V", name: "Shui Zen Xien", version: "OC DESIGN V3", category: "Self OC's Redesigns", tags: ["Redesign"] },
-    { code: "1N5L1B3TW", name: "DZM Boy", version: "OC DESIGN V3", category: "Self OC's Redesigns", tags: ["Redesign", "Boy"] },
-    { code: "MPDK6MGGO", name: "Reddish DZM Boy", version: "OC DESIGN V3", category: "Self OC's Redesigns", tags: ["Redesign", "Boy"] },
-    { code: "PZTSQWZHK", name: "Blonde Boy", version: "OC DESIGN V3", category: "Self OC's Redesigns", tags: ["Redesign", "Boy"] },
-    { code: "ENQGHZ2KN", name: "His Friend Boy", version: "OC DESIGN V3", category: "Self OC's Redesigns", tags: ["Redesign", "Boy"] },
-    { code: "45EIC5QAQ", name: "Ginger Boy", version: "OC DESIGN V3", category: "Self OC's Redesigns", tags: ["Redesign", "Boy"] },
-    { code: "9LJBTZ6C6", name: "Quack Boy", version: "OC DESIGN V3", category: "Self OC's Redesigns", tags: ["Redesign", "Boy"] },
-    { code: "R3RORDONB", name: "Aquatica Boy", version: "OC DESIGN V3", category: "Self OC's Redesigns", tags: ["Redesign", "Boy"] },
-    { code: "SHZK6V5FA", name: "Girl", version: "OC DESIGN V3", category: "Self OC's Redesigns", tags: ["Redesign", "Girl"] },
-    { code: "JWHYWZVVC", name: "Boy Boy", version: "OC DESIGN V3", category: "Self OC's Redesigns", tags: ["Redesign", "Boy"] },
-
-    // V3 UNNAMED & OTHER CHARACTERS
-    { code: "DQNGDXP53", name: "Vex", version: "OC DESIGN V3", category: "13 OCs Group", tags: [] },
-    { code: "99HWW9S3S", name: "Xira", version: "OC DESIGN V3", category: "13 OCs Group", tags: [] },
-    { code: "BQUPOC4L1", name: "Vin", version: "OC DESIGN V3", category: "13 OCs Group", tags: [] },
-    { code: "R8JLA42PL", name: "Han", version: "OC DESIGN V3", category: "13 OCs Group", tags: [] },
-    { code: "GR9YJ6WNS", name: "Alex", version: "OC DESIGN V3", category: "13 OCs Group", tags: [] },
-    { code: "AMQ38Y7B2", name: "Alex young", version: "OC DESIGN V3", category: "13 OCs Group", tags: ["Variant"] },
-    { code: "EGKENPXDS", name: "(Unnamed 13 OC)", version: "OC DESIGN V3", category: "13 OCs Group", tags: [] },
-    { code: "QIMQ15V2P", name: "Toni", version: "OC DESIGN V3", category: "13 OCs Group", tags: [] },
-    { code: "1YEIWVB4E", name: "Toni young", version: "OC DESIGN V3", category: "13 OCs Group", tags: ["Variant"] },
-    { code: "IINQDU6NO", name: "Toni Seeing sum", version: "OC DESIGN V3", category: "13 OCs Group", tags: ["Variant"] },
-    { code: "H9V4S2NG1", name: "Joe", version: "OC DESIGN V3", category: "13 OCs Group", tags: [] },
-    { code: "UTDKK5UPA", name: "Janny", version: "OC DESIGN V3", category: "13 OCs Group", tags: [] },
-    { code: "L9K21EMYH", name: "Talia", version: "OC DESIGN V3", category: "13 OCs Group", tags: [] },
-    { code: "HBZLMGTNV", name: "Talia young", version: "OC DESIGN V3", category: "13 OCs Group", tags: ["Variant"] },
-    { code: "LWUXCXSEE", name: "Talia if she has no trauma", version: "OC DESIGN V3", category: "13 OCs Group", tags: ["Variant"] },
-    { code: "DC4R5C8BI", name: "Jones", version: "OC DESIGN V3", category: "13 OCs Group", tags: [] },
-    { code: "LL6HM1LCB", name: "Warrens", version: "OC DESIGN V3", category: "13 OCs Group", tags: [] },
-    { code: "3JO4ZFNXJ", name: "Nelsen", version: "OC DESIGN V3", category: "13 OCs Group", tags: [] },
-    { code: "3F6EPGDFB", name: "Kristine", version: "OC DESIGN V3", category: "13 OCs Group", tags: ["Girl"] },
-    { code: "FR8IFFUIK", name: "Adelea", version: "OC DESIGN V3", category: "13 OCs Group", tags: ["Girl"] },
-    { code: "3REZO1GMZ", name: "Secret Agent", version: "OC DESIGN V3", category: "13 OCs Group", tags: [] },
-    { code: "WOGBHC6TT", name: "Secret Agent 2", version: "OC DESIGN V3", category: "13 OCs Group", tags: [] },
-
-    // # OC DESIGN V4
-    { code: "C6MZ47RRH", name: "Sona", version: "OC DESIGN V4", category: "Main V4", tags: [] },
-    { code: "VEI2X1T1H", name: "Kazu", version: "OC DESIGN V4", category: "Main V4", tags: [] },
-    { code: "KF84Z3OIY", name: "Mata", version: "OC DESIGN V4", category: "Main V4", tags: [] },
-    { code: "2NBGBPERN", name: "Scorpie", version: "OC DESIGN V4", category: "Main V4", tags: [] },
-    { code: "ZZEZQQ4BP", name: "Senji", version: "OC DESIGN V4", category: "Main V4", tags: [] },
-
-    // CHIBIS
-    { code: "9YD6JER8E", name: "emili", version: "OC DESIGN V4", category: "Chibis", tags: ["Chibi"] },
-    { code: "ST2SSRQV1", name: "endi", version: "OC DESIGN V4", category: "Chibis", tags: ["Chibi"] },
-    { code: "WZMTRMH2A", name: "amend", version: "OC DESIGN V4", category: "Chibis", tags: ["Chibi"] },
-    { code: "N2OU89KEN", name: "car", version: "OC DESIGN V4", category: "Chibis", tags: ["Chibi"] },
-    { code: "6V2XTEDZ3", name: "toe knee", version: "OC DESIGN V4", category: "Chibis", tags: ["Chibi"] },
-    { code: "5NSPLW491", name: "tally uhhh", version: "OC DESIGN V4", category: "Chibis", tags: ["Chibi"] },
-    { code: "O36S8UAK8", name: "awlexa", version: "OC DESIGN V4", category: "Chibis", tags: ["Chibi"] },
-    { code: "19HDHKXFL", name: "nexiraw", version: "OC DESIGN V4", category: "Chibis", tags: ["Chibi"] },
-    { code: "43M3T8I12", name: "Vase", version: "OC DESIGN V4", category: "Chibis", tags: ["Chibi"] },
-    { code: "HUEV5ZZ7F", name: "Dis", version: "OC DESIGN V4", category: "Chibis", tags: ["Chibi"] },
-    { code: "RIXEP7YTZ", name: "lil fan", version: "OC DESIGN V4", category: "Chibis", tags: ["Chibi"] },
-
-    // MISCELLANEOUS (V2/V3 additions)
-    { code: "4IPVGUEX5", name: "BM", version: "OC DESIGN V2", category: "Miscellaneous", tags: [] },
-    { code: "N24V2SHE4", name: "Svvlst", version: "OC DESIGN V2", category: "Miscellaneous", tags: [] },
-    { code: "RAIN8VCEI", name: "Wrwolf", version: "OC DESIGN V2", category: "Miscellaneous", tags: [] },
-    { code: "7CX7EHAJ5", name: "THE DUO", version: "OC DESIGN V2", category: "Miscellaneous", tags: [] },
-    { code: "K6VPV668B", name: "THE DUO (boy ver)", version: "OC DESIGN V2", category: "Miscellaneous", tags: ["Boy"] },
-    { code: "B5EY8VFNE", name: "EL LÌDER", version: "OC DESIGN V2", category: "Miscellaneous", tags: [] },
-    { code: "CQGSE8JTK", name: "EL LÌDER (boy ver)", version: "OC DESIGN V2", category: "Miscellaneous", tags: ["Boy"] },
-    { code: "PCBJG3KPH", name: "SUITED", version: "OC DESIGN V2", category: "Miscellaneous", tags: [] },
-    { code: "P7D78978M", name: "SUITED (boy ver)", version: "OC DESIGN V2", category: "Miscellaneous", tags: ["Boy"] },
-    { code: "RUEC9TEZM", name: "sum", version: "OC DESIGN V3", category: "Miscellaneous", tags: [] },
-    { code: "BNHPGHNKA", name: "sum2", version: "OC DESIGN V3", category: "Miscellaneous", tags: [] },
-    { code: "GUZBHGAKV", name: "sum3", version: "OC DESIGN V3", category: "Miscellaneous", tags: [] },
-    { code: "9MHNMVGNO", name: "hypnoxia", version: "OC DESIGN V3", category: "Miscellaneous", tags: [] },
-    { code: "ZDOL7DVB2", name: "the ceo", version: "OC DESIGN V3", category: "Miscellaneous", tags: [] },
-    { code: "76Z8PWCYO", name: "iridescentlight", version: "OC DESIGN V3", category: "Miscellaneous", tags: [] },
-
-    // PEOPLE'S CREATION - Ampersandy's Creation
-    { code: "FIRV7S8JN", name: "Molly", version: "OC DESIGN V4", category: "Ampersandy's Creation", tags: ["People's Creation"] },
-    { code: "QLUZEXG6F", name: "Safiya", version: "OC DESIGN V4", category: "Ampersandy's Creation", tags: ["People's Creation"] },
-    { code: "KGVID39FT", name: "(Ampersandy Creation 3)", version: "OC DESIGN V4", category: "Ampersandy's Creation", tags: ["People's Creation"] },
-    { code: "7RGCDUYPR", name: "(Ampersandy Creation 4)", version: "OC DESIGN V4", category: "Ampersandy's Creation", tags: ["People's Creation"] },
-    { code: "IX1HLGDIJ", name: "(Ampersandy Creation 5)", version: "OC DESIGN V4", category: "Ampersandy's Creation", tags: ["People's Creation"] },
-    { code: "6LPKPUAU8", name: "(Ampersandy Creation 6)", version: "OC DESIGN V4", category: "Ampersandy's Creation", tags: ["People's Creation"] },
-    { code: "K9MV3GQ9E", name: "(Ampersandy Creation 7)", version: "OC DESIGN V4", category: "Ampersandy's Creation", tags: ["People's Creation"] },
-    { code: "F4TR8TCUR", name: "Chibi (Ampersandy)", version: "OC DESIGN V4", category: "Ampersandy's Creation", tags: ["People's Creation", "Chibi"] },
-    { code: "S2W6Y8FDS", name: "Redesign (Ampersandy)", version: "OC DESIGN V4", category: "Ampersandy's Creation", tags: ["People's Creation", "Redesign"] },
-    { code: "FMNVT8BIG", name: "Cassie", version: "OC DESIGN V4", category: "Ampersandy's Creation", tags: ["People's Creation"] },
-
-    // Gang's Redesigns (Klyde Santos)
-    { code: "XR7S8TIAG", name: "Dissappearance / Alan / ODE1 / ODE2", version: "OC DESIGN V4", category: "Gang's Redesigns", tags: ["Klyde Santos", "Redesign"] },
-    { code: "LXMRKLXES", name: "Dissappearance / Alan / ODE1 / ODE2", version: "OC DESIGN V4", category: "Gang's Redesigns", tags: ["Klyde Santos", "Redesign"] },
-    { code: "LFL7D34W2", name: "Dissappearance / Alan / ODE1 / ODE2", version: "OC DESIGN V4", category: "Gang's Redesigns", tags: ["Klyde Santos", "Redesign"] },
-    { code: "1NIYX8JYW", name: "Dissappearance / Alan / ODE1 / ODE2", version: "OC DESIGN V4", category: "Gang's Redesigns", tags: ["Klyde Santos", "Redesign"] },
-    { code: "INH2NWFC7", name: "Hannah Outfits - Sam Kay Ling", version: "OC DESIGN V4", category: "Gang's Redesigns", tags: ["Redesign", "Outfit"] },
-
-    // Gang Redesigns
-    { code: "GV6L52VAM", name: "Akeshie", version: "OC DESIGN V4", category: "Gang Redesigns", tags: ["Redesign"] },
-    { code: "4LHZZ71GU", name: "#1", version: "OC DESIGN V4", category: "Gang Redesigns", tags: ["Redesign"] },
-    { code: "363DY5OWB", name: "#2", version: "OC DESIGN V4", category: "Gang Redesigns", tags: ["Redesign"] },
-    { code: "ZN9FTRGHK", name: "#3", version: "OC DESIGN V4", category: "Gang Redesigns", tags: ["Redesign"] },
-    { code: "Z1LNVUXXB", name: "#4", version: "OC DESIGN V4", category: "Gang Redesigns", tags: ["Redesign"] },
-    { code: "FB17RGOTZ", name: "#5", version: "OC DESIGN V4", category: "Gang Redesigns", tags: ["Redesign"] },
-    { code: "HU8ZE3UE8", name: "Leone Dominic Simat (Amelia Chibi ver)", version: "OC DESIGN V4", category: "Gang Redesigns", tags: ["Redesign", "Chibi"] },
-    { code: "7832ZLQMW", name: "Leone Dominic Simat (Amelia)", version: "OC DESIGN V4", category: "Gang Redesigns", tags: ["Redesign"] },
-    { code: "FKKQOOHTT", name: "#7", version: "OC DESIGN V4", category: "Gang Redesigns", tags: ["Redesign"] },
-    { code: "O4VV7P3RO", name: "#8", version: "OC DESIGN V4", category: "Gang Redesigns", tags: ["Redesign"] },
-    { code: "YBRYMYN27", name: "#9", version: "OC DESIGN V4", category: "Gang Redesigns", tags: ["Redesign"] }
+    { code: "C6MZ47RRH", name: "Sona", version: "OC DESIGN V4", category: "Main V4", tags: [] }
 ];
 
     // App State Management (Stored locally in Browser)
     let ocs = JSON.parse(localStorage.getItem("gacha_ocs")) || rawData;
     let editingIndex = null;
+    let uploadedImageDataUrl = "";
 
     // Elements
     const ocGrid = document.getElementById("ocGrid");
@@ -783,76 +428,97 @@
     const tagFilter = document.getElementById("tagFilter");
     const statsDisplay = document.getElementById("statsDisplay");
 
+    // Toggle Header
+    function toggleHeaderControls() {
+        const content = document.getElementById("controlsContent");
+        const btn = document.getElementById("toggleHeaderBtn");
+        content.classList.toggle("collapsed");
+        if (content.classList.contains("collapsed")) {
+            btn.textContent = "Unfold Menu 🔽";
+        } else {
+            btn.textContent = "Fold Menu 🔼";
+        }
+    }
+
+    // Handle File Upload
+    function handleFileUpload(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                uploadedImageDataUrl = e.target.result;
+                document.getElementById("inputImage").value = "";
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+
     // Populate Filters Dynamically
     function updateDropdowns() {
-    // Store current selections before resetting HTML
-    const currentCat = categoryFilter.value;
-    const currentVer = versionFilter.value;
-    const currentTag = tagFilter.value;
+        const currentCat = categoryFilter.value;
+        const currentVer = versionFilter.value;
+        const currentTag = tagFilter.value;
 
-    const categories = [...new Set(ocs.map(o => o.category).filter(Boolean))].sort();
-    const tags = [...new Set(ocs.flatMap(o => o.tags).filter(Boolean))].sort();
-    const versions = [...new Set(ocs.map(o => o.version).filter(Boolean))].sort();
+        const categories = [...new Set(ocs.map(o => o.category).filter(Boolean))].sort();
+        const tags = [...new Set(ocs.flatMap(o => o.tags).filter(Boolean))].sort();
+        const versions = [...new Set(ocs.map(o => o.version).filter(Boolean))].sort();
 
-    // Populate Filter Dropdowns
-    categoryFilter.innerHTML = '<option value="ALL">All Categories</option>' + 
-        categories.map(c => `<option value="${c}">${c}</option>`).join('');
+        categoryFilter.innerHTML = '<option value="ALL">All Categories</option>' + 
+            categories.map(c => `<option value="${c}">${c}</option>`).join('');
 
-    tagFilter.innerHTML = '<option value="ALL">All Variation Tags</option>' + 
-        tags.map(t => `<option value="${t}">${t}</option>`).join('');
+        tagFilter.innerHTML = '<option value="ALL">All Variation Tags</option>' + 
+            tags.map(t => `<option value="${t}">${t}</option>`).join('');
 
-    versionFilter.innerHTML = '<option value="ALL">All Versions</option>' + 
-        versions.map(v => `<option value="${v}">${v}</option>`).join('');
+        versionFilter.innerHTML = '<option value="ALL">All Versions</option>' + 
+            versions.map(v => `<option value="${v}">${v}</option>`).join('');
 
-    // Restore selected values if they still exist in the dataset
-    if (categories.includes(currentCat)) categoryFilter.value = currentCat;
-    if (versions.includes(currentVer)) versionFilter.value = currentVer;
-    if (tags.includes(currentTag)) tagFilter.value = currentTag;
+        if (categories.includes(currentCat)) categoryFilter.value = currentCat;
+        if (versions.includes(currentVer)) versionFilter.value = currentVer;
+        if (tags.includes(currentTag)) tagFilter.value = currentTag;
 
-    // Populate Modal Datalists
-    document.getElementById("categoryList").innerHTML = categories.map(c => `<option value="${c}">`).join('');
-    document.getElementById("versionList").innerHTML = versions.map(v => `<option value="${v}">`).join('');
-}
-function renameCategory() {
-    const categories = [...new Set(ocs.map(o => o.category).filter(Boolean))].sort();
-    if (!categories.length) return alert("No categories found.");
+        document.getElementById("categoryList").innerHTML = categories.map(c => `<option value="${c}">`).join('');
+        document.getElementById("versionList").innerHTML = versions.map(v => `<option value="${v}">`).join('');
+    }
 
-    const oldCat = prompt(`Enter existing category to rename:\n\nAvailable: ${categories.join(', ')}`);
-    if (!oldCat || !categories.includes(oldCat)) return;
+    function renameCategory() {
+        const categories = [...new Set(ocs.map(o => o.category).filter(Boolean))].sort();
+        if (!categories.length) return alert("No categories found.");
 
-    const newCat = prompt(`Enter new category name for "${oldCat}":`);
-    if (!newCat || !newCat.trim()) return;
+        const oldCat = prompt(`Enter existing category to rename:\n\nAvailable: ${categories.join(', ')}`);
+        if (!oldCat || !categories.includes(oldCat)) return;
 
-    ocs.forEach(oc => {
-        if (oc.category === oldCat) oc.category = newCat.trim();
-    });
+        const newCat = prompt(`Enter new category name for "${oldCat}":`);
+        if (!newCat || !newCat.trim()) return;
 
-    localStorage.setItem("gacha_ocs", JSON.stringify(ocs));
-    updateDropdowns();
-    render();
-    alert(`Renamed category "${oldCat}" to "${newCat.trim()}".`);
-}
+        ocs.forEach(oc => {
+            if (oc.category === oldCat) oc.category = newCat.trim();
+        });
 
-function renameVersion() {
-    const versions = [...new Set(ocs.map(o => o.version).filter(Boolean))].sort();
-    if (!versions.length) return alert("No versions found.");
+        localStorage.setItem("gacha_ocs", JSON.stringify(ocs));
+        updateDropdowns();
+        render();
+        alert(`Renamed category "${oldCat}" to "${newCat.trim()}".`);
+    }
 
-    const oldVer = prompt(`Enter existing version to rename:\n\nAvailable: ${versions.join(', ')}`);
-    if (!oldVer || !versions.includes(oldVer)) return;
+    function renameVersion() {
+        const versions = [...new Set(ocs.map(o => o.version).filter(Boolean))].sort();
+        if (!versions.length) return alert("No versions found.");
 
-    const newVer = prompt(`Enter new version name for "${oldVer}":`);
-    if (!newVer || !newVer.trim()) return;
+        const oldVer = prompt(`Enter existing version to rename:\n\nAvailable: ${versions.join(', ')}`);
+        if (!oldVer || !versions.includes(oldVer)) return;
 
-    ocs.forEach(oc => {
-        if (oc.version === oldVer) oc.version = newVer.trim();
-    });
+        const newVer = prompt(`Enter new version name for "${oldVer}":`);
+        if (!newVer || !newVer.trim()) return;
 
-    localStorage.setItem("gacha_ocs", JSON.stringify(ocs));
-    updateDropdowns();
-    render();
-    alert(`Renamed version "${oldVer}" to "${newVer.trim()}".`);
-}
+        ocs.forEach(oc => {
+            if (oc.version === oldVer) oc.version = newVer.trim();
+        });
 
+        localStorage.setItem("gacha_ocs", JSON.stringify(ocs));
+        updateDropdowns();
+        render();
+        alert(`Renamed version "${oldVer}" to "${newVer.trim()}".`);
+    }
 
     // Render Cards
     function render() {
@@ -874,18 +540,19 @@ function renameVersion() {
 
         statsDisplay.textContent = `Showing ${filtered.length} / ${ocs.length} OCs`;
 
-        ocGrid.innerHTML = filtered.map((oc, index) => {
+        ocGrid.innerHTML = filtered.map((oc) => {
             const realIndex = ocs.indexOf(oc);
             const imgSrc = oc.image || 'https://via.placeholder.com/300x180/1e293b/94a3b8?text=No+Image';
+            const imgFitStyle = oc.imageFit || 'cover';
+
             return `
-            
                 <div class="card">
                     <div>
-                        <img class="oc-image" src="${imgSrc}" alt="${oc.name}" onerror="this.onerror=null; this.src='https://via.placeholder.com/300x180/1e293b/94a3b8?text=Image+Error'">
-                <div class="card-header">
-                <h3 class="oc-name">${oc.name}</h3>
-                <input type="checkbox" class="oc-select" value="${realIndex}" style="width:18px; height:18px; cursor:pointer;">
-                </div>
+                        <img class="oc-image" src="${imgSrc}" alt="${oc.name}" style="object-fit: ${imgFitStyle};" onerror="this.onerror=null; this.src='https://via.placeholder.com/300x180/1e293b/94a3b8?text=Image+Error'">
+                        <div class="card-header">
+                            <h3 class="oc-name">${oc.name}</h3>
+                            <input type="checkbox" class="oc-select" value="${realIndex}" style="width:18px; height:18px; cursor:pointer;">
+                        </div>
                         <div class="oc-code" onclick="copyCode('${oc.code}')" title="Click to copy code">
                             ${oc.code}
                         </div>
@@ -899,9 +566,7 @@ function renameVersion() {
                         <button class="btn-secondary" onclick="editOC(${realIndex})">Edit</button>
                         <button class="btn-danger" onclick="deleteOC(${realIndex})">Delete</button>
                     </div>
-                    
                 </div>
-                
             `;
         }).join('');
     }
@@ -917,6 +582,8 @@ function renameVersion() {
     // Open Add/Edit Modal
     function openModal(index = null) {
         editingIndex = index;
+        uploadedImageDataUrl = "";
+        document.getElementById("inputFile").value = "";
         const modal = document.getElementById("editorModal");
         
         if (index !== null) {
@@ -924,6 +591,7 @@ function renameVersion() {
             document.getElementById("inputCode").value = ocs[index].code;
             document.getElementById("inputName").value = ocs[index].name;
             document.getElementById("inputImage").value = ocs[index].image || '';
+            document.getElementById("inputImageFit").value = ocs[index].imageFit || 'cover';
             document.getElementById("inputVersion").value = ocs[index].version;
             document.getElementById("inputCategory").value = ocs[index].category || '';
             document.getElementById("inputTags").value = ocs[index].tags.join(', ');
@@ -932,6 +600,7 @@ function renameVersion() {
             document.getElementById("inputCode").value = '';
             document.getElementById("inputName").value = '';
             document.getElementById("inputImage").value = '';
+            document.getElementById("inputImageFit").value = 'cover';
             document.getElementById("inputVersion").value = 'OC TEMPLATE';
             document.getElementById("inputCategory").value = '';
             document.getElementById("inputTags").value = '';
@@ -948,7 +617,8 @@ function renameVersion() {
     function saveOC() {
         const code = document.getElementById("inputCode").value.trim().toUpperCase();
         const name = document.getElementById("inputName").value.trim();
-        const image = document.getElementById("inputImage").value.trim();
+        const imageUrlInput = document.getElementById("inputImage").value.trim();
+        const imageFit = document.getElementById("inputImageFit").value;
         const version = document.getElementById("inputVersion").value;
         const category = document.getElementById("inputCategory").value.trim();
         const tags = document.getElementById("inputTags").value.split(',').map(t => t.trim()).filter(Boolean);
@@ -958,7 +628,10 @@ function renameVersion() {
             return;
         }
 
-        const newOC = { code, name, image, version, category, tags };
+        // Direct uploaded file takes precedence over typed URL if present
+        const image = uploadedImageDataUrl || imageUrlInput;
+
+        const newOC = { code, name, image, imageFit, version, category, tags };
 
         if (editingIndex !== null) {
             ocs[editingIndex] = newOC;
@@ -994,39 +667,39 @@ function renameVersion() {
         downloadAnchor.click();
         downloadAnchor.remove();
     }
-  function bulkEditOCs() {
-    const selectedCheckboxes = document.querySelectorAll('.oc-select:checked');
-    const selectedIndices = Array.from(selectedCheckboxes).map(cb => parseInt(cb.value));
 
-    if (selectedIndices.length === 0) {
-        alert("Please check at least one OC card to bulk edit.");
-        return;
-    }
+    function bulkEditOCs() {
+        const selectedCheckboxes = document.querySelectorAll('.oc-select:checked');
+        const selectedIndices = Array.from(selectedCheckboxes).map(cb => parseInt(cb.value));
 
-    const newVersion = prompt(`[Bulk Edit ${selectedIndices.length} OCs]\nEnter new Design Version (or leave blank to keep unchanged):`);
-    const newCategory = prompt(`[Bulk Edit ${selectedIndices.length} OCs]\nEnter new Category (or leave blank to keep unchanged):`);
-    const newTag = prompt(`[Bulk Edit ${selectedIndices.length} OCs]\nEnter a Tag to add to all selected (or leave blank to keep unchanged):`);
-
-    selectedIndices.forEach(idx => {
-        if (newVersion && newVersion.trim()) {
-            ocs[idx].version = newVersion.trim();
+        if (selectedIndices.length === 0) {
+            alert("Please check at least one OC card to bulk edit.");
+            return;
         }
-        if (newCategory && newCategory.trim()) {
-            ocs[idx].category = newCategory.trim();
-        }
-        if (newTag && newTag.trim()) {
-            if (!ocs[idx].tags.includes(newTag.trim())) {
-                ocs[idx].tags.push(newTag.trim());
+
+        const newVersion = prompt(`[Bulk Edit ${selectedIndices.length} OCs]\nEnter new Design Version (or leave blank to keep unchanged):`);
+        const newCategory = prompt(`[Bulk Edit ${selectedIndices.length} OCs]\nEnter new Category (or leave blank to keep unchanged):`);
+        const newTag = prompt(`[Bulk Edit ${selectedIndices.length} OCs]\nEnter a Tag to add to all selected (or leave blank to keep unchanged):`);
+
+        selectedIndices.forEach(idx => {
+            if (newVersion && newVersion.trim()) {
+                ocs[idx].version = newVersion.trim();
             }
-        }
-    });
+            if (newCategory && newCategory.trim()) {
+                ocs[idx].category = newCategory.trim();
+            }
+            if (newTag && newTag.trim()) {
+                if (!ocs[idx].tags.includes(newTag.trim())) {
+                    ocs[idx].tags.push(newTag.trim());
+                }
+            }
+        });
 
-    localStorage.setItem("gacha_ocs", JSON.stringify(ocs));
-    updateDropdowns();
-    render();
-    alert(`Successfully updated ${selectedIndices.length} OCs!`);
-}
-
+        localStorage.setItem("gacha_ocs", JSON.stringify(ocs));
+        updateDropdowns();
+        render();
+        alert(`Successfully updated ${selectedIndices.length} OCs!`);
+    }
 
     // Event Listeners
     searchInput.addEventListener("input", render);
@@ -1040,4 +713,3 @@ function renameVersion() {
 </script>
 </body>
 </html>
-
