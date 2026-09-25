@@ -427,6 +427,8 @@
             <div style="display: flex; gap: 5px;">
            <button id="sync-push" class="btn">Push to Cloud ⬆️</button>
            <button id="sync-pull" class="btn">Pull from Cloud ⬇️</button>
+            <button id="sync-create" class="btn" style="background-color: #3498db;">Create New Bin ✨</button>
+
                   </div>
                <small id="sync-status" style="display: block; margin-top: 5px; color: #666;"></small>
            </div>
@@ -1538,7 +1540,49 @@ async function pullFromCloud() {
     } catch (error) {
         console.error(error);
         setSyncStatus('Failed to pull data. Check Bin ID/Key.', true);
+    }async function createNewCloudBin() {
+    const apiKey = document.getElementById('jsonbin-key').value.trim();
+    
+    if (!apiKey) {
+        setSyncStatus('Please enter your API Key first to create a bin.', true);
+        return;
     }
+
+    setSyncStatus('Creating a new bin on JSONBin...');
+
+    try {
+        const response = await fetch('https://api.jsonbin.io/v3/b', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Master-Key': apiKey,
+                'X-Bin-Name': 'My-OC-Codes-Library'
+            },
+            body: JSON.stringify({
+                rawData: typeof rawData !== 'undefined' ? rawData : [],
+                lastUpdated: new Date().toISOString()
+            })
+        });
+
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        
+        const result = await response.json();
+        const newBinId = result.metadata.id;
+
+        // Automatically populate the Bin ID input and save it
+        document.getElementById('jsonbin-id').value = newBinId;
+        localStorage.setItem(CONFIG_KEYS.binId, newBinId);
+
+        setSyncStatus('Bin created successfully! ID saved automatically 🎉');
+    } catch (error) {
+        console.error(error);
+        setSyncStatus('Failed to create bin. Check your API Key.', true);
+    }
+}
+
+// Hook up event listener
+document.getElementById('sync-create').addEventListener('click', createNewCloudBin);
+
 }
 
 // Attach event listeners
