@@ -419,6 +419,19 @@
                 <button class="toggle-btn" id="toggleHeaderBtn" onclick="toggleHeaderControls()">Fold Menu 🔼</button>
             </div>
 
+            <!-- Add this somewhere in your HTML toolbar or settings panel -->
+<div class="cloud-sync-panel" style="margin-top: 15px; padding: 10px; background: rgba(0,0,0,0.1); border-radius: 8px;">
+    <h3>☁️ Cloud Sync (JSONBin)</h3>
+    <input type="text" id="jsonbin-id" placeholder="Enter Bin ID" style="width: 100%; margin-bottom: 5px; padding: 5px;">
+    <input type="password" id="jsonbin-key" placeholder="Enter Master/Access Key" style="width: 100%; margin-bottom: 5px; padding: 5px;">
+    <div style="display: flex; gap: 5px;">
+        <button id="sync-push" class="btn">Push to Cloud ⬆️</button>
+        <button id="sync-pull" class="btn">Pull from Cloud ⬇️</button>
+    </div>
+    <small id="sync-status" style="display: block; margin-top: 5px; color: #666;"></small>
+</div>
+
+
             <div class="controls-content" id="controlsContent">
                 <div class="filter-grid">
                     <input type="text" id="searchInput" placeholder="Search by name, code, or tags...">
