@@ -11,10 +11,10 @@
             --text-main: #f8fafc;
             --text-sub: #94a3b8;
             --accent: #6366f1;
-            --accent-hover: #4f46e5;
-            --border-color: #334155;
-            --badge-bg: #312e81;
+            --border-color: rgba(255, 255, 255, 0.15);
+            --badge-bg: rgba(99, 102, 241, 0.2);
             --badge-text: #c7d2fe;
+            --custom-card-bg-img: none;
         }
 
         body {
@@ -23,6 +23,34 @@
             color: var(--text-main);
             margin: 0;
             padding: 20px;
+            min-height: 100vh;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Wallpaper Background Layers */
+        #wallpaperContainer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -2;
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+
+        #wallpaperOverlayLayer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            transition: background-color 0.3s ease;
+            pointer-events: none;
         }
 
         .container {
@@ -34,6 +62,7 @@
             text-align: center;
             margin-bottom: 16px;
             color: var(--text-main);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.4);
         }
 
         /* Sticky Header Container */
@@ -41,49 +70,62 @@
             position: sticky;
             top: 0;
             z-index: 900;
-            background-color: var(--bg-color);
+            background-color: transparent;
             padding-top: 8px;
             padding-bottom: 12px;
-            border-bottom: 1px solid var(--border-color);
             margin-bottom: 24px;
         }
 
         .controls {
-            background-color: var(--card-bg);
             padding: 20px;
             border-radius: 12px;
-            border: 1px solid var(--border-color);
             display: flex;
             flex-direction: column;
             gap: 16px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
         }
 
         .header-top-bar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 8px;
+            margin-bottom: 4px;
         }
 
         .toggle-btn {
-            background-color: var(--border-color);
+            background-color: rgba(255, 255, 255, 0.1);
             color: var(--text-main);
             font-size: 13px;
             padding: 6px 12px;
             cursor: pointer;
-            border: none;
+            border: 1px solid var(--border-color);
             border-radius: 6px;
+            transition: background-color 0.2s;
         }
 
+        .toggle-btn:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Smooth Collapsible Animation for Filter Menu */
         .controls-content {
             display: flex;
             flex-direction: column;
             gap: 16px;
-            transition: all 0.3s ease-in-out;
+            max-height: 600px;
+            opacity: 1;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease-in-out, padding 0.3s ease;
         }
 
         .controls-content.collapsed {
-            display: none;
+            max-height: 0;
+            opacity: 0;
+            gap: 0;
+            padding-top: 0;
+            padding-bottom: 0;
+            pointer-events: none;
         }
 
         .filter-grid {
@@ -93,12 +135,18 @@
         }
 
         input, select, button {
-            background-color: var(--bg-color);
+            background-color: var(--card-bg);
             color: var(--text-main);
             border: 1px solid var(--border-color);
             padding: 10px 14px;
             border-radius: 8px;
             font-size: 14px;
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+
+        select option {
+            background-color: var(--card-bg);
+            color: var(--text-main);
         }
 
         input:focus, select:focus {
@@ -111,11 +159,15 @@
             border: none;
             cursor: pointer;
             font-weight: 600;
-            transition: background-color 0.2s;
+            transition: background-color 0.2s, filter 0.2s, transform 0.1s;
         }
 
         button:hover {
-            background-color: var(--accent-hover);
+            filter: brightness(1.15);
+        }
+
+        button:active {
+            transform: scale(0.98);
         }
 
         .action-bar {
@@ -137,15 +189,67 @@
             gap: 16px;
         }
 
+        /* Card Animation & Styling */
         .card {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
             border-radius: 10px;
             padding: 16px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             position: relative;
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease, background-color 0.3s ease, border 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.5);
+            z-index: 2;
+        }
+
+        /* Box / Card Appearance Themes */
+        .appearance-solid {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+        }
+
+        .appearance-glass {
+            background: rgba(var(--card-bg-rgb), 0.55) !important;
+            backdrop-filter: blur(16px) saturate(180%);
+            -webkit-backdrop-filter: blur(16px) saturate(180%);
+            border: 1px solid var(--border-color) !important;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        .appearance-glow {
+            background-color: var(--card-bg) !important;
+            border: 1px solid var(--accent) !important;
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.4);
+        }
+
+        .appearance-glow:hover {
+            box-shadow: 0 0 25px rgba(99, 102, 241, 0.7);
+        }
+
+        .appearance-customPic {
+            background-image: var(--custom-card-bg-img) !important;
+            background-size: cover !important;
+            background-position: center !important;
+            border: 1px solid var(--border-color) !important;
+            position: relative;
+        }
+
+        .appearance-customPic::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.55);
+            border-radius: inherit;
+            z-index: 0;
+        }
+
+        .appearance-customPic > * {
+            position: relative;
+            z-index: 1;
         }
 
         .oc-image {
@@ -153,8 +257,13 @@
             height: 180px;
             border-radius: 8px;
             margin-bottom: 12px;
-            background-color: var(--bg-color);
+            background-color: rgba(0, 0, 0, 0.3);
             border: 1px solid var(--border-color);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover .oc-image {
+            transform: scale(1.02);
         }
 
         .card-header {
@@ -183,10 +292,12 @@
             letter-spacing: 1px;
             cursor: pointer;
             border: 1px dashed var(--border-color);
+            transition: background-color 0.2s, border-color 0.2s;
         }
 
         .oc-code:hover {
             border-color: #38bdf8;
+            background-color: rgba(56, 189, 248, 0.2);
         }
 
         .badge-container {
@@ -205,7 +316,7 @@
         }
 
         .badge-version {
-            background-color: #065f46;
+            background-color: rgba(6, 95, 70, 0.6);
             color: #a7f3d0;
         }
 
@@ -224,10 +335,11 @@
         .btn-secondary {
             background-color: transparent;
             border: 1px solid var(--border-color);
+            color: var(--text-main);
         }
 
         .btn-secondary:hover {
-            background-color: var(--border-color);
+            background-color: rgba(255, 255, 255, 0.15);
         }
 
         .btn-danger {
@@ -246,29 +358,27 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
+            background-color: rgba(0, 0, 0, 0.75);
             justify-content: center;
             align-items: center;
             z-index: 1000;
         }
 
         .modal-content {
-            background-color: var(--card-bg);
             padding: 24px;
             border-radius: 12px;
             width: 90%;
-            max-width: 500px;
+            max-width: 520px;
             max-height: 90vh;
             overflow-y: auto;
-            border: 1px solid var(--border-color);
             display: flex;
             flex-direction: column;
             gap: 12px;
         }
 
-        .modal-content h2 {
+        .modal-content h2, .modal-content h3 {
             margin-top: 0;
-            margin-bottom: 8px;
+            margin-bottom: 4px;
         }
 
         .modal-buttons {
@@ -294,12 +404,16 @@
 </head>
 <body>
 
+<!-- Wallpaper Layers -->
+<div id="wallpaperContainer"></div>
+<div id="wallpaperOverlayLayer"></div>
+
 <div class="container">
     <h1>OC Code Organizer</h1>
 
     <!-- Sticky and Retractable Header Controls -->
     <div class="header-sticky">
-        <div class="controls">
+        <div class="controls appearance-solid" id="headerControls">
             <div class="header-top-bar">
                 <span class="stats" id="statsDisplay">Showing 0 / 0 OCs</span>
                 <button class="toggle-btn" id="toggleHeaderBtn" onclick="toggleHeaderControls()">Fold Menu 🔼</button>
@@ -320,14 +434,23 @@
                     <select id="tagFilter">
                         <option value="ALL">All Variation Tags</option>
                     </select>
+
+                    <select id="imageFilter">
+                        <option value="ALL">All Picture Status</option>
+                        <option value="HAS_IMAGE">With Picture</option>
+                        <option value="NO_IMAGE">Without Picture</option>
+                    </select>
                 </div>
 
                 <div class="action-bar">
-                    <button class="btn-secondary" onclick="bulkEditOCs()">Bulk Edit Selected</button>
                     <div>
+                        <button class="btn-secondary" onclick="bulkEditOCs()">Bulk Edit Selected</button>
                         <button class="btn-secondary" onclick="renameCategory()">Rename Category</button>
                         <button class="btn-secondary" onclick="renameVersion()">Rename Version</button>
-                        <button onclick="openModal()">+ Add New OC / Code</button>
+                    </div>
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                        <button class="btn-secondary" onclick="openThemeModal()">🎨 Theme Settings</button>
+                        <button onclick="openModal()">+ Add New OC</button>
                         <button class="btn-secondary" onclick="exportData()">Export Backup</button>
                     </div>
                 </div>
@@ -338,9 +461,93 @@
     <div class="card-grid" id="ocGrid"></div>
 </div>
 
+<!-- Modal for Theme Customization -->
+<div class="modal" id="themeModal">
+    <div class="modal-content appearance-solid" id="themeModalContent">
+        <h2>🎨 Theme Customization</h2>
+        
+        <label for="presetSelect">Theme Preset:</label>
+        <select id="presetSelect" onchange="applyPresetTheme(this.value)">
+            <option value="default">Default Dark Slate</option>
+            <option value="glass">Liquid Glass Dark</option>
+            <option value="cyberpunk">Cyberpunk Neon</option>
+            <option value="emerald">Emerald Forest</option>
+            <option value="sunset">Sunset Rose</option>
+            <option value="light">Light Mode Clean</option>
+            <option value="custom">Custom</option>
+        </select>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <div>
+                <label for="colorAccent">Accent Color:</label>
+                <input type="color" id="colorAccent" style="height: 40px; padding: 2px; width: 100%; cursor: pointer;">
+            </div>
+            <div>
+                <label for="colorBg">Background Color:</label>
+                <input type="color" id="colorBg" style="height: 40px; padding: 2px; width: 100%; cursor: pointer;">
+            </div>
+            <div>
+                <label for="colorCard">Card / Menu Color:</label>
+                <input type="color" id="colorCard" style="height: 40px; padding: 2px; width: 100%; cursor: pointer;">
+            </div>
+            <div>
+                <label for="colorText">Text Color:</label>
+                <input type="color" id="colorText" style="height: 40px; padding: 2px; width: 100%; cursor: pointer;">
+            </div>
+        </div>
+
+        <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 6px 0;">
+
+        <h3>Box / Menu Appearance</h3>
+        <label for="cardStyleSelect">Card Style:</label>
+        <select id="cardStyleSelect" onchange="toggleCustomCardPicInput()">
+            <option value="solid">Solid Classic</option>
+            <option value="glass">Liquid Glass (Gaussian Blur)</option>
+            <option value="glow">Neon Glow Border</option>
+            <option value="customPic">Custom Texture / Picture</option>
+        </select>
+
+        <div id="customCardPicGroup" style="display: none; flex-direction: column; gap: 8px;">
+            <label for="inputCardPic">Card Background Picture URL:</label>
+            <input type="url" id="inputCardPic" placeholder="https://example.com/texture.jpg">
+            <label for="inputCardPicFile">Or Upload Card Texture:</label>
+            <input type="file" id="inputCardPicFile" accept="image/*" onchange="handleCardTextureUpload(event)">
+        </div>
+
+        <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 6px 0;">
+
+        <h3>Wallpaper Settings</h3>
+        <label for="inputWallpaper">Wallpaper Image URL:</label>
+        <div style="display: flex; gap: 8px;">
+            <input type="url" id="inputWallpaper" placeholder="https://example.com/wallpaper.jpg" style="flex: 1;">
+            <button type="button" class="btn-danger" style="padding: 8px 12px; font-size: 12px;" onclick="removeWallpaper()">Remove</button>
+        </div>
+
+        <label for="inputWallpaperFile">Or Upload Direct Wallpaper File:</label>
+        <input type="file" id="inputWallpaperFile" accept="image/*" onchange="handleWallpaperUpload(event)">
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <div>
+                <label for="wallpaperBlur">Blur: <span id="blurVal">0px</span></label>
+                <input type="range" id="wallpaperBlur" min="0" max="20" value="0" style="width: 100%;" oninput="document.getElementById('blurVal').textContent = this.value + 'px'">
+            </div>
+            <div>
+                <label for="wallpaperOverlay">Dark Overlay: <span id="overlayVal">30%</span></label>
+                <input type="range" id="wallpaperOverlay" min="0" max="90" value="30" style="width: 100%;" oninput="document.getElementById('overlayVal').textContent = this.value + '%'">
+            </div>
+        </div>
+
+        <div class="modal-buttons" style="margin-top: 16px;">
+            <button class="btn-secondary" onclick="resetTheme()">Reset Default</button>
+            <button class="btn-secondary" onclick="closeThemeModal()">Cancel</button>
+            <button onclick="saveThemeSettings()">Save & Apply</button>
+        </div>
+    </div>
+</div>
+
 <!-- Modal for Adding/Editing Codes -->
 <div class="modal" id="editorModal">
-    <div class="modal-content">
+    <div class="modal-content appearance-solid" id="editorModalContent">
         <h2 id="modalTitle">Add New OC</h2>
         
         <label for="inputCode">9-Character Code:</label>
@@ -350,7 +557,10 @@
         <input type="text" id="inputName" placeholder="e.g. Son">
 
         <label for="inputImage">Picture URL:</label>
-        <input type="url" id="inputImage" placeholder="https://example.com/character.png">
+        <div style="display: flex; gap: 8px;">
+            <input type="url" id="inputImage" placeholder="https://example.com/character.png" style="flex: 1;">
+            <button type="button" class="btn-danger" style="padding: 8px 12px; font-size: 12px; white-space: nowrap;" onclick="removePictureInput()">Delete Picture</button>
+        </div>
 
         <label for="inputFile">Or Upload Direct Image File:</label>
         <input type="file" id="inputFile" accept="image/*" onchange="handleFileUpload(event)">
@@ -444,7 +654,6 @@
     { code: "S9CG2CECV", name: "(Unnamed Owner OC 6)", version: "OC TEMPLATE", category: "The Owner", tags: [] },
 
     // # OC DESIGN V1
-    // DZM ASSOCIATION + GIRLIE VERSION
     { code: "SZUXVBZX8", name: "DZM", version: "OC DESIGN V1", category: "DZM Association", tags: ["Boy"] },
     { code: "A9QTZMRJM", name: "DZM (Girl Ver)", version: "OC DESIGN V1", category: "DZM Association", tags: ["Girl", "Girl Ver"] },
     { code: "3ZW74FWYO", name: "Reddish", version: "OC DESIGN V1", category: "DZM Association", tags: ["Boy"] },
@@ -822,8 +1031,86 @@
     { code: "O4VV7P3RO", name: "#8", version: "OC DESIGN V4", category: "Gang Redesigns", tags: ["Redesign"] },
     { code: "YBRYMYN27", name: "#9", version: "OC DESIGN V4", category: "Gang Redesigns", tags: ["Redesign"] }
 ];
+
+    // Theme Preset Data
+    const PRESET_THEMES = {
+        default: {
+            preset: "default",
+            bgColor: "#0f172a",
+            cardBg: "#1e293b",
+            textColor: "#f8fafc",
+            accentColor: "#6366f1",
+            cardStyle: "solid",
+            cardBgPic: "",
+            wallpaperUrl: "",
+            wallpaperBlur: 0,
+            wallpaperOverlay: 30
+        },
+        glass: {
+            preset: "glass",
+            bgColor: "#090d16",
+            cardBg: "#1e293b",
+            textColor: "#ffffff",
+            accentColor: "#38bdf8",
+            cardStyle: "glass",
+            cardBgPic: "",
+            wallpaperUrl: "",
+            wallpaperBlur: 0,
+            wallpaperOverlay: 30
+        },
+        cyberpunk: {
+            preset: "cyberpunk",
+            bgColor: "#0d0221",
+            cardBg: "#19063b",
+            textColor: "#00f6ff",
+            accentColor: "#ff007f",
+            cardStyle: "glow",
+            cardBgPic: "",
+            wallpaperUrl: "",
+            wallpaperBlur: 0,
+            wallpaperOverlay: 30
+        },
+        emerald: {
+            preset: "emerald",
+            bgColor: "#022c22",
+            cardBg: "#064e3b",
+            textColor: "#ecfdf5",
+            accentColor: "#10b981",
+            cardStyle: "glass",
+            cardBgPic: "",
+            wallpaperUrl: "",
+            wallpaperBlur: 0,
+            wallpaperOverlay: 30
+        },
+        sunset: {
+            preset: "sunset",
+            bgColor: "#2d1215",
+            cardBg: "#4a1d24",
+            textColor: "#fff1f2",
+            accentColor: "#f43f5e",
+            cardStyle: "glass",
+            cardBgPic: "",
+            wallpaperUrl: "",
+            wallpaperBlur: 0,
+            wallpaperOverlay: 30
+        },
+        light: {
+            preset: "light",
+            bgColor: "#f1f5f9",
+            cardBg: "#ffffff",
+            textColor: "#0f172a",
+            accentColor: "#2563eb",
+            cardStyle: "solid",
+            cardBgPic: "",
+            wallpaperUrl: "",
+            wallpaperBlur: 0,
+            wallpaperOverlay: 10
+        }
+    };
+
     // App State Management (Stored locally in Browser)
     let ocs = JSON.parse(localStorage.getItem("gacha_ocs")) || rawData;
+    let themeSettings = JSON.parse(localStorage.getItem("gacha_theme")) || PRESET_THEMES.default;
     let editingIndex = null;
     let uploadedImageDataUrl = "";
 
@@ -833,6 +1120,7 @@
     const versionFilter = document.getElementById("versionFilter");
     const categoryFilter = document.getElementById("categoryFilter");
     const tagFilter = document.getElementById("tagFilter");
+    const imageFilter = document.getElementById("imageFilter");
     const statsDisplay = document.getElementById("statsDisplay");
 
     // Toggle Header
@@ -840,12 +1128,28 @@
         const content = document.getElementById("controlsContent");
         const btn = document.getElementById("toggleHeaderBtn");
         content.classList.toggle("collapsed");
-        if (content.classList.contains("collapsed")) {
-            btn.textContent = "Unfold Menu 🔽";
-        } else {
-            btn.textContent = "Fold Menu 🔼";
-        }
+        btn.textContent = content.classList.contains("collapsed") ? "Unfold Menu 🔽" : "Fold Menu 🔼";
     }
+
+    // Scroll Retraction Logic (Retracts on scroll only when scrolling OUTSIDE the filter card)
+    let isOverFilter = false;
+    const headerControls = document.getElementById("headerControls");
+
+    headerControls.addEventListener("mouseenter", () => { isOverFilter = true; });
+    headerControls.addEventListener("mouseleave", () => { isOverFilter = false; });
+    headerControls.addEventListener("touchstart", () => { isOverFilter = true; }, { passive: true });
+    headerControls.addEventListener("touchend", () => { setTimeout(() => { isOverFilter = false; }, 300); }, { passive: true });
+
+    window.addEventListener("scroll", () => {
+        if (!isOverFilter) {
+            const content = document.getElementById("controlsContent");
+            const btn = document.getElementById("toggleHeaderBtn");
+            if (!content.classList.contains("collapsed")) {
+                content.classList.add("collapsed");
+                btn.textContent = "Unfold Menu 🔽";
+            }
+        }
+    }, { passive: true });
 
     // Handle File Upload
     function handleFileUpload(event) {
@@ -857,6 +1161,15 @@
                 document.getElementById("inputImage").value = "";
             };
             reader.readAsDataURL(file);
+        }
+    }
+
+    function removePictureInput() {
+        document.getElementById("inputImage").value = "";
+        document.getElementById("inputFile").value = "";
+        uploadedImageDataUrl = "";
+        if (editingIndex !== null) {
+            ocs[editingIndex].image = "";
         }
     }
 
@@ -933,6 +1246,7 @@
         const verVal = versionFilter.value;
         const catVal = categoryFilter.value;
         const tagVal = tagFilter.value;
+        const imgVal = imageFilter ? imageFilter.value : "ALL";
 
         const filtered = ocs.filter(oc => {
             const matchesSearch = oc.name.toLowerCase().includes(searchVal) || 
@@ -942,7 +1256,12 @@
             const matchesCat = catVal === "ALL" || oc.category === catVal;
             const matchesTag = tagVal === "ALL" || oc.tags.includes(tagVal);
 
-            return matchesSearch && matchesVer && matchesCat && matchesTag;
+            const hasImage = Boolean(oc.image && oc.image.trim() !== "");
+            const matchesImg = imgVal === "ALL" || 
+                              (imgVal === "HAS_IMAGE" && hasImage) || 
+                              (imgVal === "NO_IMAGE" && !hasImage);
+
+            return matchesSearch && matchesVer && matchesCat && matchesTag && matchesImg;
         });
 
         statsDisplay.textContent = `Showing ${filtered.length} / ${ocs.length} OCs`;
@@ -966,7 +1285,7 @@
                         <div class="badge-container">
                             <span class="badge badge-version">${oc.version}</span>
                             <span class="badge">${oc.category || 'General'}</span>
-                            ${oc.tags.map(t => `<span class="badge" style="background:#0284c7; color:#e0f2fe;">${t}</span>`).join('')}
+                            ${oc.tags.map(t => `<span class="badge" style="background:var(--accent); color:var(--text-main);">${t}</span>`).join('')}
                         </div>
                     </div>
                     <div class="card-actions">
@@ -976,6 +1295,8 @@
                 </div>
             `;
         }).join('');
+
+        applyTheme(themeSettings);
     }
 
     // Copy to Clipboard
@@ -1020,7 +1341,6 @@
         document.getElementById("editorModal").style.display = "none";
     }
 
-    // Save OC Code
     function saveOC() {
         const code = document.getElementById("inputCode").value.trim().toUpperCase();
         const name = document.getElementById("inputName").value.trim();
@@ -1035,9 +1355,7 @@
             return;
         }
 
-        // Direct uploaded file takes precedence over typed URL if present
         const image = uploadedImageDataUrl || imageUrlInput;
-
         const newOC = { code, name, image, imageFit, version, category, tags };
 
         if (editingIndex !== null) {
@@ -1052,9 +1370,7 @@
         render();
     }
 
-    function editOC(index) {
-        openModal(index);
-    }
+    function editOC(index) { openModal(index); }
 
     function deleteOC(index) {
         if (confirm(`Are you sure you want to delete "${ocs[index].name}" (${ocs[index].code})?`)) {
@@ -1089,16 +1405,10 @@
         const newTag = prompt(`[Bulk Edit ${selectedIndices.length} OCs]\nEnter a Tag to add to all selected (or leave blank to keep unchanged):`);
 
         selectedIndices.forEach(idx => {
-            if (newVersion && newVersion.trim()) {
-                ocs[idx].version = newVersion.trim();
-            }
-            if (newCategory && newCategory.trim()) {
-                ocs[idx].category = newCategory.trim();
-            }
+            if (newVersion && newVersion.trim()) ocs[idx].version = newVersion.trim();
+            if (newCategory && newCategory.trim()) ocs[idx].category = newCategory.trim();
             if (newTag && newTag.trim()) {
-                if (!ocs[idx].tags.includes(newTag.trim())) {
-                    ocs[idx].tags.push(newTag.trim());
-                }
+                if (!ocs[idx].tags.includes(newTag.trim())) ocs[idx].tags.push(newTag.trim());
             }
         });
 
@@ -1108,11 +1418,147 @@
         alert(`Successfully updated ${selectedIndices.length} OCs!`);
     }
 
+    // ==========================================
+    // THEME CUSTOMIZATION SYSTEM
+    // ==========================================
+
+    function openThemeModal() {
+        document.getElementById("presetSelect").value = themeSettings.preset || "custom";
+        document.getElementById("colorBg").value = themeSettings.bgColor || "#0f172a";
+        document.getElementById("colorCard").value = themeSettings.cardBg || "#1e293b";
+        document.getElementById("colorText").value = themeSettings.textColor || "#f8fafc";
+        document.getElementById("colorAccent").value = themeSettings.accentColor || "#6366f1";
+        document.getElementById("cardStyleSelect").value = themeSettings.cardStyle || "solid";
+        document.getElementById("inputCardPic").value = themeSettings.cardBgPic || "";
+        document.getElementById("inputWallpaper").value = themeSettings.wallpaperUrl || "";
+        document.getElementById("wallpaperBlur").value = themeSettings.wallpaperBlur || 0;
+        document.getElementById("wallpaperOverlay").value = themeSettings.wallpaperOverlay !== undefined ? themeSettings.wallpaperOverlay : 30;
+
+        document.getElementById("blurVal").textContent = (themeSettings.wallpaperBlur || 0) + "px";
+        document.getElementById("overlayVal").textContent = (themeSettings.wallpaperOverlay !== undefined ? themeSettings.wallpaperOverlay : 30) + "%";
+
+        toggleCustomCardPicInput();
+        document.getElementById("themeModal").style.display = "flex";
+    }
+
+    function closeThemeModal() {
+        document.getElementById("themeModal").style.display = "none";
+    }
+
+    function toggleCustomCardPicInput() {
+        const cardStyle = document.getElementById("cardStyleSelect").value;
+        const picGroup = document.getElementById("customCardPicGroup");
+        picGroup.style.display = (cardStyle === "customPic") ? "flex" : "none";
+    }
+
+    function applyPresetTheme(presetKey) {
+        if (PRESET_THEMES[presetKey]) {
+            const p = PRESET_THEMES[presetKey];
+            document.getElementById("colorBg").value = p.bgColor;
+            document.getElementById("colorCard").value = p.cardBg;
+            document.getElementById("colorText").value = p.textColor;
+            document.getElementById("colorAccent").value = p.accentColor;
+            document.getElementById("cardStyleSelect").value = p.cardStyle;
+            toggleCustomCardPicInput();
+        }
+    }
+
+    function handleWallpaperUpload(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById("inputWallpaper").value = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+
+    function handleCardTextureUpload(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById("inputCardPic").value = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+
+    function removeWallpaper() {
+        document.getElementById("inputWallpaper").value = "";
+        document.getElementById("inputWallpaperFile").value = "";
+    }
+
+    function saveThemeSettings() {
+        themeSettings = {
+            preset: document.getElementById("presetSelect").value,
+            bgColor: document.getElementById("colorBg").value,
+            cardBg: document.getElementById("colorCard").value,
+            textColor: document.getElementById("colorText").value,
+            accentColor: document.getElementById("colorAccent").value,
+            cardStyle: document.getElementById("cardStyleSelect").value,
+            cardBgPic: document.getElementById("inputCardPic").value,
+            wallpaperUrl: document.getElementById("inputWallpaper").value,
+            wallpaperBlur: parseInt(document.getElementById("wallpaperBlur").value, 10),
+            wallpaperOverlay: parseInt(document.getElementById("wallpaperOverlay").value, 10)
+        };
+
+        localStorage.setItem("gacha_theme", JSON.stringify(themeSettings));
+        applyTheme(themeSettings);
+        closeThemeModal();
+    }
+
+    function resetTheme() {
+        themeSettings = { ...PRESET_THEMES.default };
+        localStorage.setItem("gacha_theme", JSON.stringify(themeSettings));
+        openThemeModal();
+        applyTheme(themeSettings);
+    }
+
+    function hexToRgb(hex) {
+        let c = hex.replace('#', '');
+        if (c.length === 3) c = c.split('').map(x => x + x).join('');
+        const num = parseInt(c, 16);
+        return `${(num >> 16) & 255}, ${(num >> 8) & 255}, ${num & 255}`;
+    }
+
+    function applyTheme(theme) {
+        const root = document.documentElement;
+        root.style.setProperty('--bg-color', theme.bgColor);
+        root.style.setProperty('--card-bg', theme.cardBg);
+        root.style.setProperty('--card-bg-rgb', hexToRgb(theme.cardBg));
+        root.style.setProperty('--text-main', theme.textColor);
+        root.style.setProperty('--accent', theme.accentColor);
+
+        // Wallpaper setup
+        const wpContainer = document.getElementById("wallpaperContainer");
+        const wpOverlay = document.getElementById("wallpaperOverlayLayer");
+
+        if (theme.wallpaperUrl) {
+            wpContainer.style.backgroundImage = `url("${theme.wallpaperUrl}")`;
+            wpContainer.style.filter = `blur(${theme.wallpaperBlur || 0}px)`;
+            wpContainer.style.transform = (theme.wallpaperBlur > 0) ? 'scale(1.05)' : 'scale(1)';
+            wpOverlay.style.backgroundColor = `rgba(0, 0, 0, ${(theme.wallpaperOverlay !== undefined ? theme.wallpaperOverlay : 30) / 100})`;
+        } else {
+            wpContainer.style.backgroundImage = 'none';
+            wpOverlay.style.backgroundColor = 'transparent';
+        }
+
+        // Apply appearance styles to menu container, modal, and cards
+        const styledElements = document.querySelectorAll('.controls, .card, .modal-content');
+        styledElements.forEach(el => {
+            el.classList.remove('appearance-solid', 'appearance-glass', 'appearance-glow', 'appearance-customPic');
+            el.classList.add(`appearance-${theme.cardStyle || 'solid'}`);
+        });
+    }
+
     // Event Listeners
     searchInput.addEventListener("input", render);
     versionFilter.addEventListener("change", render);
     categoryFilter.addEventListener("change", render);
     tagFilter.addEventListener("change", render);
+    imageFilter.addEventListener("change", render);
 
     // Initial Load
     updateDropdowns();
