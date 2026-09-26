@@ -882,7 +882,7 @@
                         <div class="badge-container">
                             <span class="badge badge-version">🏷️ ${oc.version}</span>
                             <span class="badge">📂 ${oc.category || 'General'}</span>
-                            ${${oc.tags.map(t => `<span class="badge" style="background:var(--accent); color:var(--text-main);">${t}</span>`).join('')}
+                            ${oc.tags.map(t => `<span class="badge" style="background:var(--accent); color:var(--text-main);">${t}</span>`).join('')}
                         </div>
                     </div>
                     <div class="card-actions">
