@@ -3,32 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OC Code Organizer</title>
+    <title>My little secrets 😈😈😈</title>
     <style>
         :root {
+            --bg-color: #0f0c29;
             --bg-gradient: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
-            --bg-color: #0f172a;
             --card-bg: rgba(255, 255, 255, 0.05);
-            --card-bg-rgb: 30, 41, 59;
-            --text-main: #f8fafc;
-            --text-sub: #94a3b8;
+            --card-bg-rgb: 255, 255, 255;
+            --text-main: #ffffff;
+            --text-sub: #b8b8d0;
             --accent: #ff758c;
             --accent-glow: rgba(255, 117, 140, 0.4);
-            --border-color: rgba(255, 255, 255, 0.25);
+            --border-color: rgba(255, 255, 255, 0.15);
             --badge-bg: rgba(255, 255, 255, 0.1);
-            --badge-text: #f8fafc;
+            --badge-text: #ffffff;
             --custom-card-bg-img: none;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             background: var(--bg-gradient);
             background-attachment: fixed;
             color: var(--text-main);
             margin: 0;
             padding: 20px;
             min-height: 100vh;
-            transition: background 0.3s ease, color 0.3s ease;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         /* Wallpaper Background Layers */
@@ -66,7 +66,7 @@
             text-align: center;
             margin-bottom: 16px;
             color: var(--text-main);
-            text-shadow: 0 2px 4px rgba(0,0,0,0.4);
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
         }
 
         /* Sticky Header Container */
@@ -81,10 +81,6 @@
         }
 
         .controls {
-            background: var(--card-bg);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid var(--border-color);
             padding: 20px;
             border-radius: 16px;
             display: flex;
@@ -108,12 +104,13 @@
             padding: 6px 12px;
             cursor: pointer;
             border: 1px solid var(--border-color);
-            border-radius: 6px;
-            transition: background-color 0.2s;
+            border-radius: 20px;
+            transition: background-color 0.2s, transform 0.2s;
         }
 
         .toggle-btn:hover {
-            background-color: rgba(255, 255, 255, 0.2);
+            background-color: rgba(255, 255, 255, 0.25);
+            transform: scale(1.03);
         }
 
         /* Smooth Collapsible Animation for Filter Menu */
@@ -121,10 +118,23 @@
             display: flex;
             flex-direction: column;
             gap: 16px;
-            max-height: 600px;
+            max-height: 65vh;
             opacity: 1;
-            overflow: hidden;
+            overflow-y: auto;
+            padding-right: 4px;
             transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease-in-out, padding 0.3s ease;
+        }
+        
+        .controls-content::-webkit-scrollbar {
+            width: 6px;
+        }
+        .controls-content::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+        }
+        .controls-content::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 4px;
         }
 
         .controls-content.collapsed {
@@ -147,34 +157,36 @@
             color: var(--text-main);
             border: 1px solid var(--border-color);
             padding: 10px 14px;
-            border-radius: 8px;
+            border-radius: 10px;
             font-size: 14px;
-            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
         }
 
         select option {
-            background-color: #1e293b;
-            color: #f8fafc;
+            background-color: #1a1a2e;
+            color: var(--text-main);
         }
 
         input:focus, select:focus {
-            outline: 2px solid var(--accent);
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 10px var(--accent-glow);
         }
 
         button {
-            background: linear-gradient(135deg, var(--accent) 0%, #ff7eb3 100%);
+            background: linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%);
             color: white;
-            border: 1px solid var(--border-color);
+            border: none;
             cursor: pointer;
             font-weight: 600;
+            border-radius: 20px;
+            transition: transform 0.2s ease, filter 0.2s ease, box-shadow 0.2s ease;
             box-shadow: 0 4px 15px var(--accent-glow);
-            transition: filter 0.2s, transform 0.1s, border-color 0.2s;
         }
 
         button:hover {
             filter: brightness(1.15);
-            transform: scale(1.02);
-            border-color: #fff;
+            transform: translateY(-2px);
         }
 
         button:active {
@@ -192,34 +204,32 @@
         .stats {
             color: var(--text-sub);
             font-size: 14px;
+            font-weight: 500;
         }
 
         .card-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 16px;
+            gap: 20px;
         }
 
-        /* Card Animation & Styling - Glassmorphism */
+        /* Card Animation & Styling */
         .card {
-            background: var(--card-bg);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid var(--border-color);
             border-radius: 16px;
-            padding: 20px;
+            padding: 18px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             position: relative;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease, background-color 0.3s ease, border 0.3s ease;
         }
 
         .card:hover {
             transform: translateY(-6px);
-            border-color: var(--accent);
             box-shadow: 0 12px 40px 0 var(--accent-glow);
+            border-color: var(--accent);
             z-index: 2;
         }
 
@@ -230,10 +240,11 @@
         }
 
         .appearance-glass {
-            background: var(--card-bg) !important;
+            background: rgba(255, 255, 255, 0.05) !important;
             backdrop-filter: blur(16px) saturate(180%);
             -webkit-backdrop-filter: blur(16px) saturate(180%);
-            border: 1px solid var(--border-color) !important;
+            border: 1px solid rgba(255, 255, 255, 0.15) !important;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
         }
 
         .appearance-glow {
@@ -243,7 +254,7 @@
         }
 
         .appearance-glow:hover {
-            box-shadow: 0 0 25px var(--accent-glow);
+            box-shadow: 0 0 25px var(--accent);
         }
 
         .appearance-customPic {
@@ -258,7 +269,7 @@
             content: "";
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0, 0, 0, 0.55);
+            background: rgba(0, 0, 0, 0.65);
             border-radius: inherit;
             z-index: 0;
         }
@@ -271,7 +282,7 @@
         .oc-image {
             width: 100%;
             height: 180px;
-            border-radius: 8px;
+            border-radius: 12px;
             margin-bottom: 12px;
             background-color: rgba(0, 0, 0, 0.3);
             border: 1px solid var(--border-color);
@@ -290,31 +301,31 @@
         }
 
         .oc-name {
-            font-weight: bold;
-            font-size: 16px;
+            font-weight: 700;
+            font-size: 17px;
             margin: 0;
             word-break: break-word;
-            color: var(--text-main);
         }
 
         .oc-code {
             font-family: monospace;
             font-size: 18px;
             color: #38bdf8;
-            background-color: rgba(56, 189, 248, 0.1);
-            padding: 4px 8px;
-            border-radius: 6px;
+            background-color: rgba(56, 189, 248, 0.12);
+            padding: 6px 10px;
+            border-radius: 8px;
             margin: 10px 0;
             text-align: center;
             letter-spacing: 1px;
             cursor: pointer;
-            border: 1px dashed var(--border-color);
-            transition: background-color 0.2s, border-color 0.2s;
+            border: 1px dashed rgba(56, 189, 248, 0.4);
+            transition: background-color 0.2s, border-color 0.2s, transform 0.2s;
         }
 
         .oc-code:hover {
             border-color: #38bdf8;
-            background-color: rgba(56, 189, 248, 0.2);
+            background-color: rgba(56, 189, 248, 0.25);
+            transform: scale(1.01);
         }
 
         .badge-container {
@@ -325,40 +336,39 @@
         }
 
         .badge {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid var(--border-color);
-            color: var(--text-main);
+            font-size: 12px;
             padding: 4px 10px;
             border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: var(--text-main);
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            gap: 4px;
+            font-weight: 500;
         }
 
         .badge-version {
-            background-color: rgba(6, 95, 70, 0.6);
+            background-color: rgba(16, 185, 129, 0.2);
+            border-color: rgba(16, 185, 129, 0.4);
             color: #a7f3d0;
-            border-color: rgba(167, 243, 208, 0.4);
         }
 
         .card-actions {
             display: flex;
             gap: 8px;
-            margin-top: 12px;
+            margin-top: 14px;
         }
 
         .card-actions button {
             flex: 1;
-            padding: 6px 10px;
+            padding: 8px 12px;
             font-size: 12px;
-            border: 1px solid var(--border-color);
+            border-radius: 20px;
         }
 
         .btn-secondary {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.08);
             border: 1px solid var(--border-color);
             color: var(--text-main);
             box-shadow: none;
@@ -366,20 +376,15 @@
 
         .btn-secondary:hover {
             background-color: rgba(255, 255, 255, 0.2);
-            border-color: var(--text-main);
-            transform: scale(1.01);
         }
 
         .btn-danger {
-            background-color: #991b1b;
-            border: 1px solid rgba(252, 165, 165, 0.3);
-            box-shadow: none;
-            color: white;
+            background: linear-gradient(135deg, #ef4444, #b91c1c);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
         }
 
         .btn-danger:hover {
-            background-color: #7f1d1d;
-            border-color: #fca5a5;
+            background: linear-gradient(135deg, #dc2626, #991b1b);
         }
 
         /* Modal Styles */
@@ -391,18 +396,15 @@
             width: 100%;
             height: 100%;
             background-color: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(6px);
             justify-content: center;
             align-items: center;
             z-index: 1000;
         }
 
         .modal-content {
-            background: var(--card-bg);
-            backdrop-filter: blur(16px);
             padding: 24px;
             border-radius: 16px;
-            border: 1px solid var(--border-color);
-            color: var(--text-main);
             width: 90%;
             max-width: 520px;
             max-height: 90vh;
@@ -410,12 +412,12 @@
             display: flex;
             flex-direction: column;
             gap: 12px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
         }
 
         .modal-content h2, .modal-content h3 {
             margin-top: 0;
             margin-bottom: 4px;
-            color: var(--text-main);
         }
 
         .modal-buttons {
@@ -432,10 +434,11 @@
             background-color: #10b981;
             color: white;
             padding: 12px 20px;
-            border-radius: 8px;
+            border-radius: 30px;
             display: none;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
             z-index: 2000;
+            font-weight: 600;
         }
     </style>
 </head>
@@ -446,30 +449,30 @@
 <div id="wallpaperOverlayLayer"></div>
 
 <div class="container">
-    <h1>✨ OC Code Organizer</h1>
+    <h1>OC Codes</h1>
 
     <!-- Sticky and Retractable Header Controls -->
     <div class="header-sticky">
-        <div class="controls appearance-solid" id="headerControls">
+        <div class="controls appearance-glass" id="headerControls">
             <div class="header-top-bar">
                 <span class="stats" id="statsDisplay">Showing 0 / 0 OCs</span>
                 <button class="toggle-btn" id="toggleHeaderBtn" onclick="toggleHeaderControls()">Fold Menu 🔼</button>
             </div>
 
-            <!-- Cloud Sync Panel -->
-            <div class="cloud-sync-panel" style="margin-top: 5px; padding: 10px; background: rgba(0,0,0,0.2); border-radius: 8px; border: 1px solid var(--border-color);">
-                <h3 style="margin-bottom: 8px; font-size: 15px;">☁️ Cloud Sync (JSONBin)</h3>
-                <input type="text" id="jsonbin-id" placeholder="Enter Bin ID" style="width: 100%; margin-bottom: 6px; padding: 6px; box-sizing: border-box;">
-                <input type="password" id="jsonbin-key" placeholder="Enter Master/Access Key" style="width: 100%; margin-bottom: 8px; padding: 6px; box-sizing: border-box;">
-                <div style="display: flex; gap: 6px; flex-wrap: wrap;">
-                    <button id="sync-push" class="btn" style="padding: 6px 12px; font-size: 13px;">Push ⬆️</button>
-                    <button id="sync-pull" class="btn" style="padding: 6px 12px; font-size: 13px;">Pull ⬇️</button>
-                </div>
-                <small id="sync-status" style="display: block; margin-top: 6px; color: var(--text-sub);"></small>
-            </div>
-
             <div class="controls-content" id="controlsContent">
                 <div class="filter-grid">
+                    <!-- Cloud Sync Panel -->
+                    <div class="cloud-sync-panel" style="margin-top: 5px; padding: 10px; background: rgba(0,0,0,0.2); border-radius: 12px; border: 1px solid var(--border-color);">
+                        <h3 style="margin-bottom: 8px; font-size: 15px;">☁️ Cloud Sync (JSONBin)</h3>
+                        <input type="text" id="jsonbin-id" placeholder="Enter Bin ID" style="width: 100%; margin-bottom: 6px; box-sizing: border-box;">
+                        <input type="password" id="jsonbin-key" placeholder="Enter Master/Access Key" style="width: 100%; margin-bottom: 8px; box-sizing: border-box;">
+                        <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                            <button id="sync-push" class="btn" style="padding: 6px 12px; font-size: 13px;">Push ⬆️</button>
+                            <button id="sync-pull" class="btn" style="padding: 6px 12px; font-size: 13px;">Pull ⬇️</button>
+                        </div>
+                        <small id="sync-status" style="display: block; margin-top: 6px; color: var(--text-sub);"></small>
+                    </div>
+
                     <input type="text" id="searchInput" placeholder="Search by name, code, or tags...">
                     
                     <select id="versionFilter">
@@ -512,12 +515,12 @@
 
 <!-- Modal for Theme Customization -->
 <div class="modal" id="themeModal">
-    <div class="modal-content appearance-solid" id="themeModalContent">
+    <div class="modal-content appearance-glass" id="themeModalContent">
         <h2>🎨 Theme Customization</h2>
         
         <label for="presetSelect">Theme Preset:</label>
         <select id="presetSelect" onchange="applyPresetTheme(this.value)">
-            <option value="default">Default Dark Slate</option>
+            <option value="default">Default Cosmic Dark</option>
             <option value="glass">Liquid Glass Dark</option>
             <option value="cyberpunk">Cyberpunk Neon</option>
             <option value="emerald">Emerald Forest</option>
@@ -550,8 +553,8 @@
         <h3>Box / Menu Appearance</h3>
         <label for="cardStyleSelect">Card Style:</label>
         <select id="cardStyleSelect" onchange="toggleCustomCardPicInput()">
-            <option value="solid">Solid Classic</option>
             <option value="glass">Liquid Glass (Gaussian Blur)</option>
+            <option value="solid">Solid Classic</option>
             <option value="glow">Neon Glow Border</option>
             <option value="customPic">Custom Texture / Picture</option>
         </select>
@@ -596,7 +599,7 @@
 
 <!-- Modal for Adding/Editing Codes -->
 <div class="modal" id="editorModal">
-    <div class="modal-content appearance-solid" id="editorModalContent">
+    <div class="modal-content appearance-glass" id="editorModalContent">
         <h2 id="modalTitle">Add New OC</h2>
         
         <label for="inputCode">9-Character Code:</label>
@@ -643,6 +646,7 @@
 <div class="toast" id="toast">Code copied to clipboard!</div>
 
 <script>
+    // Initial Dataset Extracted directly from Document
     const rawData = [
         { code: "EISVWOF9D", name: "Son", version: "OC TEMPLATE", category: "Base Templates", tags: ["Boy"] },
         { code: "VPE4R54U3", name: "Boy", version: "OC TEMPLATE", category: "Base Templates", tags: ["Boy"] },
@@ -664,12 +668,25 @@
         { code: "7BDXOWAKM", name: "Smol", version: "OC TEMPLATE", category: "Base Templates", tags: ["Smol"] }
     ];
 
+    // Dynamic Tag Emoji Mapping Helper
+    function getTagEmoji(tag) {
+        const lower = tag.toLowerCase();
+        if (lower.includes('boy') || lower.includes('masc') || lower.includes('man')) return '👦';
+        if (lower.includes('girl') || lower.includes('fem') || lower.includes('woman')) return '👧';
+        if (lower.includes('remastered') || lower.includes('realis')) return '✨';
+        if (lower.includes('smol')) return '🧸';
+        if (lower.includes('winter') || lower.includes('cold')) return '❄️';
+        if (lower.includes('template')) return '📋';
+        return '⭐';
+    }
+
+    // Theme Preset Data
     const PRESET_THEMES = {
         default: {
             preset: "default",
-            bgColor: "#0f172a",
+            bgColor: "#0f0c29",
             cardBg: "#1e293b",
-            textColor: "#f8fafc",
+            textColor: "#ffffff",
             accentColor: "#ff758c",
             cardStyle: "glass",
             cardBgPic: "",
@@ -739,11 +756,12 @@
         }
     };
 
+    // App State Management
     let ocs = JSON.parse(localStorage.getItem("gacha_ocs")) || rawData;
     let themeSettings = JSON.parse(localStorage.getItem("gacha_theme")) || PRESET_THEMES.default;
     let editingIndex = null;
-    let uploadedImageDataUrl = "";
 
+    // Elements
     const ocGrid = document.getElementById("ocGrid");
     const searchInput = document.getElementById("searchInput");
     const versionFilter = document.getElementById("versionFilter");
@@ -752,17 +770,7 @@
     const imageFilter = document.getElementById("imageFilter");
     const statsDisplay = document.getElementById("statsDisplay");
 
-    function getTagEmoji(tag) {
-        const lower = tag.toLowerCase();
-        if (lower.includes('boy') || lower.includes('masc') || lower.includes('man')) return '👦';
-        if (lower.includes('girl') || lower.includes('fem') || lower.includes('woman')) return '👧';
-        if (lower.includes('remastered') || lower.includes('realis')) return '✨';
-        if (lower.includes('smol')) return '🧸';
-        if (lower.includes('winter') || lower.includes('cold')) return '❄️';
-        if (lower.includes('template')) return '📋';
-        return '⭐';
-    }
-
+    // Toggle Header
     function toggleHeaderControls() {
         const content = document.getElementById("controlsContent");
         const btn = document.getElementById("toggleHeaderBtn");
@@ -770,6 +778,7 @@
         btn.textContent = content.classList.contains("collapsed") ? "Unfold Menu 🔽" : "Fold Menu 🔼";
     }
 
+    // Scroll Retraction Logic
     let isOverFilter = false;
     const headerControls = document.getElementById("headerControls");
 
@@ -789,27 +798,15 @@
         }
     }, { passive: true });
 
-    function handleFileUpload(event) {
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                uploadedImageDataUrl = e.target.result;
-                document.getElementById("inputImage").value = "";
-            };
-            reader.readAsDataURL(file);
-        }
-    }
-
     function removePictureInput() {
         document.getElementById("inputImage").value = "";
         document.getElementById("inputFile").value = "";
-        uploadedImageDataUrl = "";
         if (editingIndex !== null) {
             ocs[editingIndex].image = "";
         }
     }
 
+    // Populate Filters Dynamically
     function updateDropdowns() {
         const currentCat = categoryFilter.value;
         const currentVer = versionFilter.value;
@@ -876,6 +873,7 @@
         alert(`Renamed version "${oldVer}" to "${newVer.trim()}".`);
     }
 
+    // Render Cards
     function render() {
         const searchVal = searchInput.value.toLowerCase();
         const verVal = versionFilter.value;
@@ -920,7 +918,7 @@
                         <div class="badge-container">
                             <span class="badge badge-version">🏷️ ${oc.version}</span>
                             <span class="badge">📂 ${oc.category || 'General'}</span>
-                            ${oc.tags.map(t => `<span class="badge" style="background:var(--accent); color:#ffffff;">${getTagEmoji(t)}${t}</span>`).join('')}
+                            ${oc.tags.map(t => `<span class="badge" style="background:var(--accent); color:var(--text-main);">${getTagEmoji(t)}${t}</span>`).join('')}
                         </div>
                     </div>
                     <div class="card-actions">
@@ -934,6 +932,7 @@
         applyTheme(themeSettings);
     }
 
+    // Copy to Clipboard
     function copyCode(code) {
         navigator.clipboard.writeText(code);
         const toast = document.getElementById("toast");
@@ -941,9 +940,9 @@
         setTimeout(() => toast.style.display = "none", 2000);
     }
 
+    // Open Add/Edit Modal
     function openModal(index = null) {
         editingIndex = index;
-        uploadedImageDataUrl = "";
         document.getElementById("inputFile").value = "";
         const modal = document.getElementById("editorModal");
         
@@ -974,10 +973,40 @@
         document.getElementById("editorModal").style.display = "none";
     }
 
-    function saveOC() {
+    async function uploadImageToCloud(fileInput) {
+        if (!fileInput || !fileInput.files || fileInput.files.length === 0) return "";
+
+        const file = fileInput.files[0];
+        const apiKey = "80cfc621609d34aed0e1b6effecf9308";
+        const formData = new FormData();
+        formData.append("image", file);
+
+        try {
+            setSyncStatus("Uploading image to cloud...");
+            const response = await fetch(`https://api.imgbb.com/1/upload?key=${apiKey}`, {
+                method: "POST",
+                body: formData
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                return data.data.url;
+            } else {
+                alert("Image upload failed: " + (data.error?.message || "Unknown error"));
+                return "";
+            }
+        } catch (error) {
+            console.error("Error uploading image:", error);
+            alert("Failed to upload image file. Check console.");
+            return "";
+        }
+    }
+
+    async function saveOC() {
         const code = document.getElementById("inputCode").value.trim().toUpperCase();
         const name = document.getElementById("inputName").value.trim();
         const imageUrlInput = document.getElementById("inputImage").value.trim();
+        const fileInput = document.getElementById("inputFile");
         const imageFit = document.getElementById("inputImageFit").value;
         const version = document.getElementById("inputVersion").value;
         const category = document.getElementById("inputCategory").value.trim();
@@ -988,7 +1017,13 @@
             return;
         }
 
-        const image = uploadedImageDataUrl || imageUrlInput;
+        let image = imageUrlInput;
+        if (fileInput.files.length > 0) {
+            const uploadedUrl = await uploadImageToCloud(fileInput);
+            if (!uploadedUrl) return;
+            image = uploadedUrl;
+        }
+
         const newOC = { code, name, image, imageFit, version, category, tags };
 
         if (editingIndex !== null) {
@@ -1001,6 +1036,7 @@
         closeModal();
         updateDropdowns();
         render();
+        setSyncStatus("OC saved successfully!");
     }
 
     function editOC(index) { openModal(index); }
@@ -1051,6 +1087,7 @@
         alert(`Successfully updated ${selectedIndices.length} OCs!`);
     }
 
+    // Cloud Sync Configuration keys
     const CONFIG_KEYS = {
         binId: 'oc_jsonbin_id',
         apiKey: 'oc_jsonbin_key'
@@ -1157,11 +1194,12 @@
         }
     }
 
+    // Theme Customization System
     function openThemeModal() {
         document.getElementById("presetSelect").value = themeSettings.preset || "custom";
-        document.getElementById("colorBg").value = themeSettings.bgColor || "#0f172a";
+        document.getElementById("colorBg").value = themeSettings.bgColor || "#0f0c29";
         document.getElementById("colorCard").value = themeSettings.cardBg || "#1e293b";
-        document.getElementById("colorText").value = themeSettings.textColor || "#f8fafc";
+        document.getElementById("colorText").value = themeSettings.textColor || "#ffffff";
         document.getElementById("colorAccent").value = themeSettings.accentColor || "#ff758c";
         document.getElementById("cardStyleSelect").value = themeSettings.cardStyle || "glass";
         document.getElementById("inputCardPic").value = themeSettings.cardBgPic || "";
@@ -1260,20 +1298,13 @@
 
     function applyTheme(theme) {
         const root = document.documentElement;
-        
-        // Dynamically apply background color or gradient
-        root.style.setProperty('--bg-gradient', theme.bgColor);
         root.style.setProperty('--bg-color', theme.bgColor);
+        root.style.setProperty('--bg-gradient', `linear-gradient(135deg, ${theme.bgColor}, #101026)`);
         root.style.setProperty('--card-bg', theme.cardBg);
         root.style.setProperty('--card-bg-rgb', hexToRgb(theme.cardBg));
         root.style.setProperty('--text-main', theme.textColor);
         root.style.setProperty('--accent', theme.accentColor);
-
-        if (theme.cardBgPic) {
-            root.style.setProperty('--custom-card-bg-img', `url("${theme.cardBgPic}")`);
-        } else {
-            root.style.setProperty('--custom-card-bg-img', 'none');
-        }
+        root.style.setProperty('--accent-glow', `rgba(${hexToRgb(theme.accentColor)}, 0.4)`);
 
         const wpContainer = document.getElementById("wallpaperContainer");
         const wpOverlay = document.getElementById("wallpaperOverlayLayer");
@@ -1295,6 +1326,7 @@
         });
     }
 
+    // Event Listeners Initialization on DOM Content Loaded
     document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('jsonbin-id').value = localStorage.getItem(CONFIG_KEYS.binId) || '';
         document.getElementById('jsonbin-key').value = localStorage.getItem(CONFIG_KEYS.apiKey) || '';
