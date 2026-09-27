@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My little secrets 😈😈😈</title>
+    <title>My OC Codes</title>
     <style>
         :root {
             --bg-color: #0f0c29;
@@ -70,15 +70,29 @@
             text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
         }
 
-        /* Sticky Header Container */
+        /* Dynamic Sticky Header Placement Options */
         .header-sticky {
-            position: sticky;
-            top: 0;
             z-index: 900;
             background-color: transparent;
             padding-top: 8px;
             padding-bottom: 12px;
             margin-bottom: 24px;
+        }
+
+        .pos-sticky-top {
+            position: sticky;
+            top: 0;
+            bottom: auto;
+        }
+
+        .pos-sticky-bottom {
+            position: sticky;
+            bottom: 0;
+            top: auto;
+        }
+
+        .pos-static {
+            position: static;
         }
 
         .controls {
@@ -208,10 +222,23 @@
             font-weight: 500;
         }
 
+        /* Card Grid Layouts */
         .card-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 20px;
+        }
+
+        .grid-cols-1 { grid-template-columns: 1fr !important; }
+        .grid-cols-2 { grid-template-columns: repeat(2, 1fr) !important; }
+        .grid-cols-3 { grid-template-columns: repeat(3, 1fr) !important; }
+        .grid-cols-4 { grid-template-columns: repeat(4, 1fr) !important; }
+        .grid-cols-5 { grid-template-columns: repeat(5, 1fr) !important; }
+
+        @media (max-width: 768px) {
+            .grid-cols-2, .grid-cols-3, .grid-cols-4, .grid-cols-5 {
+                grid-template-columns: 1fr !important;
+            }
         }
 
         /* Card Animation & Styling */
@@ -232,6 +259,46 @@
             box-shadow: 0 12px 40px 0 var(--accent-glow);
             border-color: var(--accent);
             z-index: 2;
+        }
+
+        /* Card Image Placement Settings */
+        .card.img-bottom {
+            flex-direction: column-reverse;
+        }
+
+        .card.img-bottom .card-actions {
+            margin-top: 0;
+            margin-bottom: 14px;
+        }
+
+        .card.img-bottom .oc-image {
+            margin-bottom: 0;
+            margin-top: 12px;
+        }
+
+        /* Compact Card Density */
+        .card-compact .card {
+            padding: 12px;
+        }
+
+        .card-compact .oc-image {
+            height: 120px;
+            margin-bottom: 8px;
+        }
+
+        .card-compact .oc-name {
+            font-size: 15px;
+        }
+
+        .card-compact .oc-code {
+            font-size: 15px;
+            padding: 4px 8px;
+            margin: 6px 0;
+        }
+
+        .card-compact .badge {
+            font-size: 11px;
+            padding: 2px 8px;
         }
 
         /* Dynamic Box / Card Appearance Themes */
@@ -453,7 +520,7 @@
     <h1>OC Codes</h1>
 
     <!-- Sticky Header Controls -->
-    <div class="header-sticky">
+    <div class="header-sticky pos-sticky-top" id="headerContainer">
         <div class="controls appearance-glass" id="headerControls">
             <div class="header-top-bar">
                 <span class="stats" id="statsDisplay">Showing 0 / 0 OCs</span>
@@ -461,9 +528,9 @@
             </div>
 
             <div class="controls-content" id="controlsContent">
-                <div class="filter-grid">
+                <div class="filter-grid" id="controlsFilterGrid">
                     <!-- Cloud Sync Panel -->
-                    <div class="cloud-sync-panel" style="margin-top: 5px; padding: 10px; background: rgba(0,0,0,0.2); border-radius: 12px; border: 1px solid var(--border-color);">
+                    <div class="cloud-sync-panel" id="cloudSyncPanel" style="margin-top: 5px; padding: 10px; background: rgba(0,0,0,0.2); border-radius: 12px; border: 1px solid var(--border-color);">
                         <h3 style="margin-bottom: 8px; font-size: 15px;">☁️ Cloud Sync (JSONBin)</h3>
                         <input type="text" id="jsonbin-id" placeholder="Enter Bin ID" style="width: 100%; margin-bottom: 6px; box-sizing: border-box;">
                         <input type="password" id="jsonbin-key" placeholder="Enter Master/Access Key" style="width: 100%; margin-bottom: 8px; box-sizing: border-box;">
@@ -503,6 +570,7 @@
                         <button class="btn-secondary" onclick="renameVersion()">Rename Version</button>
                     </div>
                     <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                        <button class="btn-secondary" onclick="openPlacementModal()">📐 UI Layout</button>
                         <button class="btn-secondary" onclick="openThemeModal()">🎨 Theme Settings</button>
                         <button onclick="openModal()">+ Add New OC</button>
                         <button class="btn-secondary" onclick="exportData()">Export Backup</button>
@@ -513,6 +581,67 @@
     </div>
 
     <div class="card-grid" id="ocGrid"></div>
+</div>
+
+<!-- Modal for UI Placement & Layout Customization -->
+<div class="modal" id="placementModal">
+    <div class="modal-content appearance-glass" id="placementModalContent">
+        <h2>📐 UI Layout & Placement Settings</h2>
+        
+        <h3>Grid & Display Mode</h3>
+        <label for="placementGridCols">Card Columns / Grid Layout:</label>
+        <select id="placementGridCols">
+            <option value="auto">Auto Responsive Grid (Default)</option>
+            <option value="1">1 Column (List View)</option>
+            <option value="2">2 Columns</option>
+            <option value="3">3 Columns</option>
+            <option value="4">4 Columns</option>
+            <option value="5">5 Columns</option>
+        </select>
+
+        <label for="placementCardDensity">Card Spacing / Density:</label>
+        <select id="placementCardDensity">
+            <option value="normal">Normal / Spacious</option>
+            <option value="compact">Compact / High Density</option>
+        </select>
+
+        <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 6px 0;">
+
+        <h3>Card Internal Placement</h3>
+        <label for="placementCardImage">Character Picture Placement:</label>
+        <select id="placementCardImage">
+            <option value="top">Image Top (Default)</option>
+            <option value="bottom">Image Bottom</option>
+        </select>
+
+        <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 6px 0;">
+
+        <h3>Header & Filter Menu Placements</h3>
+        <label for="placementHeaderPos">Header Sticky Mode:</label>
+        <select id="placementHeaderPos">
+            <option value="sticky-top">Sticky Top (Default)</option>
+            <option value="sticky-bottom">Sticky Bottom</option>
+            <option value="static">Static (Scrolls away)</option>
+        </select>
+
+        <label for="placementCloudSyncPos">Cloud Sync Panel Position:</label>
+        <select id="placementCloudSyncPos">
+            <option value="top">Top of Filter Menu (Default)</option>
+            <option value="bottom">Bottom of Filter Menu</option>
+        </select>
+
+        <label for="placementSearchPos">Search Bar Placement:</label>
+        <select id="placementSearchPos">
+            <option value="top">Above Filters (Default)</option>
+            <option value="bottom">Below Filters</option>
+        </select>
+
+        <div class="modal-buttons" style="margin-top: 16px;">
+            <button class="btn-secondary" onclick="resetPlacementSettings()">Reset Layout</button>
+            <button class="btn-secondary" onclick="closePlacementModal()">Cancel</button>
+            <button onclick="savePlacementSettings()">Save & Apply Layout</button>
+        </div>
+    </div>
 </div>
 
 <!-- Modal for Theme Customization -->
@@ -559,7 +688,7 @@
         <h3>Box / Menu Appearance</h3>
         <label for="cardStyleSelect">Card Style:</label>
         <select id="cardStyleSelect" onchange="toggleCustomCardPicInput()">
-            <option value="glass">Liquid Ass (as that apple ad says it) (Gaussian Blur)</option>
+            <option value="glass">Liquid Glass (Gaussian Blur)</option>
             <option value="solid">Solid Classic</option>
             <option value="glow">Neon Glow Border</option>
             <option value="customPic">Custom Texture / Picture</option>
@@ -765,8 +894,18 @@
         }
     };
 
+    const DEFAULT_LAYOUT = {
+        gridCols: "auto",
+        cardDensity: "normal",
+        cardImagePos: "top",
+        headerPos: "sticky-top",
+        cloudSyncPos: "top",
+        searchPos: "top"
+    };
+
     let ocs = JSON.parse(localStorage.getItem("gacha_ocs")) || rawData;
     let themeSettings = JSON.parse(localStorage.getItem("gacha_theme")) || PRESET_THEMES.default;
+    let layoutSettings = JSON.parse(localStorage.getItem("gacha_layout")) || DEFAULT_LAYOUT;
     let editingIndex = null;
 
     const ocGrid = document.getElementById("ocGrid");
@@ -906,13 +1045,15 @@
 
         statsDisplay.textContent = `Showing ${filtered.length} / ${ocs.length} OCs`;
 
+        const isImgBottom = layoutSettings.cardImagePos === 'bottom';
+
         ocGrid.innerHTML = filtered.map((oc) => {
             const realIndex = ocs.indexOf(oc);
             const imgSrc = oc.image || 'https://via.placeholder.com/300x180/1e293b/94a3b8?text=No+Image';
             const imgFitStyle = oc.imageFit || 'cover';
 
             return `
-                <div class="card">
+                <div class="card ${isImgBottom ? 'img-bottom' : ''}">
                     <div>
                         <img class="oc-image" src="${imgSrc}" alt="${oc.name}" style="object-fit: ${imgFitStyle};" onerror="this.onerror=null; this.src='https://via.placeholder.com/300x180/1e293b/94a3b8?text=Image+Error'">
                         <div class="card-header">
@@ -937,6 +1078,7 @@
         }).join('');
 
         applyTheme(themeSettings);
+        applyPlacementSettings(layoutSettings);
     }
 
     function copyCode(code) {
@@ -1092,6 +1234,90 @@
         alert(`Successfully updated ${selectedIndices.length} OCs!`);
     }
 
+    /* UI Placement Customization Logic */
+    function openPlacementModal() {
+        document.getElementById("placementGridCols").value = layoutSettings.gridCols || "auto";
+        document.getElementById("placementCardDensity").value = layoutSettings.cardDensity || "normal";
+        document.getElementById("placementCardImage").value = layoutSettings.cardImagePos || "top";
+        document.getElementById("placementHeaderPos").value = layoutSettings.headerPos || "sticky-top";
+        document.getElementById("placementCloudSyncPos").value = layoutSettings.cloudSyncPos || "top";
+        document.getElementById("placementSearchPos").value = layoutSettings.searchPos || "top";
+
+        document.getElementById("placementModal").style.display = "flex";
+    }
+
+    function closePlacementModal() {
+        document.getElementById("placementModal").style.display = "none";
+    }
+
+    function savePlacementSettings() {
+        layoutSettings = {
+            gridCols: document.getElementById("placementGridCols").value,
+            cardDensity: document.getElementById("placementCardDensity").value,
+            cardImagePos: document.getElementById("placementCardImage").value,
+            headerPos: document.getElementById("placementHeaderPos").value,
+            cloudSyncPos: document.getElementById("placementCloudSyncPos").value,
+            searchPos: document.getElementById("placementSearchPos").value
+        };
+
+        localStorage.setItem("gacha_layout", JSON.stringify(layoutSettings));
+        applyPlacementSettings(layoutSettings);
+        closePlacementModal();
+        render();
+    }
+
+    function resetPlacementSettings() {
+        layoutSettings = { ...DEFAULT_LAYOUT };
+        localStorage.setItem("gacha_layout", JSON.stringify(layoutSettings));
+        openPlacementModal();
+        applyPlacementSettings(layoutSettings);
+        render();
+    }
+
+    function applyPlacementSettings(settings) {
+        const grid = document.getElementById("ocGrid");
+        const header = document.getElementById("headerContainer");
+        const cloudPanel = document.getElementById("cloudSyncPanel");
+        const searchInput = document.getElementById("searchInput");
+        const controlsContent = document.getElementById("controlsContent");
+        const filterGrid = document.getElementById("controlsFilterGrid");
+
+        // 1. Grid Columns
+        grid.classList.remove("grid-cols-1", "grid-cols-2", "grid-cols-3", "grid-cols-4", "grid-cols-5");
+        if (settings.gridCols && settings.gridCols !== "auto") {
+            grid.classList.add(`grid-cols-${settings.gridCols}`);
+        }
+
+        // 2. Card Density
+        if (settings.cardDensity === "compact") {
+            grid.classList.add("card-compact");
+        } else {
+            grid.classList.remove("card-compact");
+        }
+
+        // 3. Header Position
+        header.classList.remove("pos-sticky-top", "pos-sticky-bottom", "pos-static");
+        header.classList.add(`pos-${settings.headerPos || "sticky-top"}`);
+
+        // 4. Cloud Sync Position Placement
+        if (cloudPanel && filterGrid) {
+            if (settings.cloudSyncPos === "bottom") {
+                filterGrid.appendChild(cloudPanel);
+            } else {
+                filterGrid.insertBefore(cloudPanel, filterGrid.firstChild);
+            }
+        }
+
+        // 5. Search Bar Position Placement
+        if (searchInput && controlsContent) {
+            if (settings.searchPos === "bottom") {
+                controlsContent.appendChild(searchInput);
+            } else {
+                controlsContent.insertBefore(searchInput, filterGrid.nextSibling);
+            }
+        }
+    }
+
     const CONFIG_KEYS = {
         binId: 'oc_jsonbin_id',
         apiKey: 'oc_jsonbin_key'
@@ -1120,6 +1346,7 @@
         const payload = {
             ocs: JSON.parse(localStorage.getItem('gacha_ocs') || '[]'),
             settings: JSON.parse(localStorage.getItem('gacha_theme') || '{}'),
+            layout: JSON.parse(localStorage.getItem('gacha_layout') || '{}'),
             lastUpdated: new Date().toISOString()
         };
 
@@ -1172,6 +1399,7 @@
             const parsedData = result.record || result;
             const cloudOcs = parsedData.ocs || parsedData; 
             const cloudSettings = parsedData.settings || null;
+            const cloudLayout = parsedData.layout || null;
 
             if (Array.isArray(cloudOcs) && cloudOcs.length > 0) {
                 localStorage.setItem('gacha_ocs', JSON.stringify(cloudOcs));
@@ -1183,12 +1411,18 @@
                 themeSettings = cloudSettings;
             }
 
+            if (cloudLayout && typeof cloudLayout === 'object') {
+                localStorage.setItem('gacha_layout', JSON.stringify(cloudLayout));
+                layoutSettings = cloudLayout;
+            }
+
             setSyncStatus('Successfully pulled data! Refreshing... 🔄');
             
             setTimeout(() => {
                 updateDropdowns();
                 render();
                 closeThemeModal();
+                closePlacementModal();
                 setSyncStatus('Synced successfully! ✅');
             }, 800);
 
@@ -1360,6 +1594,7 @@
         imageFilter.addEventListener("change", render);
 
         updateDropdowns();
+        applyPlacementSettings(layoutSettings);
         render();
     });
 </script>
