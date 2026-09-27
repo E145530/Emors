@@ -28,7 +28,7 @@
             margin: 0;
             padding: 20px;
             min-height: 100vh;
-            transition: background-color 0.3s ease, color 0.3s ease;
+            transition: background 0.3s ease, color 0.3s ease;
         }
 
         /* Wallpaper Background Layers */
@@ -81,7 +81,7 @@
         }
 
         .controls {
-            background: rgba(255, 255, 255, 0.05);
+            background: var(--card-bg);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border: 1px solid var(--border-color);
@@ -154,7 +154,7 @@
 
         select option {
             background-color: #1e293b;
-            color: var(--text-main);
+            color: #f8fafc;
         }
 
         input:focus, select:focus {
@@ -162,7 +162,7 @@
         }
 
         button {
-            background: linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%);
+            background: linear-gradient(135deg, var(--accent) 0%, #ff7eb3 100%);
             color: white;
             border: 1px solid var(--border-color);
             cursor: pointer;
@@ -225,25 +225,25 @@
 
         /* Box / Card Appearance Themes */
         .appearance-solid {
-            background-color: rgba(30, 41, 59, 0.85);
+            background-color: var(--card-bg);
             border: 1px solid var(--border-color);
         }
 
         .appearance-glass {
-            background: rgba(var(--card-bg-rgb), 0.55) !important;
+            background: var(--card-bg) !important;
             backdrop-filter: blur(16px) saturate(180%);
             -webkit-backdrop-filter: blur(16px) saturate(180%);
             border: 1px solid var(--border-color) !important;
         }
 
         .appearance-glow {
-            background-color: rgba(25, 6, 59, 0.8) !important;
+            background-color: var(--card-bg) !important;
             border: 1px solid var(--accent) !important;
-            box-shadow: 0 0 15px rgba(255, 117, 140, 0.4);
+            box-shadow: 0 0 15px var(--accent-glow);
         }
 
         .appearance-glow:hover {
-            box-shadow: 0 0 25px rgba(255, 117, 140, 0.7);
+            box-shadow: 0 0 25px var(--accent-glow);
         }
 
         .appearance-customPic {
@@ -294,6 +294,7 @@
             font-size: 16px;
             margin: 0;
             word-break: break-word;
+            color: var(--text-main);
         }
 
         .oc-code {
@@ -323,10 +324,10 @@
             margin-top: 8px;
         }
 
-        /* Explicitly styled badges and categories with distinct borders */
         .badge {
             background: rgba(255, 255, 255, 0.1);
             border: 1px solid var(--border-color);
+            color: var(--text-main);
             padding: 4px 10px;
             border-radius: 20px;
             font-size: 0.8rem;
@@ -349,7 +350,6 @@
             margin-top: 12px;
         }
 
-        /* Explicit borders for button actions inside cards */
         .card-actions button {
             flex: 1;
             padding: 6px 10px;
@@ -374,6 +374,7 @@
             background-color: #991b1b;
             border: 1px solid rgba(252, 165, 165, 0.3);
             box-shadow: none;
+            color: white;
         }
 
         .btn-danger:hover {
@@ -396,11 +397,12 @@
         }
 
         .modal-content {
-            background: rgba(15, 23, 42, 0.95);
+            background: var(--card-bg);
             backdrop-filter: blur(16px);
             padding: 24px;
             border-radius: 16px;
             border: 1px solid var(--border-color);
+            color: var(--text-main);
             width: 90%;
             max-width: 520px;
             max-height: 90vh;
@@ -413,6 +415,7 @@
         .modal-content h2, .modal-content h3 {
             margin-top: 0;
             margin-bottom: 4px;
+            color: var(--text-main);
         }
 
         .modal-buttons {
@@ -640,7 +643,6 @@
 <div class="toast" id="toast">Code copied to clipboard!</div>
 
 <script>
-    // Initial Dataset Extracted directly from Document[cite: 2]
     const rawData = [
         { code: "EISVWOF9D", name: "Son", version: "OC TEMPLATE", category: "Base Templates", tags: ["Boy"] },
         { code: "VPE4R54U3", name: "Boy", version: "OC TEMPLATE", category: "Base Templates", tags: ["Boy"] },
@@ -662,7 +664,6 @@
         { code: "7BDXOWAKM", name: "Smol", version: "OC TEMPLATE", category: "Base Templates", tags: ["Smol"] }
     ];
 
-    // Theme Preset Data[cite: 2]
     const PRESET_THEMES = {
         default: {
             preset: "default",
@@ -738,13 +739,11 @@
         }
     };
 
-    // App State Management[cite: 2]
     let ocs = JSON.parse(localStorage.getItem("gacha_ocs")) || rawData;
     let themeSettings = JSON.parse(localStorage.getItem("gacha_theme")) || PRESET_THEMES.default;
     let editingIndex = null;
     let uploadedImageDataUrl = "";
 
-    // Elements[cite: 2]
     const ocGrid = document.getElementById("ocGrid");
     const searchInput = document.getElementById("searchInput");
     const versionFilter = document.getElementById("versionFilter");
@@ -753,7 +752,6 @@
     const imageFilter = document.getElementById("imageFilter");
     const statsDisplay = document.getElementById("statsDisplay");
 
-    // Dynamic Emoji Tag Helper (Idea #5)
     function getTagEmoji(tag) {
         const lower = tag.toLowerCase();
         if (lower.includes('boy') || lower.includes('masc') || lower.includes('man')) return '👦';
@@ -762,10 +760,9 @@
         if (lower.includes('smol')) return '🧸';
         if (lower.includes('winter') || lower.includes('cold')) return '❄️';
         if (lower.includes('template')) return '📋';
-        return '⭐'; // Default fallback icon
+        return '⭐';
     }
 
-    // Toggle Header[cite: 2]
     function toggleHeaderControls() {
         const content = document.getElementById("controlsContent");
         const btn = document.getElementById("toggleHeaderBtn");
@@ -773,7 +770,6 @@
         btn.textContent = content.classList.contains("collapsed") ? "Unfold Menu 🔽" : "Fold Menu 🔼";
     }
 
-    // Scroll Retraction Logic[cite: 2]
     let isOverFilter = false;
     const headerControls = document.getElementById("headerControls");
 
@@ -793,7 +789,6 @@
         }
     }, { passive: true });
 
-    // Handle File Upload[cite: 2]
     function handleFileUpload(event) {
         const file = event.target.files[0];
         if (file) {
@@ -815,7 +810,6 @@
         }
     }
 
-    // Populate Filters Dynamically[cite: 2]
     function updateDropdowns() {
         const currentCat = categoryFilter.value;
         const currentVer = versionFilter.value;
@@ -882,7 +876,6 @@
         alert(`Renamed version "${oldVer}" to "${newVer.trim()}".`);
     }
 
-    // Render Cards with Emojis Added
     function render() {
         const searchVal = searchInput.value.toLowerCase();
         const verVal = versionFilter.value;
@@ -927,7 +920,7 @@
                         <div class="badge-container">
                             <span class="badge badge-version">🏷️ ${oc.version}</span>
                             <span class="badge">📂 ${oc.category || 'General'}</span>
-                            ${oc.tags.map(t => `<span class="badge" style="background:var(--accent); color:var(--text-main);">${getTagEmoji(t)}${t}</span>`).join('')}
+                            ${oc.tags.map(t => `<span class="badge" style="background:var(--accent); color:#ffffff;">${getTagEmoji(t)}${t}</span>`).join('')}
                         </div>
                     </div>
                     <div class="card-actions">
@@ -941,7 +934,6 @@
         applyTheme(themeSettings);
     }
 
-    // Copy to Clipboard[cite: 2]
     function copyCode(code) {
         navigator.clipboard.writeText(code);
         const toast = document.getElementById("toast");
@@ -949,7 +941,6 @@
         setTimeout(() => toast.style.display = "none", 2000);
     }
 
-    // Open Add/Edit Modal[cite: 2]
     function openModal(index = null) {
         editingIndex = index;
         uploadedImageDataUrl = "";
@@ -1060,7 +1051,6 @@
         alert(`Successfully updated ${selectedIndices.length} OCs!`);
     }
 
-    // Cloud Sync Configuration keys[cite: 2]
     const CONFIG_KEYS = {
         binId: 'oc_jsonbin_id',
         apiKey: 'oc_jsonbin_key'
@@ -1167,7 +1157,6 @@
         }
     }
 
-    // Theme Customization System[cite: 2]
     function openThemeModal() {
         document.getElementById("presetSelect").value = themeSettings.preset || "custom";
         document.getElementById("colorBg").value = themeSettings.bgColor || "#0f172a";
@@ -1271,11 +1260,20 @@
 
     function applyTheme(theme) {
         const root = document.documentElement;
+        
+        // Dynamically apply background color or gradient
+        root.style.setProperty('--bg-gradient', theme.bgColor);
         root.style.setProperty('--bg-color', theme.bgColor);
         root.style.setProperty('--card-bg', theme.cardBg);
         root.style.setProperty('--card-bg-rgb', hexToRgb(theme.cardBg));
         root.style.setProperty('--text-main', theme.textColor);
         root.style.setProperty('--accent', theme.accentColor);
+
+        if (theme.cardBgPic) {
+            root.style.setProperty('--custom-card-bg-img', `url("${theme.cardBgPic}")`);
+        } else {
+            root.style.setProperty('--custom-card-bg-img', 'none');
+        }
 
         const wpContainer = document.getElementById("wallpaperContainer");
         const wpOverlay = document.getElementById("wallpaperOverlayLayer");
@@ -1297,7 +1295,6 @@
         });
     }
 
-    // Event Listeners Initialization on DOM Content Loaded[cite: 2]
     document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('jsonbin-id').value = localStorage.getItem(CONFIG_KEYS.binId) || '';
         document.getElementById('jsonbin-key').value = localStorage.getItem(CONFIG_KEYS.apiKey) || '';
