@@ -8,8 +8,8 @@
         :root {
             --bg-color: #0f0c29;
             --bg-gradient: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
-            --card-bg: rgba(255, 255, 255, 0.05);
-            --card-bg-rgb: 255, 255, 255;
+            --card-bg: #1e293b;
+            --card-bg-rgb: 30, 41, 59;
             --text-main: #ffffff;
             --text-sub: #b8b8d0;
             --accent: #ff758c;
@@ -174,7 +174,7 @@
         }
 
         button {
-            background: linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%);
+            background: var(--accent);
             color: white;
             border: none;
             cursor: pointer;
@@ -233,17 +233,17 @@
             z-index: 2;
         }
 
-        /* Box / Card Appearance Themes */
+        /* Dynamic Box / Card Appearance Themes */
         .appearance-solid {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
+            background-color: var(--card-bg) !important;
+            border: 1px solid var(--border-color) !important;
         }
 
         .appearance-glass {
-            background: rgba(255, 255, 255, 0.05) !important;
+            background: rgba(var(--card-bg-rgb), 0.35) !important;
             backdrop-filter: blur(16px) saturate(180%);
             -webkit-backdrop-filter: blur(16px) saturate(180%);
-            border: 1px solid rgba(255, 255, 255, 0.15) !important;
+            border: 1px solid rgba(255, 255, 255, 0.2) !important;
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
         }
 
@@ -451,7 +451,7 @@
 <div class="container">
     <h1>OC Codes</h1>
 
-    <!-- Sticky and Retractable Header Controls -->
+    <!-- Sticky Header Controls -->
     <div class="header-sticky">
         <div class="controls appearance-glass" id="headerControls">
             <div class="header-top-bar">
@@ -532,19 +532,19 @@
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
             <div>
                 <label for="colorAccent">Accent Color:</label>
-                <input type="color" id="colorAccent" style="height: 40px; padding: 2px; width: 100%; cursor: pointer;">
+                <input type="color" id="colorAccent" style="height: 40px; padding: 2px; width: 100%; cursor: pointer;" oninput="markCustomTheme()">
             </div>
             <div>
                 <label for="colorBg">Background Color:</label>
-                <input type="color" id="colorBg" style="height: 40px; padding: 2px; width: 100%; cursor: pointer;">
+                <input type="color" id="colorBg" style="height: 40px; padding: 2px; width: 100%; cursor: pointer;" oninput="markCustomTheme()">
             </div>
             <div>
                 <label for="colorCard">Card / Menu Color:</label>
-                <input type="color" id="colorCard" style="height: 40px; padding: 2px; width: 100%; cursor: pointer;">
+                <input type="color" id="colorCard" style="height: 40px; padding: 2px; width: 100%; cursor: pointer;" oninput="markCustomTheme()">
             </div>
             <div>
                 <label for="colorText">Text Color:</label>
-                <input type="color" id="colorText" style="height: 40px; padding: 2px; width: 100%; cursor: pointer;">
+                <input type="color" id="colorText" style="height: 40px; padding: 2px; width: 100%; cursor: pointer;" oninput="markCustomTheme()">
             </div>
         </div>
 
@@ -646,7 +646,6 @@
 <div class="toast" id="toast">Code copied to clipboard!</div>
 
 <script>
-    // Initial Dataset Extracted directly from Document
     const rawData = [
         { code: "EISVWOF9D", name: "Son", version: "OC TEMPLATE", category: "Base Templates", tags: ["Boy"] },
         { code: "VPE4R54U3", name: "Boy", version: "OC TEMPLATE", category: "Base Templates", tags: ["Boy"] },
@@ -668,7 +667,6 @@
         { code: "7BDXOWAKM", name: "Smol", version: "OC TEMPLATE", category: "Base Templates", tags: ["Smol"] }
     ];
 
-    // Dynamic Tag Emoji Mapping Helper
     function getTagEmoji(tag) {
         const lower = tag.toLowerCase();
         if (lower.includes('boy') || lower.includes('masc') || lower.includes('man')) return '👦';
@@ -680,7 +678,6 @@
         return '⭐';
     }
 
-    // Theme Preset Data
     const PRESET_THEMES = {
         default: {
             preset: "default",
@@ -756,12 +753,10 @@
         }
     };
 
-    // App State Management
     let ocs = JSON.parse(localStorage.getItem("gacha_ocs")) || rawData;
     let themeSettings = JSON.parse(localStorage.getItem("gacha_theme")) || PRESET_THEMES.default;
     let editingIndex = null;
 
-    // Elements
     const ocGrid = document.getElementById("ocGrid");
     const searchInput = document.getElementById("searchInput");
     const versionFilter = document.getElementById("versionFilter");
@@ -770,7 +765,10 @@
     const imageFilter = document.getElementById("imageFilter");
     const statsDisplay = document.getElementById("statsDisplay");
 
-    // Toggle Header
+    function markCustomTheme() {
+        document.getElementById("presetSelect").value = "custom";
+    }
+
     function toggleHeaderControls() {
         const content = document.getElementById("controlsContent");
         const btn = document.getElementById("toggleHeaderBtn");
@@ -778,7 +776,6 @@
         btn.textContent = content.classList.contains("collapsed") ? "Unfold Menu 🔽" : "Fold Menu 🔼";
     }
 
-    // Scroll Retraction Logic
     let isOverFilter = false;
     const headerControls = document.getElementById("headerControls");
 
@@ -806,7 +803,6 @@
         }
     }
 
-    // Populate Filters Dynamically
     function updateDropdowns() {
         const currentCat = categoryFilter.value;
         const currentVer = versionFilter.value;
@@ -873,7 +869,6 @@
         alert(`Renamed version "${oldVer}" to "${newVer.trim()}".`);
     }
 
-    // Render Cards
     function render() {
         const searchVal = searchInput.value.toLowerCase();
         const verVal = versionFilter.value;
@@ -918,7 +913,7 @@
                         <div class="badge-container">
                             <span class="badge badge-version">🏷️ ${oc.version}</span>
                             <span class="badge">📂 ${oc.category || 'General'}</span>
-                            ${oc.tags.map(t => `<span class="badge" style="background:var(--accent); color:var(--text-main);">${getTagEmoji(t)}${t}</span>`).join('')}
+                            ${oc.tags.map(t => `<span class="badge" style="background:var(--accent); color:#ffffff;">${getTagEmoji(t)}${t}</span>`).join('')}
                         </div>
                     </div>
                     <div class="card-actions">
@@ -932,7 +927,6 @@
         applyTheme(themeSettings);
     }
 
-    // Copy to Clipboard
     function copyCode(code) {
         navigator.clipboard.writeText(code);
         const toast = document.getElementById("toast");
@@ -940,7 +934,6 @@
         setTimeout(() => toast.style.display = "none", 2000);
     }
 
-    // Open Add/Edit Modal
     function openModal(index = null) {
         editingIndex = index;
         document.getElementById("inputFile").value = "";
@@ -1087,7 +1080,6 @@
         alert(`Successfully updated ${selectedIndices.length} OCs!`);
     }
 
-    // Cloud Sync Configuration keys
     const CONFIG_KEYS = {
         binId: 'oc_jsonbin_id',
         apiKey: 'oc_jsonbin_key'
@@ -1194,7 +1186,6 @@
         }
     }
 
-    // Theme Customization System
     function openThemeModal() {
         document.getElementById("presetSelect").value = themeSettings.preset || "custom";
         document.getElementById("colorBg").value = themeSettings.bgColor || "#0f0c29";
@@ -1290,6 +1281,7 @@
     }
 
     function hexToRgb(hex) {
+        if (!hex) return "30, 41, 59";
         let c = hex.replace('#', '');
         if (c.length === 3) c = c.split('').map(x => x + x).join('');
         const num = parseInt(c, 16);
@@ -1298,13 +1290,22 @@
 
     function applyTheme(theme) {
         const root = document.documentElement;
+        const rgbCard = hexToRgb(theme.cardBg || "#1e293b");
+        const rgbAccent = hexToRgb(theme.accentColor || "#ff758c");
+
         root.style.setProperty('--bg-color', theme.bgColor);
-        root.style.setProperty('--bg-gradient', `linear-gradient(135deg, ${theme.bgColor}, #101026)`);
+        root.style.setProperty('--bg-gradient', `linear-gradient(135deg, ${theme.bgColor}, #050515)`);
         root.style.setProperty('--card-bg', theme.cardBg);
-        root.style.setProperty('--card-bg-rgb', hexToRgb(theme.cardBg));
+        root.style.setProperty('--card-bg-rgb', rgbCard);
         root.style.setProperty('--text-main', theme.textColor);
         root.style.setProperty('--accent', theme.accentColor);
-        root.style.setProperty('--accent-glow', `rgba(${hexToRgb(theme.accentColor)}, 0.4)`);
+        root.style.setProperty('--accent-glow', `rgba(${rgbAccent}, 0.4)`);
+
+        if (theme.cardBgPic) {
+            root.style.setProperty('--custom-card-bg-img', `url("${theme.cardBgPic}")`);
+        } else {
+            root.style.setProperty('--custom-card-bg-img', 'none');
+        }
 
         const wpContainer = document.getElementById("wallpaperContainer");
         const wpOverlay = document.getElementById("wallpaperOverlayLayer");
@@ -1326,7 +1327,6 @@
         });
     }
 
-    // Event Listeners Initialization on DOM Content Loaded
     document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('jsonbin-id').value = localStorage.getItem(CONFIG_KEYS.binId) || '';
         document.getElementById('jsonbin-key').value = localStorage.getItem(CONFIG_KEYS.apiKey) || '';
