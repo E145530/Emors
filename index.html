@@ -567,8 +567,9 @@
                 </div>
 
                 <div class="action-bar">
-                    <div>
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
                         <button class="btn-secondary" onclick="bulkEditOCs()">Bulk Edit Selected</button>
+                        <button class="btn-danger" onclick="deleteSelectedOCs()">Delete Selected</button>
                         <button class="btn-secondary" onclick="renameCategory()">Rename Category</button>
                         <button class="btn-secondary" onclick="renameVersion()">Rename Version</button>
                     </div>
@@ -1235,6 +1236,29 @@
         updateDropdowns();
         render();
         alert(`Successfully updated ${selectedIndices.length} OCs!`);
+    }
+
+    function deleteSelectedOCs() {
+        const selectedCheckboxes = document.querySelectorAll('.oc-select:checked');
+        const selectedIndices = Array.from(selectedCheckboxes)
+            .map(cb => parseInt(cb.value))
+            .sort((a, b) => b - a); // Sort in descending order to prevent index shifting during deletion
+
+        if (selectedIndices.length === 0) {
+            alert("Please check at least one OC card to delete.");
+            return;
+        }
+
+        if (confirm(`Are you sure you want to delete ${selectedIndices.length} selected OC(s)?`)) {
+            selectedIndices.forEach(idx => {
+                ocs.splice(idx, 1);
+            });
+
+            localStorage.setItem("gacha_ocs", JSON.stringify(ocs));
+            updateDropdowns();
+            render();
+            alert(`Successfully deleted ${selectedIndices.length} OCs!`);
+        }
     }
 
     function openPlacementModal() {
