@@ -156,14 +156,15 @@
             border-radius: 4px;
         }
 
-        .controls-content.collapsed {
+        .controls-content.collapsed:not(:focus-within) {
             max-height: 0;
             opacity: 0;
             gap: 0;
             padding-top: 0;
             padding-bottom: 0;
             pointer-events: none;
-        }
+         }
+
 
         .filter-grid {
             display: grid;
@@ -939,17 +940,21 @@
     headerControls.addEventListener("touchstart", () => { isOverFilter = true; }, { passive: true });
     headerControls.addEventListener("touchend", () => { setTimeout(() => { isOverFilter = false; }, 300); }, { passive: true });
 
-    window.addEventListener("scroll", () => {
-        if (!isOverFilter) {
-            const content = document.getElementById("controlsContent");
+        window.addEventListener("scroll", () => {
+        const content = document.getElementById("controlsContent");
+        // Do not auto-collapse if user is currently typing/focused in an input/select
+        const activeEl = document.activeElement;
+        const isInputFocused = content && content.contains(activeEl);
+
+        if (!isOverFilter && !isInputFocused) {
             const btn = document.getElementById("toggleHeaderBtn");
-            if (!content.classList.contains("collapsed")) {
+            if (content && !content.classList.contains("collapsed")) {
                 content.classList.add("collapsed");
                 btn.textContent = "Unfold Menu 🔽";
             }
         }
     }, { passive: true });
-
+    
     function removePictureInput() {
         document.getElementById("inputImage").value = "";
         document.getElementById("inputFile").value = "";
