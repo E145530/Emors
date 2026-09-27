@@ -930,6 +930,9 @@
     let lastScrollY = window.scrollY;
     let autoCollapseDisabled = false;
     let wasAutoCollapsed = false;
+    let scrollDeltaSinceUnfold = 0;
+    let hasScrolledUpSinceUnfold = false;
+    let isUnfoldingLock = false; // Prevents scroll collapse immediately after clicking unfold
 
     function toggleHeaderControls() {
         const content = document.getElementById("controlsContent");
@@ -937,13 +940,22 @@
         const isCollapsed = content.classList.contains("collapsed");
 
         if (isCollapsed) {
-            // Unfold menu manually -> disable auto-collapse temporarily until scrolled through
+            // Manual Unfold
+            isUnfoldingLock = true;
             content.classList.remove("collapsed");
             btn.textContent = "Fold Menu 🔼";
             autoCollapseDisabled = true;
             wasAutoCollapsed = false;
+            scrollDeltaSinceUnfold = 0;
+            hasScrolledUpSinceUnfold = false;
+            lastScrollY = window.scrollY;
+
+            // Release the lockout after 600ms so normal scrolling works later
+            setTimeout(() => {
+                isUnfoldingLock = false;
+            }, 600);
         } else {
-            // Fold menu manually
+            // Manual Fold
             content.classList.add("collapsed");
             btn.textContent = "Unfold Menu 🔽";
             wasAutoCollapsed = false;
@@ -960,10 +972,28 @@
     headerControls.addEventListener("touchcancel", () => { setTimeout(() => { isOverFilter = false; }, 300); }, { passive: true });
 
     window.addEventListener("scroll", () => {
-        // Re-enable auto-collapse when scrolling through the oc code list / page
-        if (autoCollapseDisabled) {
-            autoCollapseDisabled = false;
+        if (isUnfoldingLock) return; // Skip scroll checks entirely while unfolding
+
+        const currentScrollY = window.scrollY;
+        const scrollDiff = currentScrollY - lastScrollY;
+        const scrollingDown = scrollDiff > 0;
+        const scrollingUp = scrollDiff < 0;
+
+        if (scrollingUp) {
+            hasScrolledUpSinceUnfold = true;
         }
+
+        if (autoCollapseDisabled) {
+            if (scrollingDown) {
+                scrollDeltaSinceUnfold += scrollDiff;
+            }
+            if (scrollDeltaSinceUnfold > 300 || hasScrolledUpSinceUnfold) {
+                autoCollapseDisabled = false;
+                scrollDeltaSinceUnfold = 0;
+            }
+        }
+
+        lastScrollY = currentScrollY;
 
         if (layoutSettings.autoCollapse === "disabled") return;
 
@@ -972,35 +1002,19 @@
         const activeEl = document.activeElement;
         const isInputFocused = content && content.contains(activeEl);
 
-        const currentScrollY = window.scrollY;
-        const scrollingDown = currentScrollY > lastScrollY;
-        lastScrollY = currentScrollY;
-
         if (!isOverFilter && !isInputFocused) {
             if (layoutSettings.headerPos !== "sticky-bottom") {
-                // Collapse menu when scrolling down past 30px
-                if (scrollingDown && currentScrollY > 30) {
+                if (wasAutoCollapsed) return;
+                if (autoCollapseDisabled) return;
+
+                if (scrollingDown && currentScrollY > 40 && Math.abs(scrollDiff) > 2) {
                     if (content && !content.classList.contains("collapsed")) {
                         content.classList.add("collapsed");
                         btn.textContent = "Unfold Menu 🔽";
-                        wasAutoCollapsed = true; // Mark that it was folded by auto-collapse
-                    }
-                } 
-                // Do NOT auto-expand on scroll up if it was auto-collapsed (stays always folded until manually unfolded)
-                else if (!scrollingDown || currentScrollY <= 10) {
-                    if (!wasAutoCollapsed && autoCollapseDisabled === false) {
-                        if (content && content.classList.contains("collapsed")) {
-                            content.classList.remove("collapsed");
-                            btn.textContent = "Fold Menu 🔼";
-                        }
+                        wasAutoCollapsed = true; 
                     }
                 }
             }
-        }
-
-        // Reset wasAutoCollapsed if user scrolls back near the top
-        if (currentScrollY <= 10) {
-            wasAutoCollapsed = false;
         }
     }, { passive: true });
     
