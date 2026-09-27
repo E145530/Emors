@@ -14,7 +14,7 @@
             --text-sub: #94a3b8;
             --accent: #ff758c;
             --accent-glow: rgba(255, 117, 140, 0.4);
-            --border-color: rgba(255, 255, 255, 0.15);
+            --border-color: rgba(255, 255, 255, 0.25);
             --badge-bg: rgba(255, 255, 255, 0.1);
             --badge-text: #f8fafc;
             --custom-card-bg-img: none;
@@ -164,16 +164,17 @@
         button {
             background: linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%);
             color: white;
-            border: none;
+            border: 1px solid var(--border-color);
             cursor: pointer;
             font-weight: 600;
             box-shadow: 0 4px 15px var(--accent-glow);
-            transition: filter 0.2s, transform 0.1s;
+            transition: filter 0.2s, transform 0.1s, border-color 0.2s;
         }
 
         button:hover {
             filter: brightness(1.15);
             transform: scale(1.02);
+            border-color: #fff;
         }
 
         button:active {
@@ -204,7 +205,7 @@
             background: var(--card-bg);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            border: 1px solid var(--card-border);
+            border: 1px solid var(--border-color);
             border-radius: 16px;
             padding: 20px;
             display: flex;
@@ -322,9 +323,10 @@
             margin-top: 8px;
         }
 
+        /* Explicitly styled badges and categories with distinct borders */
         .badge {
             background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            border: 1px solid var(--border-color);
             padding: 4px 10px;
             border-radius: 20px;
             font-size: 0.8rem;
@@ -332,12 +334,13 @@
             display: inline-flex;
             align-items: center;
             gap: 6px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
         .badge-version {
             background-color: rgba(6, 95, 70, 0.6);
             color: #a7f3d0;
-            border-color: rgba(167, 243, 208, 0.3);
+            border-color: rgba(167, 243, 208, 0.4);
         }
 
         .card-actions {
@@ -346,10 +349,12 @@
             margin-top: 12px;
         }
 
+        /* Explicit borders for button actions inside cards */
         .card-actions button {
             flex: 1;
             padding: 6px 10px;
             font-size: 12px;
+            border: 1px solid var(--border-color);
         }
 
         .btn-secondary {
@@ -361,16 +366,19 @@
 
         .btn-secondary:hover {
             background-color: rgba(255, 255, 255, 0.2);
+            border-color: var(--text-main);
             transform: scale(1.01);
         }
 
         .btn-danger {
             background-color: #991b1b;
+            border: 1px solid rgba(252, 165, 165, 0.3);
             box-shadow: none;
         }
 
         .btn-danger:hover {
             background-color: #7f1d1d;
+            border-color: #fca5a5;
         }
 
         /* Modal Styles */
@@ -632,7 +640,7 @@
 <div class="toast" id="toast">Code copied to clipboard!</div>
 
 <script>
-    // Initial Dataset Extracted directly from Document
+    // Initial Dataset Extracted directly from Document[cite: 2]
     const rawData = [
         { code: "EISVWOF9D", name: "Son", version: "OC TEMPLATE", category: "Base Templates", tags: ["Boy"] },
         { code: "VPE4R54U3", name: "Boy", version: "OC TEMPLATE", category: "Base Templates", tags: ["Boy"] },
