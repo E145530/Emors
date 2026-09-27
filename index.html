@@ -7,7 +7,8 @@
     <style>
         :root {
             --bg-color: #0f0c29;
-            --bg-gradient: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            --bg-grad: #24243e;
+            --bg-gradient: linear-gradient(135deg, #0f0c29, #24243e);
             --card-bg: #1e293b;
             --card-bg-rgb: 30, 41, 59;
             --text-main: #ffffff;
@@ -28,7 +29,7 @@
             margin: 0;
             padding: 20px;
             min-height: 100vh;
-            transition: background-color 0.3s ease, color 0.3s ease;
+            transition: background 0.3s ease, color 0.3s ease;
         }
 
         /* Wallpaper Background Layers */
@@ -535,8 +536,12 @@
                 <input type="color" id="colorAccent" style="height: 40px; padding: 2px; width: 100%; cursor: pointer;" oninput="markCustomTheme()">
             </div>
             <div>
-                <label for="colorBg">Background Color:</label>
+                <label for="colorBg">Gradient Start Color:</label>
                 <input type="color" id="colorBg" style="height: 40px; padding: 2px; width: 100%; cursor: pointer;" oninput="markCustomTheme()">
+            </div>
+            <div>
+                <label for="colorBgGrad">Gradient End Color:</label>
+                <input type="color" id="colorBgGrad" style="height: 40px; padding: 2px; width: 100%; cursor: pointer;" oninput="markCustomTheme()">
             </div>
             <div>
                 <label for="colorCard">Card / Menu Color:</label>
@@ -682,6 +687,7 @@
         default: {
             preset: "default",
             bgColor: "#0f0c29",
+            bgGrad: "#24243e",
             cardBg: "#1e293b",
             textColor: "#ffffff",
             accentColor: "#ff758c",
@@ -694,6 +700,7 @@
         glass: {
             preset: "glass",
             bgColor: "#090d16",
+            bgGrad: "#1e293b",
             cardBg: "#1e293b",
             textColor: "#ffffff",
             accentColor: "#38bdf8",
@@ -706,6 +713,7 @@
         cyberpunk: {
             preset: "cyberpunk",
             bgColor: "#0d0221",
+            bgGrad: "#2a085c",
             cardBg: "#19063b",
             textColor: "#00f6ff",
             accentColor: "#ff007f",
@@ -718,6 +726,7 @@
         emerald: {
             preset: "emerald",
             bgColor: "#022c22",
+            bgGrad: "#064e3b",
             cardBg: "#064e3b",
             textColor: "#ecfdf5",
             accentColor: "#10b981",
@@ -730,6 +739,7 @@
         sunset: {
             preset: "sunset",
             bgColor: "#2d1215",
+            bgGrad: "#5b1a24",
             cardBg: "#4a1d24",
             textColor: "#fff1f2",
             accentColor: "#f43f5e",
@@ -742,6 +752,7 @@
         light: {
             preset: "light",
             bgColor: "#f1f5f9",
+            bgGrad: "#cbd5e1",
             cardBg: "#ffffff",
             textColor: "#0f172a",
             accentColor: "#2563eb",
@@ -1189,6 +1200,7 @@
     function openThemeModal() {
         document.getElementById("presetSelect").value = themeSettings.preset || "custom";
         document.getElementById("colorBg").value = themeSettings.bgColor || "#0f0c29";
+        document.getElementById("colorBgGrad").value = themeSettings.bgGrad || "#24243e";
         document.getElementById("colorCard").value = themeSettings.cardBg || "#1e293b";
         document.getElementById("colorText").value = themeSettings.textColor || "#ffffff";
         document.getElementById("colorAccent").value = themeSettings.accentColor || "#ff758c";
@@ -1219,6 +1231,7 @@
         if (PRESET_THEMES[presetKey]) {
             const p = PRESET_THEMES[presetKey];
             document.getElementById("colorBg").value = p.bgColor;
+            document.getElementById("colorBgGrad").value = p.bgGrad;
             document.getElementById("colorCard").value = p.cardBg;
             document.getElementById("colorText").value = p.textColor;
             document.getElementById("colorAccent").value = p.accentColor;
@@ -1258,6 +1271,7 @@
         themeSettings = {
             preset: document.getElementById("presetSelect").value,
             bgColor: document.getElementById("colorBg").value,
+            bgGrad: document.getElementById("colorBgGrad").value,
             cardBg: document.getElementById("colorCard").value,
             textColor: document.getElementById("colorText").value,
             accentColor: document.getElementById("colorAccent").value,
@@ -1293,8 +1307,12 @@
         const rgbCard = hexToRgb(theme.cardBg || "#1e293b");
         const rgbAccent = hexToRgb(theme.accentColor || "#ff758c");
 
-        root.style.setProperty('--bg-color', theme.bgColor);
-        root.style.setProperty('--bg-gradient', `linear-gradient(135deg, ${theme.bgColor}, #050515)`);
+        const startColor = theme.bgColor || "#0f0c29";
+        const endColor = theme.bgGrad || "#24243e";
+
+        root.style.setProperty('--bg-color', startColor);
+        root.style.setProperty('--bg-grad', endColor);
+        root.style.setProperty('--bg-gradient', `linear-gradient(135deg, ${startColor}, ${endColor})`);
         root.style.setProperty('--card-bg', theme.cardBg);
         root.style.setProperty('--card-bg-rgb', rgbCard);
         root.style.setProperty('--text-main', theme.textColor);
