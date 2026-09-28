@@ -163,7 +163,7 @@
             padding-top: 0;
             padding-bottom: 0;
             pointer-events: none;
-         }
+        }
 
         .filter-grid {
             display: grid;
@@ -301,6 +301,195 @@
         .card-compact .badge {
             font-size: 11px;
             padding: 2px 8px;
+        }
+
+        /* DIRECTORY FILE-EXPLORER FOLDER VIEW */
+        .file-explorer-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .explorer-bar {
+            background: rgba(var(--card-bg-rgb), 0.6);
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-weight: 600;
+        }
+
+        .folder-row {
+            background: rgba(var(--card-bg-rgb), 0.4);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .folder-row:hover {
+            background: rgba(var(--card-bg-rgb), 0.8);
+            border-color: var(--accent);
+            transform: translateX(4px);
+        }
+
+        .folder-row-up {
+            background: rgba(255, 117, 140, 0.15);
+            border: 1px dashed var(--accent);
+        }
+
+        /* TREE BRANCH DIAGRAM MODE */
+        .tree-diagram-container {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            overflow-x: auto;
+            padding: 20px 0;
+        }
+
+        .tree-branch-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            position: relative;
+        }
+
+        .tree-root-node {
+            background: rgba(var(--card-bg-rgb), 0.85);
+            border: 2px solid var(--accent);
+            border-radius: 30px;
+            padding: 8px 18px;
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+            white-space: nowrap;
+            box-shadow: 0 4px 15px var(--accent-glow);
+            transition: transform 0.2s ease;
+            z-index: 2;
+            width: fit-content;
+        }
+
+        .tree-root-node:hover {
+            transform: scale(1.03);
+        }
+
+        .tree-sub-node {
+            background: rgba(var(--card-bg-rgb), 0.6);
+            border: 1px solid #38bdf8;
+            border-radius: 20px;
+            padding: 6px 14px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: transform 0.2s ease;
+            width: fit-content;
+        }
+
+        .tree-sub-node:hover {
+            transform: scale(1.02);
+            background: rgba(56, 189, 248, 0.2);
+        }
+
+        .tree-tag-node {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 5px 12px;
+            font-weight: 500;
+            font-size: 12px;
+            cursor: pointer;
+            white-space: nowrap;
+            width: fit-content;
+        }
+
+        .tree-children-container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            position: relative;
+            margin-left: 20px;
+            padding-left: 16px;
+            border-left: 2px dashed var(--border-color);
+        }
+
+        .tree-children-container.collapsed {
+            display: none;
+        }
+
+        .tree-child-node {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .tree-child-node::before {
+            content: '';
+            position: absolute;
+            left: -16px;
+            top: 50%;
+            width: 16px;
+            height: 2px;
+            background: var(--border-color);
+        }
+
+        .tree-leaf-pill {
+            background: rgba(0, 0, 0, 0.35);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 6px 14px;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+        }
+
+        .tree-leaf-pill:hover {
+            border-color: #38bdf8;
+            background: rgba(56, 189, 248, 0.15);
+        }
+
+        /* Action Menu Popover */
+        .action-menu-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .btn-gear {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid var(--border-color);
+            padding: 6px 12px;
+            font-size: 13px;
+            border-radius: 12px;
+        }
+
+        .action-menu-dropdown {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 110%;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 8px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+            z-index: 10;
+            flex-direction: column;
+            gap: 6px;
+            min-width: 140px;
+        }
+
+        .action-menu-dropdown.show {
+            display: flex;
         }
 
         /* Card Themes */
@@ -582,7 +771,7 @@
         </div>
     </div>
 
-    <!-- Permanent Search Bar Placed Outside Collapsible Menu on Top of OC List -->
+    <!-- Permanent Search Bar -->
     <div style="margin-bottom: 20px;">
         <input type="text" id="searchInput" placeholder="Search by name, code, or tags..." style="width: 100%; box-sizing: border-box; padding: 12px 16px; font-size: 15px; border-radius: 14px;">
     </div>
@@ -596,9 +785,11 @@
         <h2>📐 UI Layout & Placement Settings</h2>
         
         <h3>Grid & Display Mode</h3>
-        <label for="placementGridCols">Card Columns / Grid Layout:</label>
+        <label for="placementGridCols">Card Columns / Layout Style:</label>
         <select id="placementGridCols">
             <option value="auto">Auto Responsive Grid (Default)</option>
+            <option value="folder">📁 File Explorer Folder Mode</option>
+            <option value="tree">🌿 Small Tree Branch Diagram</option>
             <option value="1">1 Column (List View)</option>
             <option value="2">2 Columns</option>
             <option value="3">3 Columns</option>
@@ -606,10 +797,11 @@
             <option value="5">5 Columns</option>
         </select>
 
-        <label for="placementCardDensity">Card Spacing / Density:</label>
+        <label for="placementCardDensity">Card Spacing & Action Button Style:</label>
         <select id="placementCardDensity">
-            <option value="normal">Normal / Spacious</option>
+            <option value="normal">Normal / Spacious (Full Action Buttons)</option>
             <option value="compact">Compact / High Density</option>
+            <option value="menu-button">⚙️ Compact with Menu Pop-up Button</option>
         </select>
 
         <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 6px 0;">
@@ -768,15 +960,24 @@
         </select>
 
         <label for="inputVersion">Design Version:</label>
-        <input type="text" id="inputVersion" list="versionList" placeholder="Select or type new version...">
-        <datalist id="versionList"></datalist>
+        <select id="inputVersionSelect" onchange="handleCustomSelectChange(this, 'inputVersion')">
+            <option value="OC TEMPLATE">OC TEMPLATE</option>
+            <option value="NEW_CUSTOM">+ Add Custom Version...</option>
+        </select>
+        <input type="text" id="inputVersion" placeholder="Type new version..." style="margin-top: 6px; display: none;">
 
         <label for="inputCategory">Category / Association:</label>
-        <input type="text" id="inputCategory" list="categoryList" placeholder="Select or type new category...">
-        <datalist id="categoryList"></datalist>
+        <select id="inputCategorySelect" onchange="handleCustomSelectChange(this, 'inputCategory')">
+            <option value="Base Templates">Base Templates</option>
+            <option value="NEW_CUSTOM">+ Add Custom Category...</option>
+        </select>
+        <input type="text" id="inputCategory" placeholder="Type new category..." style="margin-top: 6px; display: none;">
 
         <label for="inputTags">Variation Tags (comma-separated):</label>
-        <input type="text" id="inputTags" placeholder="e.g. Boy, Remastered, Winter, Redesign">
+        <select id="inputTagSelect" onchange="appendSelectedTag(this)">
+            <option value="">-- Choose Existing Tag to Add --</option>
+        </select>
+        <input type="text" id="inputTags" placeholder="e.g. Boy, Remastered, Winter, Redesign" style="margin-top: 6px;">
 
         <div class="modal-buttons">
             <button class="btn-secondary" onclick="closeModal()">Cancel</button>
@@ -821,84 +1022,12 @@
     }
 
     const PRESET_THEMES = {
-        default: {
-            preset: "default",
-            bgColor: "#0f0c29",
-            bgGrad: "#24243e",
-            cardBg: "#1e293b",
-            textColor: "#ffffff",
-            accentColor: "#ff758c",
-            cardStyle: "glass",
-            cardBgPic: "",
-            wallpaperUrl: "",
-            wallpaperBlur: 0,
-            wallpaperOverlay: 30
-        },
-        glass: {
-            preset: "glass",
-            bgColor: "#090d16",
-            bgGrad: "#1e293b",
-            cardBg: "#1e293b",
-            textColor: "#ffffff",
-            accentColor: "#38bdf8",
-            cardStyle: "glass",
-            cardBgPic: "",
-            wallpaperUrl: "",
-            wallpaperBlur: 0,
-            wallpaperOverlay: 30
-        },
-        cyberpunk: {
-            preset: "cyberpunk",
-            bgColor: "#0d0221",
-            bgGrad: "#2a085c",
-            cardBg: "#19063b",
-            textColor: "#00f6ff",
-            accentColor: "#ff007f",
-            cardStyle: "glow",
-            cardBgPic: "",
-            wallpaperUrl: "",
-            wallpaperBlur: 0,
-            wallpaperOverlay: 30
-        },
-        emerald: {
-            preset: "emerald",
-            bgColor: "#022c22",
-            bgGrad: "#064e3b",
-            cardBg: "#064e3b",
-            textColor: "#ecfdf5",
-            accentColor: "#10b981",
-            cardStyle: "glass",
-            cardBgPic: "",
-            wallpaperUrl: "",
-            wallpaperBlur: 0,
-            wallpaperOverlay: 30
-        },
-        sunset: {
-            preset: "sunset",
-            bgColor: "#2d1215",
-            bgGrad: "#5b1a24",
-            cardBg: "#4a1d24",
-            textColor: "#fff1f2",
-            accentColor: "#f43f5e",
-            cardStyle: "glass",
-            cardBgPic: "",
-            wallpaperUrl: "",
-            wallpaperBlur: 0,
-            wallpaperOverlay: 30
-        },
-        light: {
-            preset: "light",
-            bgColor: "#f1f5f9",
-            bgGrad: "#cbd5e1",
-            cardBg: "#ffffff",
-            textColor: "#0f172a",
-            accentColor: "#2563eb",
-            cardStyle: "solid",
-            cardBgPic: "",
-            wallpaperUrl: "",
-            wallpaperBlur: 0,
-            wallpaperOverlay: 10
-        }
+        default: { preset: "default", bgColor: "#0f0c29", bgGrad: "#24243e", cardBg: "#1e293b", textColor: "#ffffff", accentColor: "#ff758c", cardStyle: "glass", cardBgPic: "", wallpaperUrl: "", wallpaperBlur: 0, wallpaperOverlay: 30 },
+        glass: { preset: "glass", bgColor: "#090d16", bgGrad: "#1e293b", cardBg: "#1e293b", textColor: "#ffffff", accentColor: "#38bdf8", cardStyle: "glass", cardBgPic: "", wallpaperUrl: "", wallpaperBlur: 0, wallpaperOverlay: 30 },
+        cyberpunk: { preset: "cyberpunk", bgColor: "#0d0221", bgGrad: "#2a085c", cardBg: "#19063b", textColor: "#00f6ff", accentColor: "#ff007f", cardStyle: "glow", cardBgPic: "", wallpaperUrl: "", wallpaperBlur: 0, wallpaperOverlay: 30 },
+        emerald: { preset: "emerald", bgColor: "#022c22", bgGrad: "#064e3b", cardBg: "#064e3b", textColor: "#ecfdf5", accentColor: "#10b981", cardStyle: "glass", cardBgPic: "", wallpaperUrl: "", wallpaperBlur: 0, wallpaperOverlay: 30 },
+        sunset: { preset: "sunset", bgColor: "#2d1215", bgGrad: "#5b1a24", cardBg: "#4a1d24", textColor: "#fff1f2", accentColor: "#f43f5e", cardStyle: "glass", cardBgPic: "", wallpaperUrl: "", wallpaperBlur: 0, wallpaperOverlay: 30 },
+        light: { preset: "light", bgColor: "#f1f5f9", bgGrad: "#cbd5e1", cardBg: "#ffffff", textColor: "#0f172a", accentColor: "#2563eb", cardStyle: "solid", cardBgPic: "", wallpaperUrl: "", wallpaperBlur: 0, wallpaperOverlay: 10 }
     };
 
     const DEFAULT_LAYOUT = {
@@ -914,6 +1043,7 @@
     let themeSettings = JSON.parse(localStorage.getItem("gacha_theme")) || PRESET_THEMES.default;
     let layoutSettings = JSON.parse(localStorage.getItem("gacha_layout")) || DEFAULT_LAYOUT;
     let editingIndex = null;
+    let currentExplorerPath = { version: null, category: null, tag: null };
 
     const ocGrid = document.getElementById("ocGrid");
     const searchInput = document.getElementById("searchInput");
@@ -932,7 +1062,7 @@
     let wasAutoCollapsed = false;
     let scrollDeltaSinceUnfold = 0;
     let hasScrolledUpSinceUnfold = false;
-    let isUnfoldingLock = false; // Prevents scroll collapse immediately after clicking unfold
+    let isUnfoldingLock = false;
 
     function toggleHeaderControls() {
         const content = document.getElementById("controlsContent");
@@ -940,7 +1070,6 @@
         const isCollapsed = content.classList.contains("collapsed");
 
         if (isCollapsed) {
-            // Manual Unfold
             isUnfoldingLock = true;
             content.classList.remove("collapsed");
             btn.textContent = "Fold Menu 🔼";
@@ -950,12 +1079,8 @@
             hasScrolledUpSinceUnfold = false;
             lastScrollY = window.scrollY;
 
-            // Release the lockout after 600ms so normal scrolling works later
-            setTimeout(() => {
-                isUnfoldingLock = false;
-            }, 600);
+            setTimeout(() => { isUnfoldingLock = false; }, 600);
         } else {
-            // Manual Fold
             content.classList.add("collapsed");
             btn.textContent = "Unfold Menu 🔽";
             wasAutoCollapsed = false;
@@ -972,21 +1097,17 @@
     headerControls.addEventListener("touchcancel", () => { setTimeout(() => { isOverFilter = false; }, 300); }, { passive: true });
 
     window.addEventListener("scroll", () => {
-        if (isUnfoldingLock) return; // Skip scroll checks entirely while unfolding
+        if (isUnfoldingLock) return;
 
         const currentScrollY = window.scrollY;
         const scrollDiff = currentScrollY - lastScrollY;
         const scrollingDown = scrollDiff > 0;
         const scrollingUp = scrollDiff < 0;
 
-        if (scrollingUp) {
-            hasScrolledUpSinceUnfold = true;
-        }
+        if (scrollingUp) hasScrolledUpSinceUnfold = true;
 
         if (autoCollapseDisabled) {
-            if (scrollingDown) {
-                scrollDeltaSinceUnfold += scrollDiff;
-            }
+            if (scrollingDown) scrollDeltaSinceUnfold += scrollDiff;
             if (scrollDeltaSinceUnfold > 300 || hasScrolledUpSinceUnfold) {
                 autoCollapseDisabled = false;
                 scrollDeltaSinceUnfold = 0;
@@ -994,7 +1115,6 @@
         }
 
         lastScrollY = currentScrollY;
-
         if (layoutSettings.autoCollapse === "disabled") return;
 
         const content = document.getElementById("controlsContent");
@@ -1004,8 +1124,7 @@
 
         if (!isOverFilter && !isInputFocused) {
             if (layoutSettings.headerPos !== "sticky-bottom") {
-                if (wasAutoCollapsed) return;
-                if (autoCollapseDisabled) return;
+                if (wasAutoCollapsed || autoCollapseDisabled) return;
 
                 if (scrollingDown && currentScrollY > 40 && Math.abs(scrollDiff) > 2) {
                     if (content && !content.classList.contains("collapsed")) {
@@ -1021,9 +1140,7 @@
     function removePictureInput() {
         document.getElementById("inputImage").value = "";
         document.getElementById("inputFile").value = "";
-        if (editingIndex !== null) {
-            ocs[editingIndex].image = "";
-        }
+        if (editingIndex !== null) ocs[editingIndex].image = "";
     }
 
     function updateDropdowns() {
@@ -1048,8 +1165,37 @@
         if (versions.includes(currentVer)) versionFilter.value = currentVer;
         if (tags.includes(currentTag)) tagFilter.value = currentTag;
 
-        document.getElementById("categoryList").innerHTML = categories.map(c => `<option value="${c}">`).join('');
-        document.getElementById("versionList").innerHTML = versions.map(v => `<option value="${v}">`).join('');
+        const verSelect = document.getElementById("inputVersionSelect");
+        verSelect.innerHTML = versions.map(v => `<option value="${v}">${v}</option>`).join('') + '<option value="NEW_CUSTOM">+ Add Custom Version...</option>';
+        
+        const catSelect = document.getElementById("inputCategorySelect");
+        catSelect.innerHTML = categories.map(c => `<option value="${c}">${c}</option>`).join('') + '<option value="NEW_CUSTOM">+ Add Custom Category...</option>';
+
+        const tagSelect = document.getElementById("inputTagSelect");
+        tagSelect.innerHTML = '<option value="">-- Choose Existing Tag to Add --</option>' + tags.map(t => `<option value="${t}">${t}</option>`).join('');
+    }
+
+    function handleCustomSelectChange(selectEl, inputId) {
+        const inputEl = document.getElementById(inputId);
+        if (selectEl.value === "NEW_CUSTOM") {
+            inputEl.style.display = "block";
+            inputEl.value = "";
+            inputEl.focus();
+        } else {
+            inputEl.style.display = "none";
+            inputEl.value = selectEl.value;
+        }
+    }
+
+    function appendSelectedTag(selectEl) {
+        if (!selectEl.value) return;
+        const inputTags = document.getElementById("inputTags");
+        const currentTags = inputTags.value.split(',').map(t => t.trim()).filter(Boolean);
+        if (!currentTags.includes(selectEl.value)) {
+            currentTags.push(selectEl.value);
+            inputTags.value = currentTags.join(', ');
+        }
+        selectEl.value = "";
     }
 
     function renameCategory() {
@@ -1062,10 +1208,7 @@
         const newCat = prompt(`Enter new category name for "${oldCat}":`);
         if (!newCat || !newCat.trim()) return;
 
-        ocs.forEach(oc => {
-            if (oc.category === oldCat) oc.category = newCat.trim();
-        });
-
+        ocs.forEach(oc => { if (oc.category === oldCat) oc.category = newCat.trim(); });
         localStorage.setItem("gacha_ocs", JSON.stringify(ocs));
         updateDropdowns();
         render();
@@ -1082,14 +1225,98 @@
         const newVer = prompt(`Enter new version name for "${oldVer}":`);
         if (!newVer || !newVer.trim()) return;
 
-        ocs.forEach(oc => {
-            if (oc.version === oldVer) oc.version = newVer.trim();
-        });
-
+        ocs.forEach(oc => { if (oc.version === oldVer) oc.version = newVer.trim(); });
         localStorage.setItem("gacha_ocs", JSON.stringify(ocs));
         updateDropdowns();
         render();
         alert(`Renamed version "${oldVer}" to "${newVer.trim()}".`);
+    }
+
+    function toggleActionMenu(event, btn) {
+        event.stopPropagation();
+        document.querySelectorAll('.action-menu-dropdown').forEach(m => m.classList.remove('show'));
+        const menu = btn.nextElementSibling;
+        if(menu) menu.classList.toggle('show');
+    }
+
+    document.addEventListener('click', () => {
+        document.querySelectorAll('.action-menu-dropdown').forEach(m => m.classList.remove('show'));
+    });
+
+    function buildCardHTML(oc, realIndex) {
+        const isImgBottom = layoutSettings.cardImagePos === 'bottom';
+        const isMenuBtn = layoutSettings.cardDensity === 'menu-button';
+        const imgSrc = oc.image || 'https://via.placeholder.com/300x180/1e293b/94a3b8?text=No+Image';
+        const imgFitStyle = oc.imageFit || 'cover';
+
+        const actionsHTML = isMenuBtn ? `
+            <div class="action-menu-container" style="margin-top: 10px; text-align: right;">
+                <button class="btn-gear" onclick="toggleActionMenu(event, this)">⚙️ Options 🔽</button>
+                <div class="action-menu-dropdown">
+                    <button class="btn-secondary" onclick="editOC(${realIndex})">Edit OC</button>
+                    <button class="btn-secondary" onclick="copyCode('${oc.code}')">Copy Code</button>
+                    <button class="btn-danger" onclick="deleteOC(${realIndex})">Delete</button>
+                </div>
+            </div>
+        ` : `
+            <div class="card-actions">
+                <button class="btn-secondary" onclick="editOC(${realIndex})">Edit</button>
+                <button class="btn-danger" onclick="deleteOC(${realIndex})">Delete</button>
+            </div>
+        `;
+
+        return `
+            <div class="card ${isImgBottom ? 'img-bottom' : ''}">
+                <div>
+                    <img class="oc-image" src="${imgSrc}" alt="${oc.name}" style="object-fit: ${imgFitStyle};" onerror="this.onerror=null; this.src='https://via.placeholder.com/300x180/1e293b/94a3b8?text=Image+Error'">
+                    <div class="card-header">
+                        <h3 class="oc-name">${oc.name}</h3>
+                        <input type="checkbox" class="oc-select" value="${realIndex}" style="width:18px; height:18px; cursor:pointer;">
+                    </div>
+                    <div class="oc-code" onclick="copyCode('${oc.code}')" title="Click to copy code">
+                        ${oc.code}
+                    </div>
+                    <div class="badge-container">
+                        <span class="badge badge-version">🏷️ ${oc.version}</span>
+                        <span class="badge">📂 ${oc.category || 'General'}</span>
+                        ${oc.tags.map(t => `<span class="badge" style="background:var(--accent); color:#ffffff;">${getTagEmoji(t)}${t}</span>`).join('')}
+                    </div>
+                </div>
+                ${actionsHTML}
+            </div>
+        `;
+    }
+
+    function toggleTreeBranch(id) {
+        const el = document.getElementById(id);
+        if (el) el.classList.toggle('collapsed');
+    }
+
+    function openExplorerVersion(verName) {
+        currentExplorerPath = { version: verName, category: null, tag: null };
+        render();
+    }
+
+    function openExplorerCategory(catName) {
+        currentExplorerPath.category = catName;
+        currentExplorerPath.tag = null;
+        render();
+    }
+
+    function openExplorerTag(tagName) {
+        currentExplorerPath.tag = tagName;
+        render();
+    }
+
+    function navigateExplorerUp() {
+        if (currentExplorerPath.tag !== null) {
+            currentExplorerPath.tag = null;
+        } else if (currentExplorerPath.category !== null) {
+            currentExplorerPath.category = null;
+        } else if (currentExplorerPath.version !== null) {
+            currentExplorerPath.version = null;
+        }
+        render();
     }
 
     function render() {
@@ -1117,37 +1344,217 @@
 
         statsDisplay.textContent = `Showing ${filtered.length} / ${ocs.length} OCs`;
 
-        const isImgBottom = layoutSettings.cardImagePos === 'bottom';
+        /* --- 1. FILE-EXPLORER DIRECTORY FOLDER MODE (ORDER: Version > Category > Tags) --- */
+        if (layoutSettings.gridCols === "folder") {
+            ocGrid.className = "file-explorer-container";
 
-        ocGrid.innerHTML = filtered.map((oc) => {
-            const realIndex = ocs.indexOf(oc);
-            const imgSrc = oc.image || 'https://via.placeholder.com/300x180/1e293b/94a3b8?text=No+Image';
-            const imgFitStyle = oc.imageFit || 'cover';
+            // Group structure: hierarchy[version][category][tag] -> array of items
+            const hierarchy = {};
+            filtered.forEach(oc => {
+                const ver = oc.version || 'Unassigned Version';
+                const cat = oc.category || 'Uncategorized';
+                const tagList = oc.tags && oc.tags.length > 0 ? oc.tags : ['Untagged'];
 
-            return `
-                <div class="card ${isImgBottom ? 'img-bottom' : ''}">
-                    <div>
-                        <img class="oc-image" src="${imgSrc}" alt="${oc.name}" style="object-fit: ${imgFitStyle};" onerror="this.onerror=null; this.src='https://via.placeholder.com/300x180/1e293b/94a3b8?text=Image+Error'">
-                        <div class="card-header">
-                            <h3 class="oc-name">${oc.name}</h3>
-                            <input type="checkbox" class="oc-select" value="${realIndex}" style="width:18px; height:18px; cursor:pointer;">
+                if (!hierarchy[ver]) hierarchy[ver] = {};
+                if (!hierarchy[ver][cat]) hierarchy[ver][cat] = {};
+
+                tagList.forEach(tag => {
+                    if (!hierarchy[ver][cat][tag]) hierarchy[ver][cat][tag] = [];
+                    hierarchy[ver][cat][tag].push(oc);
+                });
+            });
+
+            // Level 1: Root Level -> Show Version Folders
+            if (currentExplorerPath.version === null) {
+                const versions = Object.keys(hierarchy);
+                ocGrid.innerHTML = `
+                    <div class="explorer-bar">
+                        <span>🏷️ Directory Root / Versions (${versions.length} Version Folders)</span>
+                    </div>
+                    ${versions.map(v => {
+                        let totalInVer = 0;
+                        Object.values(hierarchy[v]).forEach(catObj => {
+                            Object.values(catObj).forEach(tagList => { totalInVer += tagList.length; });
+                        });
+                        return `
+                            <div class="folder-row" onclick="openExplorerVersion('${v}')">
+                                <span style="display:flex; align-items:center; gap:10px;">
+                                    <span style="font-size:20px;">🏷️</span> <strong>${v}</strong>
+                                </span>
+                                <span class="stats">${totalInVer} item(s) ➔</span>
+                            </div>
+                        `;
+                    }).join('')}
+                `;
+            } 
+            // Level 2: Inside Version -> Show Category Folders
+            else if (currentExplorerPath.category === null) {
+                const selectedVer = currentExplorerPath.version;
+                const categories = hierarchy[selectedVer] ? Object.keys(hierarchy[selectedVer]) : [];
+                ocGrid.innerHTML = `
+                    <div class="explorer-bar">
+                        <span>📂 / ${selectedVer} (${categories.length} Category Folders)</span>
+                    </div>
+                    <div class="folder-row folder-row-up" onclick="navigateExplorerUp()">
+                        <span style="display:flex; align-items:center; gap:10px; color:var(--accent);">
+                            <span style="font-size:18px;">⬆️</span> <strong>.. (Back to Versions Root)</strong>
+                        </span>
+                    </div>
+                    ${categories.map(c => {
+                        let totalInCat = 0;
+                        Object.values(hierarchy[selectedVer][c]).forEach(tagList => { totalInCat += tagList.length; });
+                        return `
+                            <div class="folder-row" onclick="openExplorerCategory('${c}')">
+                                <span style="display:flex; align-items:center; gap:10px;">
+                                    <span style="font-size:20px;">📁</span> <strong>${c}</strong>
+                                </span>
+                                <span class="stats">${totalInCat} item(s) ➔</span>
+                            </div>
+                        `;
+                    }).join('')}
+                `;
+            } 
+            // Level 3: Inside Category -> Show Tag Folders
+            else if (currentExplorerPath.tag === null) {
+                const selectedVer = currentExplorerPath.version;
+                const selectedCat = currentExplorerPath.category;
+                const tags = hierarchy[selectedVer] && hierarchy[selectedVer][selectedCat] ? Object.keys(hierarchy[selectedVer][selectedCat]) : [];
+                ocGrid.innerHTML = `
+                    <div class="explorer-bar">
+                        <span>🏷️ / ${selectedVer} / ${selectedCat} (${tags.length} Tag Folders)</span>
+                    </div>
+                    <div class="folder-row folder-row-up" onclick="navigateExplorerUp()">
+                        <span style="display:flex; align-items:center; gap:10px; color:var(--accent);">
+                            <span style="font-size:18px;">⬆️</span> <strong>.. (Back to Category Level)</strong>
+                        </span>
+                    </div>
+                    ${tags.map(t => {
+                        const totalInTag = hierarchy[selectedVer][selectedCat][t].length;
+                        return `
+                            <div class="folder-row" onclick="openExplorerTag('${t}')">
+                                <span style="display:flex; align-items:center; gap:10px;">
+                                    <span style="font-size:20px;">🔖</span> <strong>${t}</strong>
+                                </span>
+                                <span class="stats">${totalInTag} item(s) ➔</span>
+                            </div>
+                        `;
+                    }).join('')}
+                `;
+            } 
+            // Level 4: Inside Tag -> Show Cards
+            else {
+                const selectedVer = currentExplorerPath.version;
+                const selectedCat = currentExplorerPath.category;
+                const selectedTag = currentExplorerPath.tag;
+                const folderItems = (hierarchy[selectedVer] && hierarchy[selectedVer][selectedCat] && hierarchy[selectedVer][selectedCat][selectedTag]) || [];
+                
+                // Deduplicate items in case tags had multiple entries
+                const uniqueOCs = Array.from(new Set(folderItems));
+
+                ocGrid.innerHTML = `
+                    <div class="explorer-bar">
+                        <span>📄 / ${selectedVer} / ${selectedCat} / ${selectedTag} (${uniqueOCs.length} OCs)</span>
+                    </div>
+                    <div class="folder-row folder-row-up" onclick="navigateExplorerUp()">
+                        <span style="display:flex; align-items:center; gap:10px; color:var(--accent);">
+                            <span style="font-size:18px;">⬆️</span> <strong>.. (Back to Tag Level)</strong>
+                        </span>
+                    </div>
+                    <div class="card-grid" style="margin-top:10px;">
+                        ${uniqueOCs.map(oc => buildCardHTML(oc, ocs.indexOf(oc))).join('')}
+                    </div>
+                `;
+            }
+        } 
+        /* --- 2. SMALL TREE BRANCH DIAGRAM MODE (ORDER: Version > Category > Tags) --- */
+        else if (layoutSettings.gridCols === "tree") {
+            ocGrid.className = "tree-diagram-container";
+
+            // Group hierarchy: Version -> Category -> Tag -> OCs
+            const hierarchy = {};
+            filtered.forEach(oc => {
+                const ver = oc.version || 'Unassigned Version';
+                const cat = oc.category || 'Uncategorized';
+                const tagList = oc.tags && oc.tags.length > 0 ? oc.tags : ['Untagged'];
+
+                if (!hierarchy[ver]) hierarchy[ver] = {};
+                if (!hierarchy[ver][cat]) hierarchy[ver][cat] = {};
+
+                tagList.forEach(tag => {
+                    if (!hierarchy[ver][cat][tag]) hierarchy[ver][cat][tag] = [];
+                    hierarchy[ver][cat][tag].push(oc);
+                });
+            });
+
+            let verIdx = 0;
+            ocGrid.innerHTML = Object.keys(hierarchy).map(verName => {
+                verIdx++;
+                const categoriesObj = hierarchy[verName];
+
+                let catIdx = 0;
+                const categoriesHTML = Object.keys(categoriesObj).map(catName => {
+                    catIdx++;
+                    const tagsObj = categoriesObj[catName];
+
+                    let tagIdx = 0;
+                    const tagsHTML = Object.keys(tagsObj).map(tagName => {
+                        tagIdx++;
+                        const ocsList = Array.from(new Set(tagsObj[tagName]));
+
+                        const ocPillsHTML = ocsList.map(oc => `
+                            <div class="tree-child-node">
+                                <div class="tree-leaf-pill">
+                                    <strong>${oc.name}</strong> 
+                                    <span style="font-family:monospace; color:#38bdf8; cursor:pointer;" onclick="copyCode('${oc.code}')" title="Copy">${oc.code}</span>
+                                </div>
+                            </div>
+                        `).join('');
+
+                        return `
+                            <div class="tree-child-node">
+                                <div class="tree-branch-group" style="width: 100%;">
+                                    <div class="tree-tag-node" onclick="toggleTreeBranch('tree-tag-${verIdx}-${catIdx}-${tagIdx}')">
+                                        🔖 ${tagName} (${ocsList.length}) 🔽
+                                    </div>
+                                    <div class="tree-children-container" id="tree-tag-${verIdx}-${catIdx}-${tagIdx}">
+                                        ${ocPillsHTML}
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+
+                    return `
+                        <div class="tree-child-node">
+                            <div class="tree-branch-group" style="width: 100%;">
+                                <div class="tree-sub-node" onclick="toggleTreeBranch('tree-cat-${verIdx}-${catIdx}')">
+                                    📁 ${catName} (${Object.keys(tagsObj).length} Tags) 🔽
+                                </div>
+                                <div class="tree-children-container" id="tree-cat-${verIdx}-${catIdx}">
+                                    ${tagsHTML}
+                                </div>
+                            </div>
                         </div>
-                        <div class="oc-code" onclick="copyCode('${oc.code}')" title="Click to copy code">
-                            ${oc.code}
+                    `;
+                }).join('');
+
+                return `
+                    <div class="tree-branch-group">
+                        <div class="tree-root-node" onclick="toggleTreeBranch('tree-ver-${verIdx}')">
+                            🏷️ ${verName} (${Object.keys(categoriesObj).length} Categories) 🔽
                         </div>
-                        <div class="badge-container">
-                            <span class="badge badge-version">🏷️ ${oc.version}</span>
-                            <span class="badge">📂 ${oc.category || 'General'}</span>
-                            ${oc.tags.map(t => `<span class="badge" style="background:var(--accent); color:#ffffff;">${getTagEmoji(t)}${t}</span>`).join('')}
+                        <div class="tree-children-container" id="tree-ver-${verIdx}">
+                            ${categoriesHTML}
                         </div>
                     </div>
-                    <div class="card-actions">
-                        <button class="btn-secondary" onclick="editOC(${realIndex})">Edit</button>
-                        <button class="btn-danger" onclick="deleteOC(${realIndex})">Delete</button>
-                    </div>
-                </div>
-            `;
-        }).join('');
+                `;
+            }).join('');
+        } 
+        /* --- 3. STANDARD GRID MODE --- */
+        else {
+            ocGrid.className = "card-grid";
+            ocGrid.innerHTML = filtered.map(oc => buildCardHTML(oc, ocs.indexOf(oc))).join('');
+        }
 
         applyTheme(themeSettings);
         applyPlacementSettings(layoutSettings);
@@ -1165,14 +1572,38 @@
         document.getElementById("inputFile").value = "";
         const modal = document.getElementById("editorModal");
         
+        const verSelect = document.getElementById("inputVersionSelect");
+        const verInput = document.getElementById("inputVersion");
+        const catSelect = document.getElementById("inputCategorySelect");
+        const catInput = document.getElementById("inputCategory");
+
         if (index !== null) {
             document.getElementById("modalTitle").textContent = "Edit OC Code";
             document.getElementById("inputCode").value = ocs[index].code;
             document.getElementById("inputName").value = ocs[index].name;
             document.getElementById("inputImage").value = ocs[index].image || '';
             document.getElementById("inputImageFit").value = ocs[index].imageFit || 'cover';
-            document.getElementById("inputVersion").value = ocs[index].version;
-            document.getElementById("inputCategory").value = ocs[index].category || '';
+            
+            if ([...verSelect.options].some(o => o.value === ocs[index].version)) {
+                verSelect.value = ocs[index].version;
+                verInput.style.display = "none";
+                verInput.value = ocs[index].version;
+            } else {
+                verSelect.value = "NEW_CUSTOM";
+                verInput.style.display = "block";
+                verInput.value = ocs[index].version;
+            }
+
+            if ([...catSelect.options].some(o => o.value === ocs[index].category)) {
+                catSelect.value = ocs[index].category;
+                catInput.style.display = "none";
+                catInput.value = ocs[index].category;
+            } else {
+                catSelect.value = "NEW_CUSTOM";
+                catInput.style.display = "block";
+                catInput.value = ocs[index].category;
+            }
+
             document.getElementById("inputTags").value = ocs[index].tags.join(', ');
         } else {
             document.getElementById("modalTitle").textContent = "Add New OC";
@@ -1180,8 +1611,12 @@
             document.getElementById("inputName").value = '';
             document.getElementById("inputImage").value = '';
             document.getElementById("inputImageFit").value = 'cover';
-            document.getElementById("inputVersion").value = 'OC TEMPLATE';
-            document.getElementById("inputCategory").value = '';
+            verSelect.selectedIndex = 0;
+            verInput.style.display = "none";
+            verInput.value = verSelect.value;
+            catSelect.selectedIndex = 0;
+            catInput.style.display = "none";
+            catInput.value = catSelect.value;
             document.getElementById("inputTags").value = '';
         }
 
@@ -1227,7 +1662,7 @@
         const imageUrlInput = document.getElementById("inputImage").value.trim();
         const fileInput = document.getElementById("inputFile");
         const imageFit = document.getElementById("inputImageFit").value;
-        const version = document.getElementById("inputVersion").value;
+        const version = document.getElementById("inputVersion").value.trim();
         const category = document.getElementById("inputCategory").value.trim();
         const tags = document.getElementById("inputTags").value.split(',').map(t => t.trim()).filter(Boolean);
 
@@ -1382,7 +1817,7 @@
         }
 
         grid.classList.remove("grid-cols-1", "grid-cols-2", "grid-cols-3", "grid-cols-4", "grid-cols-5");
-        if (settings.gridCols && settings.gridCols !== "auto") {
+        if (settings.gridCols && !["auto", "folder", "tree"].includes(settings.gridCols)) {
             grid.classList.add(`grid-cols-${settings.gridCols}`);
         }
 
@@ -1404,10 +1839,7 @@
         }
     }
 
-    const CONFIG_KEYS = {
-        binId: 'oc_jsonbin_id',
-        apiKey: 'oc_jsonbin_key'
-    };
+    const CONFIG_KEYS = { binId: 'oc_jsonbin_id', apiKey: 'oc_jsonbin_key' };
 
     function setSyncStatus(message, isError = false) {
         const statusEl = document.getElementById('sync-status');
@@ -1474,9 +1906,7 @@
         try {
             const response = await fetch(`https://api.jsonbin.io/v3/b/${binId}/latest`, {
                 method: 'GET',
-                headers: {
-                    'X-Master-Key': apiKey
-                }
+                headers: { 'X-Master-Key': apiKey }
             });
 
             if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
@@ -1565,9 +1995,7 @@
         const file = event.target.files[0];
         if (file) {
             const reader = new FileReader();
-            reader.onload = function(e) {
-                document.getElementById("inputWallpaper").value = e.target.result;
-            };
+            reader.onload = function(e) { document.getElementById("inputWallpaper").value = e.target.result; };
             reader.readAsDataURL(file);
         }
     }
@@ -1576,9 +2004,7 @@
         const file = event.target.files[0];
         if (file) {
             const reader = new FileReader();
-            reader.onload = function(e) {
-                document.getElementById("inputCardPic").value = e.target.result;
-            };
+            reader.onload = function(e) { document.getElementById("inputCardPic").value = e.target.result; };
             reader.readAsDataURL(file);
         }
     }
@@ -1659,7 +2085,7 @@
             wpOverlay.style.backgroundColor = 'transparent';
         }
 
-        const styledElements = document.querySelectorAll('.controls, .card, .modal-content');
+        const styledElements = document.querySelectorAll('.controls, .card, .modal-content, .explorer-bar, .folder-row');
         styledElements.forEach(el => {
             el.classList.remove('appearance-solid', 'appearance-glass', 'appearance-glow', 'appearance-customPic');
             el.classList.add(`appearance-${theme.cardStyle || 'glass'}`);
