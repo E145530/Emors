@@ -1107,7 +1107,7 @@
         <select id="placementCardDensity">
             <option value="normal">Normal / Spacious (Full Action Buttons)</option>
             <option value="compact">Compact / High Density</option>
-            <option value="menu-button">⚙️ Compact with Menu Pop-up Button</option>
+            <option value="menu-button">⚙️️ Compact with Menu Pop-up Button</option>
         </select>
 
         <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 6px 0;">
@@ -2103,7 +2103,7 @@
                     </div>
                     <div class="folder-row folder-row-up" onclick="navigateExplorerUp()">
                         <span style="display:flex; align-items:center; gap:10px; color:var(--accent);">
-                            <span style="font-size:18px;">⬆️️</span> <strong>.. (Back to Tag Level)</strong>
+                            <span style="font-size:18px;">⬆</span> <strong>.. (Back to Tag Level)</strong>
                         </span>
                     </div>
                     <div class="card-grid" style="margin-top:10px;">
@@ -2724,86 +2724,70 @@
         applyTheme(themeSettings);
     }
 
-    function applyTheme(settings) {
-        if (!settings) return;
+    function hexToRgb(hex) {
+        if (!hex) return '255, 255, 255';
+        let c = hex.replace('#', '');
+        if (c.length === 3) c = c.split('').map(x => x + x).join('');
+        const num = parseInt(c, 16);
+        return `${(num >> 16) & 255}, ${(num >> 8) & 255}, ${num & 255}`;
+    }
+
+    function applyTheme(t) {
+        if (!t) return;
         const root = document.documentElement;
-        root.style.setProperty('--bg-color', settings.bgColor || '#0f0c29');
-        root.style.setProperty('--bg-grad', settings.bgGrad || '#24243e');
-        root.style.setProperty('--bg-gradient', `linear-gradient(135deg, ${settings.bgColor || '#0f0c29'}, ${settings.bgGrad || '#24243e'})`);
-        root.style.setProperty('--card-bg', settings.cardBg || '#1e293b');
+        root.style.setProperty('--bg-color', t.bgColor || '#0f0c29');
+        root.style.setProperty('--bg-grad', t.bgGrad || '#24243e');
+        root.style.setProperty('--bg-gradient', `linear-gradient(135deg, ${t.bgColor || '#0f0c29'}, ${t.bgGrad || '#24243e'})`);
+        root.style.setProperty('--card-bg', t.cardBg || '#1e293b');
+        root.style.setProperty('--card-bg-rgb', hexToRgb(t.cardBg || '#1e293b'));
+        root.style.setProperty('--text-main', t.textColor || '#ffffff');
+        root.style.setProperty('--accent', t.accentColor || '#ff758c');
+        root.style.setProperty('--accent-glow', `rgba(${hexToRgb(t.accentColor || '#ff758c')}, 0.4)`);
 
-        let hex = (settings.cardBg || '#1e293b').replace('#', '');
-        if (hex.length === 3) hex = hex.split('').map(x => x + x).join('');
-        const r = parseInt(hex.substring(0, 2), 16) || 30;
-        const g = parseInt(hex.substring(2, 4), 16) || 41;
-        const b = parseInt(hex.substring(4, 6), 16) || 59;
-        root.style.setProperty('--card-bg-rgb', `${r}, ${g}, ${b}`);
-
-        root.style.setProperty('--text-main', settings.textColor || '#ffffff');
-        root.style.setProperty('--accent', settings.accentColor || '#ff758c');
-        root.style.setProperty('--accent-glow', `${settings.accentColor || '#ff758c'}66`);
-
-        if (settings.cardStyle === 'customPic' && settings.cardBgPic) {
-            root.style.setProperty('--custom-card-bg-img', `url("${settings.cardBgPic}")`);
+        if (t.cardBgPic) {
+            root.style.setProperty('--custom-card-bg-img', `url("${t.cardBgPic}")`);
         } else {
             root.style.setProperty('--custom-card-bg-img', 'none');
         }
 
-        const cards = document.querySelectorAll('.card, .controls, .modal-content, .fullscreen-card-modal');
-        cards.forEach(card => {
-            card.classList.remove('appearance-glass', 'appearance-solid', 'appearance-glow', 'appearance-customPic');
-            card.classList.add(`appearance-${settings.cardStyle || 'glass'}`);
+        const elementsToStyle = document.querySelectorAll('.card, .controls, .modal-content, .fullscreen-card-modal');
+        elementsToStyle.forEach(c => {
+            c.classList.remove('appearance-glass', 'appearance-solid', 'appearance-glow', 'appearance-customPic');
+            c.classList.add(`appearance-${t.cardStyle || 'glass'}`);
         });
 
         const wpContainer = document.getElementById('wallpaperContainer');
         const wpOverlay = document.getElementById('wallpaperOverlayLayer');
 
-        if (settings.wallpaperUrl) {
-            wpContainer.style.backgroundImage = `url("${settings.wallpaperUrl}")`;
-            wpContainer.style.filter = `blur(${settings.wallpaperBlur || 0}px)`;
-            wpOverlay.style.backgroundColor = `rgba(0, 0, 0, ${(settings.wallpaperOverlay !== undefined ? settings.wallpaperOverlay : 30) / 100})`;
+        if (t.wallpaperUrl) {
+            wpContainer.style.backgroundImage = `url("${t.wallpaperUrl}")`;
+            wpContainer.style.filter = `blur(${t.wallpaperBlur || 0}px)`;
+            wpOverlay.style.backgroundColor = `rgba(0, 0, 0, ${(t.wallpaperOverlay !== undefined ? t.wallpaperOverlay : 30) / 100})`;
         } else {
             wpContainer.style.backgroundImage = 'none';
             wpOverlay.style.backgroundColor = 'transparent';
         }
     }
 
-    function handleFileUpload(event) {
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                document.getElementById("inputImage").value = e.target.result;
-            };
-            reader.readAsDataURL(file);
-        }
-    }
-
-    // Event Listeners & Initial Load Setup
+    // Initialization
     document.addEventListener("DOMContentLoaded", () => {
-        const syncPushBtn = document.getElementById('sync-push');
-        const syncPullBtn = document.getElementById('sync-pull');
-        if (syncPushBtn) syncPushBtn.addEventListener('click', pushToCloud);
-        if (syncPullBtn) syncPullBtn.addEventListener('click', pullFromCloud);
-
         const savedBinId = localStorage.getItem(CONFIG_KEYS.binId);
         const savedApiKey = localStorage.getItem(CONFIG_KEYS.apiKey);
-        if (savedBinId && document.getElementById('jsonbin-id')) {
-            document.getElementById('jsonbin-id').value = savedBinId;
-        }
-        if (savedApiKey && document.getElementById('jsonbin-key')) {
-            document.getElementById('jsonbin-key').value = savedApiKey;
-        }
+        if (savedBinId) document.getElementById('jsonbin-id').value = savedBinId;
+        if (savedApiKey) document.getElementById('jsonbin-key').value = savedApiKey;
 
-        searchInput.addEventListener('input', render);
-        versionFilter.addEventListener('change', render);
-        categoryFilter.addEventListener('change', render);
-        tagFilter.addEventListener('change', render);
+        const pushBtn = document.getElementById('sync-push');
+        const pullBtn = document.getElementById('sync-pull');
+        if (pushBtn) pushBtn.addEventListener('click', pushToCloud);
+        if (pullBtn) pullBtn.addEventListener('click', pullFromCloud);
+
+        if (searchInput) searchInput.addEventListener('input', render);
+        if (versionFilter) versionFilter.addEventListener('change', render);
+        if (categoryFilter) categoryFilter.addEventListener('change', render);
+        if (tagFilter) tagFilter.addEventListener('change', render);
         if (imageFilter) imageFilter.addEventListener('change', render);
 
         updateDropdowns();
-        applyPlacementSettings(layoutSettings);
-        applyTheme(themeSettings);
         render();
     });
 </script>
