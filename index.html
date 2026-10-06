@@ -100,7 +100,6 @@
 
         /* --- CUSTOM FORM CONTROLS & STYLING --- */
 
-        /* Inputs, Textareas, and Dropdowns Base */
         input[type="text"],
         input[type="password"],
         input[type="url"],
@@ -138,7 +137,6 @@
             background-color: rgba(0, 0, 0, 0.45);
         }
 
-        /* Custom Select Dropdown Styling with SVG Arrow */
         select {
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
             background-repeat: no-repeat;
@@ -154,7 +152,6 @@
             padding: 10px;
         }
 
-        /* Custom Styled Checkbox */
         input[type="checkbox"] {
             appearance: none;
             -webkit-appearance: none;
@@ -195,7 +192,6 @@
             top: 2px;
         }
 
-        /* Custom Range Sliders */
         input[type="range"] {
             appearance: none;
             -webkit-appearance: none;
@@ -248,7 +244,6 @@
             filter: brightness(1.15);
         }
 
-        /* Custom Color Picker */
         input[type="color"] {
             appearance: none;
             -webkit-appearance: none;
@@ -281,7 +276,6 @@
             border-radius: 7px;
         }
 
-        /* Custom File Upload Input */
         input[type="file"] {
             background-color: rgba(0, 0, 0, 0.25);
             padding: 6px;
@@ -314,7 +308,6 @@
             transform: translateY(-1px);
         }
 
-        /* Buttons */
         button {
             background: var(--accent);
             color: white;
@@ -336,7 +329,6 @@
             transform: scale(0.98);
         }
 
-        /* Sticky Header Positioning */
         .header-sticky {
             z-index: 900;
             width: 100%;
@@ -397,7 +389,6 @@
             transform: scale(1.03);
         }
 
-        /* Collapsible Filter Menu */
         .controls-content {
             display: flex;
             flex-direction: column;
@@ -438,7 +429,6 @@
             font-weight: 500;
         }
 
-        /* Card Grid Layouts */
         .card-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -457,7 +447,6 @@
             }
         }
 
-        /* Card Styling */
         .card {
             border-radius: 16px;
             padding: 18px;
@@ -516,7 +505,6 @@
             padding: 2px 8px;
         }
 
-        /* File Explorer Folder View */
         .file-explorer-container {
             display: flex;
             flex-direction: column;
@@ -558,7 +546,6 @@
             border: 1px dashed var(--accent);
         }
 
-        /* Tree Branch Diagram */
         .tree-diagram-container {
             display: flex;
             flex-direction: column;
@@ -587,6 +574,9 @@
             transition: transform 0.2s ease;
             z-index: 2;
             width: fit-content;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .tree-root-node:hover {
@@ -604,6 +594,9 @@
             white-space: nowrap;
             transition: transform 0.2s ease;
             width: fit-content;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .tree-sub-node:hover {
@@ -621,6 +614,9 @@
             cursor: pointer;
             white-space: nowrap;
             width: fit-content;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .tree-children-container {
@@ -671,7 +667,6 @@
             background: rgba(56, 189, 248, 0.15);
         }
 
-        /* Action Menu Popover */
         .action-menu-container {
             position: relative;
             display: inline-block;
@@ -706,7 +701,6 @@
             display: flex;
         }
 
-        /* Card Themes */
         .appearance-solid {
             background-color: var(--card-bg) !important;
             border: 1px solid var(--border-color) !important;
@@ -818,7 +812,7 @@
             color: var(--text-main);
             display: inline-flex;
             align-items: center;
-            gap: 4px;
+            gap: 6px;
             font-weight: 500;
         }
 
@@ -826,6 +820,30 @@
             background-color: rgba(16, 185, 129, 0.2);
             border-color: rgba(16, 185, 129, 0.4);
             color: #a7f3d0;
+        }
+
+        /* Thumbnails inside badges, folder rows, and tree nodes */
+        .badge-icon-img {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            object-fit: cover;
+            vertical-align: middle;
+        }
+
+        .folder-thumb-img {
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            object-fit: cover;
+        }
+
+        .tree-thumb-img {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            object-fit: cover;
+            vertical-align: middle;
         }
 
         .card-actions {
@@ -863,7 +881,6 @@
             background: linear-gradient(135deg, #dc2626, #991b1b);
         }
 
-        /* Modal Styling */
         .modal {
             display: none;
             position: fixed;
@@ -903,7 +920,6 @@
             margin-top: 12px;
         }
 
-        /* Fullscreen OC Card Modal */
         .fullscreen-card-modal {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
@@ -1043,6 +1059,7 @@
                         <button class="btn-danger" id="deleteSelectedBtn" onclick="deleteSelectedOCs()">Delete Selected (0)</button>
                         <button class="btn-secondary" onclick="renameCategory()">Rename Category</button>
                         <button class="btn-secondary" onclick="renameVersion()">Rename Version</button>
+                        <button class="btn-secondary" onclick="openMetaImageModal()">🖼️ Meta Images</button>
                     </div>
                     <div style="display: flex; gap: 8px; flex-wrap: wrap;">
                         <button class="btn-secondary" onclick="openPlacementModal()">📐 UI Layout</button>
@@ -1283,6 +1300,44 @@
     </div>
 </div>
 
+<!-- Modal for Managing Version, Category, and Tag Thumbnails -->
+<div class="modal" id="metaImageModal">
+    <div class="modal-content appearance-glass" id="metaImageModalContent">
+        <h2>🖼️ Manage Version, Category & Tag Thumbnails</h2>
+        
+        <label for="metaTypeSelect">Select Metadata Type:</label>
+        <select id="metaTypeSelect" onchange="populateMetaItemSelect()">
+            <option value="versions">Design Version</option>
+            <option value="categories">Category</option>
+            <option value="tags">Variation Tag</option>
+        </select>
+
+        <label for="metaItemSelect">Select Item to Add/Edit Image:</label>
+        <select id="metaItemSelect" onchange="loadSelectedMetaImage()">
+            <!-- Populated dynamically -->
+        </select>
+
+        <label for="metaImageUrl">Thumbnail Image URL:</label>
+        <div style="display: flex; gap: 8px;">
+            <input type="url" id="metaImageUrl" placeholder="https://example.com/thumb.png" style="flex: 1;" oninput="previewMetaImage()">
+            <button type="button" class="btn-danger" style="padding: 8px 12px; font-size: 12px; white-space: nowrap;" onclick="removeMetaImageInput()">Remove Image</button>
+        </div>
+
+        <label for="metaImageFile">Or Upload Direct Image File:</label>
+        <input type="file" id="metaImageFile" accept="image/*" onchange="handleMetaFileUpload(event)">
+
+        <div id="metaImagePreviewContainer" style="text-align: center; margin-top: 10px; display: none;">
+            <small style="color: var(--text-sub); display: block; margin-bottom: 4px;">Thumbnail Preview:</small>
+            <img id="metaImagePreview" src="" style="width: 60px; height: 60px; border-radius: 12px; object-fit: cover; border: 2px solid var(--accent);">
+        </div>
+
+        <div class="modal-buttons" style="margin-top: 16px;">
+            <button class="btn-secondary" onclick="closeMetaImageModal()">Close</button>
+            <button onclick="saveMetaImage()">Save Thumbnail</button>
+        </div>
+    </div>
+</div>
+
 <div class="toast" id="toast">Code copied to clipboard!</div>
 
 <script>
@@ -1307,6 +1362,7 @@
     let ocs = JSON.parse(localStorage.getItem("gacha_ocs")) || [];
     let themeSettings = JSON.parse(localStorage.getItem("gacha_theme")) || PRESET_THEMES.default;
     let layoutSettings = JSON.parse(localStorage.getItem("gacha_layout")) || DEFAULT_LAYOUT;
+    let metaImages = JSON.parse(localStorage.getItem("gacha_meta_images")) || { versions: {}, categories: {}, tags: {} };
     let editingIndex = null;
     let currentExplorerPath = { version: null, category: null, tag: null };
 
@@ -1354,6 +1410,33 @@
         if (lower.includes('winter') || lower.includes('cold')) return '❄️';
         if (lower.includes('template')) return '📋';
         return '⭐';
+    }
+
+    /* Helper Badge HTML Generators (Support Custom Meta Images) */
+    function getVersionBadgeHTML(version) {
+        const v = version || 'OC TEMPLATE';
+        const img = metaImages.versions && metaImages.versions[v];
+        if (img) {
+            return `<span class="badge badge-version"><img src="${img}" class="badge-icon-img" alt=""> ${v}</span>`;
+        }
+        return `<span class="badge badge-version">🏷️ ${v}</span>`;
+    }
+
+    function getCategoryBadgeHTML(category) {
+        const c = category || 'General';
+        const img = metaImages.categories && metaImages.categories[c];
+        if (img) {
+            return `<span class="badge"><img src="${img}" class="badge-icon-img" alt=""> ${c}</span>`;
+        }
+        return `<span class="badge">📂 ${c}</span>`;
+    }
+
+    function getTagBadgeHTML(tag) {
+        const img = metaImages.tags && metaImages.tags[tag];
+        if (img) {
+            return `<span class="badge" style="background:var(--accent); color:#ffffff;"><img src="${img}" class="badge-icon-img" alt=""> ${tag}</span>`;
+        }
+        return `<span class="badge" style="background:var(--accent); color:#ffffff;">${getTagEmoji(tag)}${tag}</span>`;
     }
 
     function markCustomTheme() {
@@ -1519,6 +1602,13 @@
         if (!newCat || !newCat.trim()) return;
 
         ocs.forEach(oc => { if (oc.category === oldCat) oc.category = newCat.trim(); });
+
+        if (metaImages.categories[oldCat]) {
+            metaImages.categories[newCat.trim()] = metaImages.categories[oldCat];
+            delete metaImages.categories[oldCat];
+            localStorage.setItem("gacha_meta_images", JSON.stringify(metaImages));
+        }
+
         saveToLocalStorage();
         updateDropdowns();
         render();
@@ -1536,10 +1626,118 @@
         if (!newVer || !newVer.trim()) return;
 
         ocs.forEach(oc => { if (oc.version === oldVer) oc.version = newVer.trim(); });
+
+        if (metaImages.versions[oldVer]) {
+            metaImages.versions[newVer.trim()] = metaImages.versions[oldVer];
+            delete metaImages.versions[oldVer];
+            localStorage.setItem("gacha_meta_images", JSON.stringify(metaImages));
+        }
+
         saveToLocalStorage();
         updateDropdowns();
         render();
         alert(`Renamed version "${oldVer}" to "${newVer.trim()}". (Saved locally)`);
+    }
+
+    /* Meta Image Manager Functions */
+    function openMetaImageModal() {
+        populateMetaItemSelect();
+        document.getElementById("metaImageModal").style.display = "flex";
+    }
+
+    function closeMetaImageModal() {
+        document.getElementById("metaImageModal").style.display = "none";
+    }
+
+    function populateMetaItemSelect() {
+        const type = document.getElementById("metaTypeSelect").value;
+        const itemSelect = document.getElementById("metaItemSelect");
+        
+        let items = [];
+        if (type === "versions") {
+            items = [...new Set([...ocs.map(o => o.version).filter(Boolean), ...Object.keys(metaImages.versions || {})])].sort();
+        } else if (type === "categories") {
+            items = [...new Set([...ocs.map(o => o.category).filter(Boolean), ...Object.keys(metaImages.categories || {})])].sort();
+        } else if (type === "tags") {
+            items = [...new Set([...ocs.flatMap(o => o.tags || []).filter(Boolean), ...Object.keys(metaImages.tags || {})])].sort();
+        }
+
+        if (items.length === 0) {
+            itemSelect.innerHTML = '<option value="">-- No items found --</option>';
+        } else {
+            itemSelect.innerHTML = items.map(i => `<option value="${i}">${i} ${metaImages[type] && metaImages[type][i] ? '🖼' : ''}</option>`).join('');
+        }
+
+        loadSelectedMetaImage();
+    }
+
+    function loadSelectedMetaImage() {
+        const type = document.getElementById("metaTypeSelect").value;
+        const item = document.getElementById("metaItemSelect").value;
+        const urlInput = document.getElementById("metaImageUrl");
+        const fileInput = document.getElementById("metaImageFile");
+        fileInput.value = "";
+
+        if (item && metaImages[type] && metaImages[type][item]) {
+            urlInput.value = metaImages[type][item];
+        } else {
+            urlInput.value = "";
+        }
+        previewMetaImage();
+    }
+
+    function previewMetaImage() {
+        const url = document.getElementById("metaImageUrl").value.trim();
+        const previewContainer = document.getElementById("metaImagePreviewContainer");
+        const previewImg = document.getElementById("metaImagePreview");
+
+        if (url) {
+            previewImg.src = url;
+            previewContainer.style.display = "block";
+        } else {
+            previewContainer.style.display = "none";
+        }
+    }
+
+    async function handleMetaFileUpload(event) {
+        const fileInput = event.target;
+        if (fileInput.files.length > 0) {
+            const uploadedUrl = await uploadImageToCloud(fileInput);
+            if (uploadedUrl) {
+                document.getElementById("metaImageUrl").value = uploadedUrl;
+                previewMetaImage();
+            }
+        }
+    }
+
+    function removeMetaImageInput() {
+        document.getElementById("metaImageUrl").value = "";
+        document.getElementById("metaImageFile").value = "";
+        previewMetaImage();
+    }
+
+    function saveMetaImage() {
+        const type = document.getElementById("metaTypeSelect").value;
+        const item = document.getElementById("metaItemSelect").value;
+        const url = document.getElementById("metaImageUrl").value.trim();
+
+        if (!item) {
+            alert("Please select or create an item first.");
+            return;
+        }
+
+        if (!metaImages[type]) metaImages[type] = {};
+
+        if (url) {
+            metaImages[type][item] = url;
+        } else {
+            delete metaImages[type][item];
+        }
+
+        localStorage.setItem("gacha_meta_images", JSON.stringify(metaImages));
+        populateMetaItemSelect();
+        render();
+        showToast("Thumbnail saved!");
     }
 
     function toggleActionMenu(event, btn) {
@@ -1599,9 +1797,9 @@
                     <h2 style="margin: 0; font-size: 24px; color: var(--text-main);">${oc.name}</h2>
                     
                     <div class="badge-container">
-                        <span class="badge badge-version">🏷️ ${oc.version || 'OC TEMPLATE'}</span>
-                        <span class="badge">📂 ${oc.category || 'General'}</span>
-                        ${(oc.tags || []).map(t => `<span class="badge" style="background:var(--accent); color:#ffffff;">${getTagEmoji(t)}${t}</span>`).join('')}
+                        ${getVersionBadgeHTML(oc.version)}
+                        ${getCategoryBadgeHTML(oc.category)}
+                        ${(oc.tags || []).map(t => getTagBadgeHTML(t)).join('')}
                     </div>
 
                     <div style="margin-top: 4px;">
@@ -1674,7 +1872,7 @@
                 <button class="btn-gear" onclick="toggleActionMenu(event, this)">⚙️ Options 🔽</button>
                 <div class="action-menu-dropdown">
                     <button class="btn-secondary" onclick="openFullscreenOC(${realIndex})">👁 Fullscreen</button>
-                    <button class="btn-secondary" onclick="editOC(${realIndex})">✏️ Edit OC</button>
+                    <button class="btn-secondary" onclick="editOC(${realIndex})">✏ Edit OC</button>
                     <button class="btn-secondary" onclick="copyCode('${oc.code}')">📋 Copy Code</button>
                     ${hasOffline ? `<button class="btn-secondary" onclick="copyOfflineCode(${realIndex}, event)">⚡ Copy Offline</button>` : ''}
                     <button class="btn-danger" onclick="deleteOC(${realIndex})">🗑️ Delete</button>
@@ -1713,9 +1911,9 @@
                     </div>
                     ${offlineBarHTML}
                     <div class="badge-container">
-                        <span class="badge badge-version">🏷️ ${oc.version || 'OC TEMPLATE'}</span>
-                        <span class="badge">📂 ${oc.category || 'General'}</span>
-                        ${(oc.tags || []).map(t => `<span class="badge" style="background:var(--accent); color:#ffffff;">${getTagEmoji(t)}${t}</span>`).join('')}
+                        ${getVersionBadgeHTML(oc.version)}
+                        ${getCategoryBadgeHTML(oc.category)}
+                        ${(oc.tags || []).map(t => getTagBadgeHTML(t)).join('')}
                     </div>
                 </div>
                 ${actionsHTML}
@@ -1823,10 +2021,12 @@
                         Object.values(hierarchy[v]).forEach(catObj => {
                             Object.values(catObj).forEach(tagList => { totalInVer += tagList.length; });
                         });
+                        const verImg = metaImages.versions && metaImages.versions[v];
+                        const iconHTML = verImg ? `<img src="${verImg}" class="folder-thumb-img">` : `<span style="font-size:20px;">🏷</span>`;
                         return `
                             <div class="folder-row" onclick="openExplorerVersion('${v}')">
                                 <span style="display:flex; align-items:center; gap:10px;">
-                                    <span style="font-size:20px;">🏷</span> <strong>${v}</strong>
+                                    ${iconHTML} <strong>${v}</strong>
                                 </span>
                                 <span class="stats">${totalInVer} item(s) ➔</span>
                             </div>
@@ -1849,10 +2049,12 @@
                     ${categories.map(c => {
                         let totalInCat = 0;
                         Object.values(hierarchy[selectedVer][c]).forEach(tagList => { totalInCat += tagList.length; });
+                        const catImg = metaImages.categories && metaImages.categories[c];
+                        const iconHTML = catImg ? `<img src="${catImg}" class="folder-thumb-img">` : `<span style="font-size:20px;">📁</span>`;
                         return `
                             <div class="folder-row" onclick="openExplorerCategory('${c}')">
                                 <span style="display:flex; align-items:center; gap:10px;">
-                                    <span style="font-size:20px;">📁</span> <strong>${c}</strong>
+                                    ${iconHTML} <strong>${c}</strong>
                                 </span>
                                 <span class="stats">${totalInCat} item(s) ➔</span>
                             </div>
@@ -1870,15 +2072,17 @@
                     </div>
                     <div class="folder-row folder-row-up" onclick="navigateExplorerUp()">
                         <span style="display:flex; align-items:center; gap:10px; color:var(--accent);">
-                            <span style="font-size:18px;">⬆️</span> <strong>.. (Back to Category Level)</strong>
+                            <span style="font-size:18px;">⬆</span> <strong>.. (Back to Category Level)</strong>
                         </span>
                     </div>
                     ${tags.map(t => {
                         const totalInTag = hierarchy[selectedVer][selectedCat][t].length;
+                        const tagImg = metaImages.tags && metaImages.tags[t];
+                        const iconHTML = tagImg ? `<img src="${tagImg}" class="folder-thumb-img">` : `<span style="font-size:20px;">🔖</span>`;
                         return `
                             <div class="folder-row" onclick="openExplorerTag('${t}')">
                                 <span style="display:flex; align-items:center; gap:10px;">
-                                    <span style="font-size:20px;">🔖</span> <strong>${t}</strong>
+                                    ${iconHTML} <strong>${t}</strong>
                                 </span>
                                 <span class="stats">${totalInTag} item(s) ➔</span>
                             </div>
@@ -1899,7 +2103,7 @@
                     </div>
                     <div class="folder-row folder-row-up" onclick="navigateExplorerUp()">
                         <span style="display:flex; align-items:center; gap:10px; color:var(--accent);">
-                            <span style="font-size:18px;">⬆️</span> <strong>.. (Back to Tag Level)</strong>
+                            <span style="font-size:18px;">⬆️️</span> <strong>.. (Back to Tag Level)</strong>
                         </span>
                     </div>
                     <div class="card-grid" style="margin-top:10px;">
@@ -1930,16 +2134,22 @@
             ocGrid.innerHTML = Object.keys(hierarchy).map(verName => {
                 verIdx++;
                 const categoriesObj = hierarchy[verName];
+                const verImg = metaImages.versions && metaImages.versions[verName];
+                const verIcon = verImg ? `<img src="${verImg}" class="tree-thumb-img">` : `🏷️ `;
 
                 let catIdx = 0;
                 const categoriesHTML = Object.keys(categoriesObj).map(catName => {
                     catIdx++;
                     const tagsObj = categoriesObj[catName];
+                    const catImg = metaImages.categories && metaImages.categories[catName];
+                    const catIcon = catImg ? `<img src="${catImg}" class="tree-thumb-img">` : `📁 `;
 
                     let tagIdx = 0;
                     const tagsHTML = Object.keys(tagsObj).map(tagName => {
                         tagIdx++;
                         const ocsList = Array.from(new Set(tagsObj[tagName]));
+                        const tagImg = metaImages.tags && metaImages.tags[tagName];
+                        const tagIcon = tagImg ? `<img src="${tagImg}" class="tree-thumb-img">` : `🔖 `;
 
                         const ocPillsHTML = ocsList.map(oc => {
                             const realIdx = ocs.indexOf(oc);
@@ -1960,7 +2170,7 @@
                             <div class="tree-child-node">
                                 <div class="tree-branch-group" style="width: 100%;">
                                     <div class="tree-tag-node" onclick="toggleTreeBranch('tree-tag-${verIdx}-${catIdx}-${tagIdx}')">
-                                        🔖 ${tagName} (${ocsList.length}) 🔽
+                                        ${tagIcon} ${tagName} (${ocsList.length}) 🔽
                                     </div>
                                     <div class="tree-children-container" id="tree-tag-${verIdx}-${catIdx}-${tagIdx}">
                                         ${ocPillsHTML}
@@ -1974,7 +2184,7 @@
                         <div class="tree-child-node">
                             <div class="tree-branch-group" style="width: 100%;">
                                 <div class="tree-sub-node" onclick="toggleTreeBranch('tree-cat-${verIdx}-${catIdx}')">
-                                    📁 ${catName} (${Object.keys(tagsObj).length} Tags) 🔽
+                                    ${catIcon} ${catName} (${Object.keys(tagsObj).length} Tags) 🔽
                                 </div>
                                 <div class="tree-children-container" id="tree-cat-${verIdx}-${catIdx}">
                                     ${tagsHTML}
@@ -1987,7 +2197,7 @@
                 return `
                     <div class="tree-branch-group">
                         <div class="tree-root-node" onclick="toggleTreeBranch('tree-ver-${verIdx}')">
-                            🏷️ ${verName} (${Object.keys(categoriesObj).length} Categories) 🔽
+                            ${verIcon} ${verName} (${Object.keys(categoriesObj).length} Categories) 🔽
                         </div>
                         <div class="tree-children-container" id="tree-ver-${verIdx}">
                             ${categoriesHTML}
@@ -2159,7 +2369,7 @@
     }
 
     function exportData() {
-        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(ocs, null, 2));
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({ ocs, metaImages }, null, 2));
         const downloadAnchor = document.createElement('a');
         downloadAnchor.setAttribute("href", dataStr);
         downloadAnchor.setAttribute("download", "oc_codes_backup.json");
@@ -2321,6 +2531,7 @@
             ocs: currentLocalOcs,
             settings: JSON.parse(localStorage.getItem('gacha_theme') || '{}'),
             layout: JSON.parse(localStorage.getItem('gacha_layout') || '{}'),
+            metaImages: JSON.parse(localStorage.getItem('gacha_meta_images') || '{}'),
             lastUpdated: new Date().toISOString()
         };
 
@@ -2372,6 +2583,7 @@
             const cloudOcs = parsedData.ocs || parsedData; 
             const cloudSettings = parsedData.settings || null;
             const cloudLayout = parsedData.layout || null;
+            const cloudMetaImages = parsedData.metaImages || null;
 
             if (Array.isArray(cloudOcs)) {
                 ocs = cloudOcs.map(oc => ({
@@ -2396,6 +2608,11 @@
             if (cloudLayout && typeof cloudLayout === 'object') {
                 localStorage.setItem('gacha_layout', JSON.stringify(cloudLayout));
                 layoutSettings = cloudLayout;
+            }
+
+            if (cloudMetaImages && typeof cloudMetaImages === 'object') {
+                localStorage.setItem('gacha_meta_images', JSON.stringify(cloudMetaImages));
+                metaImages = cloudMetaImages;
             }
 
             setSyncStatus('Successfully pulled data! Refreshing... 🔄');
@@ -2507,65 +2724,76 @@
         applyTheme(themeSettings);
     }
 
-    function hexToRgb(hex) {
-        if (!hex) return "30, 41, 59";
-        let c = hex.replace('#', '');
-        if (c.length === 3) c = c.split('').map(x => x + x).join('');
-        const num = parseInt(c, 16);
-        return `${(num >> 16) & 255}, ${(num >> 8) & 255}, ${num & 255}`;
-    }
-
-    function applyTheme(theme) {
+    function applyTheme(settings) {
+        if (!settings) return;
         const root = document.documentElement;
-        const rgbCard = hexToRgb(theme.cardBg || "#1e293b");
-        const rgbAccent = hexToRgb(theme.accentColor || "#ff758c");
+        root.style.setProperty('--bg-color', settings.bgColor || '#0f0c29');
+        root.style.setProperty('--bg-grad', settings.bgGrad || '#24243e');
+        root.style.setProperty('--bg-gradient', `linear-gradient(135deg, ${settings.bgColor || '#0f0c29'}, ${settings.bgGrad || '#24243e'})`);
+        root.style.setProperty('--card-bg', settings.cardBg || '#1e293b');
 
-        const startColor = theme.bgColor || "#0f0c29";
-        const endColor = theme.bgGrad || "#24243e";
+        let hex = (settings.cardBg || '#1e293b').replace('#', '');
+        if (hex.length === 3) hex = hex.split('').map(x => x + x).join('');
+        const r = parseInt(hex.substring(0, 2), 16) || 30;
+        const g = parseInt(hex.substring(2, 4), 16) || 41;
+        const b = parseInt(hex.substring(4, 6), 16) || 59;
+        root.style.setProperty('--card-bg-rgb', `${r}, ${g}, ${b}`);
 
-        root.style.setProperty('--bg-color', startColor);
-        root.style.setProperty('--bg-grad', endColor);
-        root.style.setProperty('--bg-gradient', `linear-gradient(135deg, ${startColor}, ${endColor})`);
-        root.style.setProperty('--card-bg', theme.cardBg);
-        root.style.setProperty('--card-bg-rgb', rgbCard);
-        root.style.setProperty('--text-main', theme.textColor);
-        root.style.setProperty('--accent', theme.accentColor);
-        root.style.setProperty('--accent-glow', `rgba(${rgbAccent}, 0.4)`);
+        root.style.setProperty('--text-main', settings.textColor || '#ffffff');
+        root.style.setProperty('--accent', settings.accentColor || '#ff758c');
+        root.style.setProperty('--accent-glow', `${settings.accentColor || '#ff758c'}66`);
 
-        if (theme.cardBgPic) {
-            root.style.setProperty('--custom-card-bg-img', `url("${theme.cardBgPic}")`);
+        if (settings.cardStyle === 'customPic' && settings.cardBgPic) {
+            root.style.setProperty('--custom-card-bg-img', `url("${settings.cardBgPic}")`);
         } else {
             root.style.setProperty('--custom-card-bg-img', 'none');
         }
 
-        const wpContainer = document.getElementById("wallpaperContainer");
-        const wpOverlay = document.getElementById("wallpaperOverlayLayer");
-
-        if (theme.wallpaperUrl) {
-            wpContainer.style.backgroundImage = `url("${theme.wallpaperUrl}")`;
-            wpContainer.style.filter = `blur(${theme.wallpaperBlur || 0}px)`;
-            const overlayAlpha = (theme.wallpaperOverlay !== undefined ? theme.wallpaperOverlay : 30) / 100;
-            wpOverlay.style.backgroundColor = `rgba(0, 0, 0, ${overlayAlpha})`;
-        } else {
-            wpContainer.style.backgroundImage = "none";
-            wpOverlay.style.backgroundColor = "transparent";
-        }
-
-        document.querySelectorAll('.card').forEach(card => {
-            card.classList.remove('appearance-solid', 'appearance-glass', 'appearance-glow', 'appearance-customPic');
-            card.classList.add(`appearance-${theme.cardStyle || 'glass'}`);
+        const cards = document.querySelectorAll('.card, .controls, .modal-content, .fullscreen-card-modal');
+        cards.forEach(card => {
+            card.classList.remove('appearance-glass', 'appearance-solid', 'appearance-glow', 'appearance-customPic');
+            card.classList.add(`appearance-${settings.cardStyle || 'glass'}`);
         });
+
+        const wpContainer = document.getElementById('wallpaperContainer');
+        const wpOverlay = document.getElementById('wallpaperOverlayLayer');
+
+        if (settings.wallpaperUrl) {
+            wpContainer.style.backgroundImage = `url("${settings.wallpaperUrl}")`;
+            wpContainer.style.filter = `blur(${settings.wallpaperBlur || 0}px)`;
+            wpOverlay.style.backgroundColor = `rgba(0, 0, 0, ${(settings.wallpaperOverlay !== undefined ? settings.wallpaperOverlay : 30) / 100})`;
+        } else {
+            wpContainer.style.backgroundImage = 'none';
+            wpOverlay.style.backgroundColor = 'transparent';
+        }
     }
 
-    window.onload = function() {
-        const savedBin = localStorage.getItem(CONFIG_KEYS.binId);
-        const savedKey = localStorage.getItem(CONFIG_KEYS.apiKey);
+    function handleFileUpload(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById("inputImage").value = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    }
 
-        if (savedBin) document.getElementById('jsonbin-id').value = savedBin;
-        if (savedKey) document.getElementById('jsonbin-key').value = savedKey;
+    // Event Listeners & Initial Load Setup
+    document.addEventListener("DOMContentLoaded", () => {
+        const syncPushBtn = document.getElementById('sync-push');
+        const syncPullBtn = document.getElementById('sync-pull');
+        if (syncPushBtn) syncPushBtn.addEventListener('click', pushToCloud);
+        if (syncPullBtn) syncPullBtn.addEventListener('click', pullFromCloud);
 
-        document.getElementById('sync-push').onclick = pushToCloud;
-        document.getElementById('sync-pull').onclick = pullFromCloud;
+        const savedBinId = localStorage.getItem(CONFIG_KEYS.binId);
+        const savedApiKey = localStorage.getItem(CONFIG_KEYS.apiKey);
+        if (savedBinId && document.getElementById('jsonbin-id')) {
+            document.getElementById('jsonbin-id').value = savedBinId;
+        }
+        if (savedApiKey && document.getElementById('jsonbin-key')) {
+            document.getElementById('jsonbin-key').value = savedApiKey;
+        }
 
         searchInput.addEventListener('input', render);
         versionFilter.addEventListener('change', render);
@@ -2574,8 +2802,10 @@
         if (imageFilter) imageFilter.addEventListener('change', render);
 
         updateDropdowns();
+        applyPlacementSettings(layoutSettings);
+        applyTheme(themeSettings);
         render();
-    };
+    });
 </script>
 </body>
-    </html>
+</html>
